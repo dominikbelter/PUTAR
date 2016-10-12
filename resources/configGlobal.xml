@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    
+  <Visualizer useVisualizer="true">
+	<type>QGLViewer</type>
+	<config>QVisualizerConfig.xml</config>
+  </Visualizer>
