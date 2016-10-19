@@ -11,7 +11,7 @@ int main()
         tinyxml2::XMLDocument config;
         config.LoadFile("../../resources/configGlobal.xml");
         if (config.ErrorID())
-            std::cout << "unable to load config file1.\n";
+            std::cout << "unable to load config file.\n";
         //std::string simConfig = config.FirstChildElement( "Environment" )->Attribute("config");
 
         std::cout << "Done\n";

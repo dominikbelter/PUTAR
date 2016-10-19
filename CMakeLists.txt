@@ -25,11 +25,15 @@ option(BUILD_DEFS "Build PUTAR Defs library" YES)
 mark_as_advanced(BUILD_DEFS)
 option(BUILD_PUTAR_UTILITIES "Build PUTAR Utilities library" ON)
 mark_as_advanced(BUILD_PUTAR_UTILITIES)
+option(BUILD_VISUALIZER "Build Visualizer" ON)
+mark_as_advanced(BUILD_VISUALIZER)
 
 # demos
 option(BUILD_PUTAR_DEMO "Build PUTAR demonstration programs and libraries" ON)
 option(BUILD_PUTAR_DEMO_MAIN "Build main PUTAR test" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_MAIN)
+option(BUILD_PUTAR_DEMO_VISUALIZER "Build PUTAR visualizer demo" ON)
+mark_as_advanced(BUILD_PUTAR_DEMO_VISUALIZER)
 
 #additional dependencies
 # Boost
@@ -139,6 +143,39 @@ if(BUILD_PUTAR_UTILITIES)
         INSTALL(FILES ${TRACKER_HEADERS} DESTINATION include/putar/Utilities/)
 endif(BUILD_PUTAR_UTILITIES)
 
+###############################################################################
+#
+# PUTAR Visualizer library
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_VISUALIZER)
+        file(GLOB VISUALIZER_SOURCES
+            "${CMAKE_SOURCE_DIR}/src/Visualizer/*.cpp"
+        )
+        file(GLOB VISUALIZER_HEADERS
+            "${CMAKE_SOURCE_DIR}/include/putar/Visualizer/*.h"
+        )
+        ADD_LIBRARY(Visualizer STATIC ${VISUALIZER_SOURCES} ${VISUALIZER_HEADERS})
+        TARGET_LINK_LIBRARIES(Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY})
+#        INSTALL(TARGETS Utilities RUNTIME DESTINATION bin LIBRARY DESTINATION bin ARCHIVE DESTINATION lib)
+#        INSTALL(FILES ${VISUALIZER_HEADERS} DESTINATION include/walkers/Visualizer/)
+endif(BUILD_PUTAR AND BUILD_VISUALIZER)
+
+###############################################################################
+#
+# PUTAR demo Visualizer
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_VISUALIZER)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/demoVisualizer.cpp)
+        ADD_EXECUTABLE(demoVisualizer ${DEMO_SOURCES})
+        TARGET_LINK_LIBRARIES(demoVisualizer Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+        INSTALL(TARGETS demoVisualizer RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_VISUALIZER)
 
 ###############################################################################
 #
