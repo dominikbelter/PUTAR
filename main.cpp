@@ -1,4 +1,5 @@
 #include "Defs/defs.h"
+#include "ObjLoader/MyLoader.h"
 #include "3rdParty/tinyXML/tinyxml2.h"
 #include <iostream>
 
@@ -13,6 +14,11 @@ int main()
         if (config.ErrorID())
             std::cout << "unable to load config file.\n";
         //std::string simConfig = config.FirstChildElement( "Environment" )->Attribute("config");
+
+        ObjLoader* objLoader = putar::createMyLoader();
+
+        objLoader->loadObj("kamien.obj");
+
 
         std::cout << "Done\n";
     }

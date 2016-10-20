@@ -27,6 +27,8 @@ option(BUILD_PUTAR_UTILITIES "Build PUTAR Utilities library" ON)
 mark_as_advanced(BUILD_PUTAR_UTILITIES)
 option(BUILD_VISUALIZER "Build Visualizer" ON)
 mark_as_advanced(BUILD_VISUALIZER)
+option(BUILD_OBJLOADER "Build ObjLoader" ON)
+mark_as_advanced(BUILD_OBJLOADER)
 
 # demos
 option(BUILD_PUTAR_DEMO "Build PUTAR demonstration programs and libraries" ON)
@@ -164,6 +166,25 @@ endif(BUILD_PUTAR AND BUILD_VISUALIZER)
 
 ###############################################################################
 #
+# PUTAR Visualizer library
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_OBJLOADER)
+        file(GLOB VISUALIZER_SOURCES
+            "${CMAKE_SOURCE_DIR}/src/ObjLoader/*.cpp"
+        )
+        file(GLOB VISUALIZER_HEADERS
+            "${CMAKE_SOURCE_DIR}/include/putar/ObjLoader/*.h"
+        )
+        ADD_LIBRARY(ObjLoader STATIC ${VISUALIZER_SOURCES} ${VISUALIZER_HEADERS})
+        TARGET_LINK_LIBRARIES(ObjLoader tinyxml2)
+#        INSTALL(TARGETS Utilities RUNTIME DESTINATION bin LIBRARY DESTINATION bin ARCHIVE DESTINATION lib)
+#        INSTALL(FILES ${VISUALIZER_HEADERS} DESTINATION include/walkers/Visualizer/)
+endif(BUILD_PUTAR AND BUILD_OBJLOADER)
+
+###############################################################################
+#
 # PUTAR demo Visualizer
 #
 ###############################################################################
@@ -187,7 +208,7 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO AND BUILD_PUTAR_DEMO_MAIN)
         SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
         SET(DEMO_SOURCES ./main.cpp)
         ADD_EXECUTABLE(putar ${DEMO_SOURCES})
-        TARGET_LINK_LIBRARIES(putar PUTARDefs Utilities tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+        TARGET_LINK_LIBRARIES(putar PUTARDefs Utilities ObjLoader tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
         INSTALL(TARGETS putar RUNTIME DESTINATION bin)
 
 endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO AND BUILD_PUTAR_DEMO_MAIN)

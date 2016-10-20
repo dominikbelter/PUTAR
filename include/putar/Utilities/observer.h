@@ -13,7 +13,7 @@ public:
 
 class Subject
 {
-    //Lets keep a track of all the shops we have observing
+    //Lets keep a track of all the observers we observe
     std::vector<Observer*> list;
 
 public:
