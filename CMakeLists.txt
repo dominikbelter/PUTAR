@@ -7,7 +7,12 @@ SET(CMAKE_BUILD_TYPE "Release" CACHE PATH "Current build configuration")
 
 # Example Project configuration
 PROJECT(PUTAR)
-SET(CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -std=c++11 -pthread -malign-double")
+if(APPLE)
+    SET(CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -std=c++11 -pthread")
+else()
+    SET(CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -std=c++11 -pthread -malign-double")
+endif()
+
 #add_definitions(-DDEBUG)
 
 # Folders
@@ -46,7 +51,9 @@ FIND_PACKAGE(OpenCV REQUIRED)
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 #Eigen
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/3rdParty/Eigen)
+if(NOT APPLE)
+    set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/3rdParty/Eigen)
+endif()
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 add_definitions(-Wno-deprecated -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT)
@@ -91,10 +98,10 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY})
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIRECTORY})
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${ARCHIVE_OUTPUT_DIRECTORY})
 foreach(CONFIGURATION_TYPE ${CMAKE_CONFIGURATION_TYPES})
-	string(TOUPPER ${CONFIGURATION_TYPE} CONFIGURATION_TYPE)
-	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIGURATION_TYPE} ${RUNTIME_OUTPUT_DIRECTORY})
-	SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONFIGURATION_TYPE} ${LIBRARY_OUTPUT_DIRECTORY})
-	SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONFIGURATION_TYPE} ${ARCHIVE_OUTPUT_DIRECTORY})
+        string(TOUPPER ${CONFIGURATION_TYPE} CONFIGURATION_TYPE)
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIGURATION_TYPE} ${RUNTIME_OUTPUT_DIRECTORY})
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONFIGURATION_TYPE} ${LIBRARY_OUTPUT_DIRECTORY})
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONFIGURATION_TYPE} ${ARCHIVE_OUTPUT_DIRECTORY})
 endforeach(CONFIGURATION_TYPE CMAKE_CONFIGURATION_TYPES)
 
 if(MSVC)
@@ -117,11 +124,20 @@ add_library(tinyxml2 STATIC ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/tinyXML/tinyxml
 ###############################################################################
 
 if(BUILD_DEFS)
+        if(APPLE)
+          file(GLOB DEFS_SOURCES
+              "${CMAKE_SOURCE_DIR}/src/Defs/*.cpp"
+          )
+        endif()
         file(GLOB DEFS_HEADERS
             "${CMAKE_SOURCE_DIR}/include/putar/Defs/*.h"
         )
-        ADD_LIBRARY(PUTARDefs STATIC ${DEFS_HEADERS})
-        set_target_properties(PUTARDefs PROPERTIES LINKER_LANGUAGE CXX)
+        if(APPLE)
+            add_library(PUTARDefs STATIC ${DEFS_SOURCES} ${DEFS_HEADERS})
+        else()
+            add_library(PUTARDefs STATIC ${DEFS_HEADERS})
+            set_target_properties(PUTARDefs PROPERTIES LINKER_LANGUAGE CXX)
+        endif()
 # 	INSTALL(TARGETS PUTARDefs RUNTIME DESTINATION bin LIBRARY DESTINATION bin ARCHIVE DESTINATION lib)
         INSTALL(FILES ${DEFS_HEADERS} DESTINATION include/putar/Defs/)
 
@@ -159,7 +175,12 @@ if(BUILD_PUTAR AND BUILD_VISUALIZER)
             "${CMAKE_SOURCE_DIR}/include/putar/Visualizer/*.h"
         )
         ADD_LIBRARY(Visualizer STATIC ${VISUALIZER_SOURCES} ${VISUALIZER_HEADERS})
-        TARGET_LINK_LIBRARIES(Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY})
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} /Applications/QRCreator/5.7/clang_64/lib/QtCore.framework /Applications/QRCreator/5.7/clang_64/lib/QtXml.framework /Applications/QRCreator/5.7/clang_64/lib/QtOpenGL.framework /Applications/QRCreator/5.7/clang_64/lib/QtGui.framework ${OPENGL_LIBRARY})
+        else()
+            TARGET_LINK_LIBRARIES(Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY})
+        endif()
+
 #        INSTALL(TARGETS Utilities RUNTIME DESTINATION bin LIBRARY DESTINATION bin ARCHIVE DESTINATION lib)
 #        INSTALL(FILES ${VISUALIZER_HEADERS} DESTINATION include/walkers/Visualizer/)
 endif(BUILD_PUTAR AND BUILD_VISUALIZER)
@@ -193,7 +214,11 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_VISUALIZER)
         SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
         SET(DEMO_SOURCES ./demos/demoVisualizer.cpp)
         ADD_EXECUTABLE(demoVisualizer ${DEMO_SOURCES})
-        TARGET_LINK_LIBRARIES(demoVisualizer Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(demoVisualizer Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /Applications/QRCreator/5.7/clang_64/lib/QtCore.framework /Applications/QRCreator/5.7/clang_64/lib/QtXml.framework /Applications/QRCreator/5.7/clang_64/lib/QtOpenGL.framework /Applications/QRCreator/5.7/clang_64/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+        else()
+            TARGET_LINK_LIBRARIES(demoVisualizer Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+        endif()
         INSTALL(TARGETS demoVisualizer RUNTIME DESTINATION bin)
 
 endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_VISUALIZER)
@@ -208,7 +233,11 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO AND BUILD_PUTAR_DEMO_MAIN)
         SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
         SET(DEMO_SOURCES ./main.cpp)
         ADD_EXECUTABLE(putar ${DEMO_SOURCES})
-        TARGET_LINK_LIBRARIES(putar PUTARDefs Utilities ObjLoader tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(putar PUTARDefs Utilities ObjLoader tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /Applications/QRCreator/5.7/clang_64/lib/QtCore.framework /Applications/QRCreator/5.7/clang_64/lib/QtXml.framework /Applications/QRCreator/5.7/clang_64/lib/QtOpenGL.framework /Applications/QRCreator/5.7/clang_64/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+        else()
+            TARGET_LINK_LIBRARIES(putar PUTARDefs Utilities ObjLoader tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+        endif()
         INSTALL(TARGETS putar RUNTIME DESTINATION bin)
 
 endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO AND BUILD_PUTAR_DEMO_MAIN)
