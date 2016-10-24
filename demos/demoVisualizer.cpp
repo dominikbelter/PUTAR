@@ -2,7 +2,7 @@
 #include "../3rdParty/tinyXML/tinyxml2.h"
 #include "Visualizer/Qvisualizer.h"
 #include <GL/glut.h>
-#include <qapplication.h>
+#include <QtWidgets/QApplication>
 #include <iostream>
 #include <thread>
 
