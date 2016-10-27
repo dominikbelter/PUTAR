@@ -34,6 +34,8 @@ option(BUILD_VISUALIZER "Build Visualizer" ON)
 mark_as_advanced(BUILD_VISUALIZER)
 option(BUILD_OBJLOADER "Build ObjLoader" ON)
 mark_as_advanced(BUILD_OBJLOADER)
+option(BUILD_VIS3D "Build Vis3D" ON)
+mark_as_advanced(BUILD_VIS3D)
 
 # demos
 option(BUILD_PUTAR_DEMO "Build PUTAR demonstration programs and libraries" ON)
@@ -206,6 +208,23 @@ endif(BUILD_PUTAR AND BUILD_OBJLOADER)
 
 ###############################################################################
 #
+# Vis3D library
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_VIS3D)
+        file(GLOB VIS3D_SOURCES
+            "${CMAKE_SOURCE_DIR}/src/Vis3D/*.cpp"
+        )
+        file(GLOB VIS3D_HEADERS
+            "${CMAKE_SOURCE_DIR}/include/putar/Vis3D/*.h"
+        )
+        ADD_LIBRARY(Vis3D STATIC ${VIS3D_SOURCES} ${VIS3D_HEADERS})
+        TARGET_LINK_LIBRARIES(Vis3D tinyxml2)
+endif(BUILD_PUTAR AND BUILD_VIS3D)
+
+###############################################################################
+#
 # PUTAR demo Visualizer
 #
 ###############################################################################
@@ -234,9 +253,9 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO AND BUILD_PUTAR_DEMO_MAIN)
         SET(DEMO_SOURCES ./main.cpp)
         ADD_EXECUTABLE(putar ${DEMO_SOURCES})
         if(APPLE)
-            TARGET_LINK_LIBRARIES(putar PUTARDefs Utilities ObjLoader tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt5/5.7.0/lib/QtCore.framework /usr/local/Cellar/qt5/5.7.0/lib/QtXml.framework /usr/local/Cellar/qt5/5.7.0/lib/QtOpenGL.framework /usr/local/Cellar/qt5/5.7.0/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+            TARGET_LINK_LIBRARIES(putar PUTARDefs Utilities Vis3D ObjLoader tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt5/5.7.0/lib/QtCore.framework /usr/local/Cellar/qt5/5.7.0/lib/QtXml.framework /usr/local/Cellar/qt5/5.7.0/lib/QtOpenGL.framework /usr/local/Cellar/qt5/5.7.0/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
         else()
-            TARGET_LINK_LIBRARIES(putar PUTARDefs Utilities ObjLoader tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+            TARGET_LINK_LIBRARIES(putar PUTARDefs Utilities Vis3D ObjLoader tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
         endif()
         INSTALL(TARGETS putar RUNTIME DESTINATION bin)
 
