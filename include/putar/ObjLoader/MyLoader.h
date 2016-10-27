@@ -3,6 +3,7 @@
  * implementation - My Loader
  *
  */
+///Adam Kaźmierczak & Arkadiusz Bomba
 
 #ifndef MY_LOADER_H_INCLUDED
 #define MY_LOADER_H_INCLUDED
