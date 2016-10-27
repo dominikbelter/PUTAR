@@ -1,12 +1,11 @@
-/** @file MyLoader.h
+/** @file My3dsLoader.h
  *
- * implementation - My Loader
+ * implementation - My 3DS Loader
  *
  */
-///Adam Kaźmierczak & Arkadiusz Bomba
 
-#ifndef MY_LOADER_H_INCLUDED
-#define MY_LOADER_H_INCLUDED
+#ifndef MY_3DS_LOADER_H_INCLUDED
+#define MY_3DS_LOADER_H_INCLUDED
 
 #include "objLoader.h"
 #include "../../3rdParty/tinyXML/tinyxml2.h"
@@ -15,24 +14,24 @@
 
 namespace putar {
     /// create a single ObjLoader
-    ObjLoader* createMyLoader(void);
-    ObjLoader* createMyLoader(std::string configFile);
+    ObjLoader* createMy3dsLoader(void);
+    ObjLoader* createMy3dsLoader(std::string configFile);
 }
 
 using namespace putar;
 
 /// ObjLoader implementation
-class MyLoader : public ObjLoader {
+class My3dsLoader : public ObjLoader {
     public:
 
         /// Pointer
-        typedef std::unique_ptr<MyLoader> Ptr;
+        typedef std::unique_ptr<My3dsLoader> Ptr;
 
         /// Construction
-        MyLoader(void);
+        My3dsLoader(void);
 
         /// Construction
-        MyLoader(std::string configFilename) : ObjLoader("MyLoader", TYPE_OBJ){
+        My3dsLoader(std::string configFilename) : ObjLoader("My3dsLoader", TYPE_3DS){
             tinyxml2::XMLDocument config;
             std::string filename = "../../resources/" + configFilename;
             config.LoadFile(filename.c_str());
@@ -62,4 +61,4 @@ class MyLoader : public ObjLoader {
         Mat34 poseVis;
 };
 
-#endif // MY_LOADER_H_INCLUDED
+#endif // MY_3DS_LOADER_H_INCLUDED

@@ -46,7 +46,7 @@ mark_as_advanced(BUILD_PUTAR_DEMO_VISUALIZER)
 
 #additional dependencies
 # Boost
-FIND_PACKAGE(Boost COMPONENTS system filesystem thread asio)
+FIND_PACKAGE(Boost COMPONENTS system OS thread asio)
 
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
@@ -189,7 +189,7 @@ endif(BUILD_PUTAR AND BUILD_VISUALIZER)
 
 ###############################################################################
 #
-# PUTAR Visualizer library
+# PUTAR ObjLoader library
 #
 ###############################################################################
 
