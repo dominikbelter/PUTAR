@@ -9,7 +9,7 @@
 #include <mutex>
 
 namaspace putar{
-	class imageVisualizer{
+	class ImageVisualizer{
 		public:
 					
 			virtual void updateCloud(cv::Mat RGBD) = 0;
