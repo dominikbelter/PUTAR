@@ -7,7 +7,7 @@ namespace putar {
     public:
 
         /// overloaded constructor
-        ObjLoader() {}
+        Vis3d() {}
         
         /// Updates mesh
         virtual void updateMesh(const Object3D& mesh) const = 0;
@@ -16,7 +16,7 @@ namespace putar {
         virtual void updateCloud(cv::Mat RGBD) = 0;
 
         /// Virtual descrutor
-        virtual ~ObjLoader() {}
+        virtual ~Vis3d() {}
 }
 
 #endif
