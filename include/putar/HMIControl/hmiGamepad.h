@@ -3,14 +3,14 @@
 
 namespace putar {
 
-    class HmiGamepad {
+    class HmiGamepad : public Hmi {
     public:
 
         /// overloaded constructor
         HmiGamepad() {}
         
         /// Updates pose
-        virtual void updatePose(const Object3D& pose) const = 0;
+        virtual void updatePose(const Mat34& pose);
         
         /// Virtual descrutor
         virtual ~HmiGamepad() {}

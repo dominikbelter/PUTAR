@@ -36,6 +36,8 @@ option(BUILD_OBJLOADER "Build ObjLoader" ON)
 mark_as_advanced(BUILD_OBJLOADER)
 option(BUILD_VIS3D "Build Vis3D" ON)
 mark_as_advanced(BUILD_VIS3D)
+option(BUILD_HMIControl "Build HMIControl" ON)
+mark_as_advanced(BUILD_HMIControl)
 
 # demos
 option(BUILD_PUTAR_DEMO "Build PUTAR demonstration programs and libraries" ON)
@@ -224,6 +226,24 @@ if(BUILD_PUTAR AND BUILD_VIS3D)
 endif(BUILD_PUTAR AND BUILD_VIS3D)
 
 ###############################################################################
+#
+# HMIControl library
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_HMIControl)
+        file(GLOB HMICONTROL_SOURCES
+            "${CMAKE_SOURCE_DIR}/src/HMIControl/*.cpp"
+        )
+        file(GLOB HMICONTROL_HEADERS
+            "${CMAKE_SOURCE_DIR}/include/putar/HMIControl/*.h"
+        )
+        ADD_LIBRARY(HMIControl STATIC ${HMIControl_SOURCES} ${HMIControl_HEADERS})
+        TARGET_LINK_LIBRARIES(HMIControl tinyxml2)
+endif(BUILD_PUTAR AND BUILD_HMIControl)
+
+###############################################################################
+#
 #
 # PUTAR demo Visualizer
 #
