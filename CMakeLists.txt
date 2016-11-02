@@ -32,6 +32,8 @@ option(BUILD_PUTAR_UTILITIES "Build PUTAR Utilities library" ON)
 mark_as_advanced(BUILD_PUTAR_UTILITIES)
 option(BUILD_VISUALIZER "Build Visualizer" ON)
 mark_as_advanced(BUILD_VISUALIZER)
+option(BUILD_VISUALIZER "Build ImageVisualizer" ON)
+mark_as_advanced(BUILD_IMAGEVISUALIZER)
 option(BUILD_OBJLOADER "Build ObjLoader" ON)
 mark_as_advanced(BUILD_OBJLOADER)
 option(BUILD_VIS3D "Build Vis3D" ON)
@@ -261,6 +263,29 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_VISUALIZER)
         INSTALL(TARGETS demoVisualizer RUNTIME DESTINATION bin)
 
 endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_VISUALIZER)
+
+###############################################################################
+#
+# PUTAR ImageVisualizer
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_IMAGEVISUALIZER)
+
+        file(GLOB IMAGEVISUALIZER_SOURCES
+            "${CMAKE_SOURCE_DIR}/src/ImageVisualizer/*.cpp"
+        )
+        file(GLOB IMAGEVISUALIZER_HEADERS
+            "${CMAKE_SOURCE_DIR}/include/putar/ImageVisualizer/*.h"
+        )
+        ADD_LIBRARY(ImageVisualizer STATIC ${IMAGEVISUALIZER_SOURCES} ${IMAGEVISUALIZER_HEADERS})
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY})
+        else()
+            TARGET_LINK_LIBRARIES(Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY})
+        endif()
+
+endif(BUILD_PUTAR AND BUILD_VISUALIZER)
 
 ###############################################################################
 #
