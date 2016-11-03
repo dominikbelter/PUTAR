@@ -69,10 +69,10 @@ public:
     void update(const putar::Mat34& objectState);
     
     /// Updates mesh
-    virtual void updateMesh(const Object3D& mesh) = 0;
+    void updateMesh(const Object3D& mesh);
     
     /// Updates cloud
-    virtual void updateCloud(cv::Mat RGBD) = 0;
+    void updateCloud(cv::Mat RGBD);
 
     /// Destruction
     ~QGLVisualizer(void);
