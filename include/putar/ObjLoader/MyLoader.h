@@ -56,7 +56,7 @@ class MyLoader : public ObjLoader {
         /// Grab image and/or point cloud
         void getMesh(Object3D& mesh) const;
 
-        void computeMask(cv::Mat& mask);
+        void computeMask(const Mat34 cameraPose, cv::Mat& mask);
 
     private:
         Mat34 poseVis;

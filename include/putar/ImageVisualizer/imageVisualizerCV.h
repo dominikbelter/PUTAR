@@ -5,13 +5,14 @@
 #include "Utilities/observer.h"
 #include <iostream>
 #include <string>
-#include "ImageVisualizer.h"
+#include "opencvCore.h"
+#include "imageVisualizer.h"
 
 
 namespace putar{
 	
 	//create ImageVisualizer object
-	ImageVisualizer* myImageVisualizer(void);
+    ImageVisualizer* createMyImageVisualizer(void);
 }
 
 using namespace putar;
@@ -21,19 +22,19 @@ class ImageVisualizerCV: public ImageVisualizer{
 	public:
 	
 	// Pointer
-	typedef unique_ptr<ImageVisualizerCV> Ptr;
+    typedef std::unique_ptr<ImageVisualizerCV> Ptr;
 	
 	// Constructor
 	ImageVisualizerCV(void){}
 	
 	// update the Cloud
-	void updateCloud(cv::Mat RGBD)
+    void updateFrame(cv::Mat RGBD, cv::Mat depthImg);
 	
 	// update Mask
-	void updateImage(cv::Mat Mask)
+    void updateMask(cv::Mat Mask);
 	
 	// Desctructor
 	~ImageVisualizerCV(){}
-}
+};
 
 #endif

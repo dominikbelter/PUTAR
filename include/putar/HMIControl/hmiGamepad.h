@@ -1,10 +1,15 @@
 #ifndef HMIGAMEPAD_H_INCLUDED
 #define HMIGAMEPAD_H_INCLUDED
 
+#include "hmi.h"
+
 namespace putar {
 
     class HmiGamepad : public Hmi {
     public:
+
+        /// Pointer
+        typedef std::unique_ptr<HmiGamepad> Ptr;
 
         /// overloaded constructor
         HmiGamepad() {}
@@ -14,6 +19,6 @@ namespace putar {
         
         /// Virtual descrutor
         virtual ~HmiGamepad() {}
-}
+};
 
 #endif

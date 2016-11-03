@@ -7,7 +7,7 @@
 using namespace putar;
 using namespace std;
 
-HMIGamepad::Ptr HMIGamepad;
+HmiGamepad::Ptr HMIGamepad;
 
 virtual void updatePose(const Mat34& pose){
         throw runtime_error("updatePose method is not implemented");

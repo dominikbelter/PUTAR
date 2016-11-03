@@ -29,7 +29,7 @@ void My3dsLoader::getMesh(Object3D& mesh) const{
     throw std::runtime_error("getMesh method is not implemented\n");
 }
 
-void My3dsLoader::computeMask(cv::Mat& mask){
+void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask){
     std::cout << mask.rows << "\n";
     throw std::runtime_error("compute Mask method is not implemented\n");
 }

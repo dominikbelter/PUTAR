@@ -39,7 +39,7 @@ namespace putar {
             /// Grab image and/or point cloud
             virtual void getMesh(Object3D& mesh) const = 0;
 
-            virtual void computeMask(cv::Mat& mask) = 0;
+            virtual void computeMask(const Mat34 cameraPose,cv::Mat& mask) = 0;
 
             /// Virtual descrutor
             virtual ~ObjLoader() {}
