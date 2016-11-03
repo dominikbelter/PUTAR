@@ -51,7 +51,7 @@ public:
             backgroundColor.setRedF(rgba[0]); backgroundColor.setGreenF(rgba[1]);
             backgroundColor.setBlueF(rgba[2]); backgroundColor.setAlphaF(rgba[3]);
         }
-
+    
         public:
             /// verbose
             bool verbose;
@@ -67,6 +67,12 @@ public:
 
     /// update object state
     void update(const putar::Mat34& objectState);
+    
+    /// Updates mesh
+    virtual void updateMesh(const Object3D& mesh) = 0;
+    
+    /// Updates cloud
+    virtual void updateCloud(cv::Mat RGBD) = 0;
 
     /// Destruction
     ~QGLVisualizer(void);
