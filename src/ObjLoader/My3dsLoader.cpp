@@ -34,6 +34,11 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask){
     throw std::runtime_error("compute Mask method is not implemented\n");
 }
 
+/// Attach visualizer
+void My3dsLoader::attachVisualizer(QGLVisualizer* visualizer) {
+    attach(visualizer);
+}
+
 putar::ObjLoader* putar::createMy3dsLoader(void) {
     my3dsLoader.reset(new My3dsLoader());
     return my3dsLoader.get();

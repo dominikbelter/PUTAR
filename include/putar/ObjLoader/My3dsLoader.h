@@ -21,7 +21,7 @@ namespace putar {
 using namespace putar;
 
 /// ObjLoader implementation
-class My3dsLoader : public ObjLoader {
+class My3dsLoader : public ObjLoader, public Subject {
     public:
 
         /// Pointer
@@ -54,6 +54,9 @@ class My3dsLoader : public ObjLoader {
 
         /// Grab image and/or point cloud
         void getMesh(Object3D& mesh) const;
+
+        ///Attach visualizer
+        void attachVisualizer(QGLVisualizer* visualizer);
 
         void computeMask(const Mat34 cameraPose,cv::Mat& mask);
 

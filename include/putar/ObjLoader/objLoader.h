@@ -9,6 +9,7 @@
 
 #include "../Defs/defs.h"
 #include "Utilities/observer.h"
+#include "Visualizer/Qvisualizer.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -40,6 +41,9 @@ namespace putar {
             virtual void getMesh(Object3D& mesh) const = 0;
 
             virtual void computeMask(const Mat34 cameraPose,cv::Mat& mask) = 0;
+
+            /// Attach visualizer
+            virtual void attachVisualizer(QGLVisualizer* visualizer) = 0;
 
             /// Virtual descrutor
             virtual ~ObjLoader() {}

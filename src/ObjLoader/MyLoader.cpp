@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <chrono>
 #include <thread>
+#include <random>
 
 using namespace putar;
 
@@ -20,7 +21,7 @@ const std::string& MyLoader::getName() const {
 /// Returns the current 2D image
 void MyLoader::loadObj(std::string filename){
     std::cout << filename << "\n";
-    throw std::runtime_error("LoadObj method is not implemented\n");
+    //throw std::runtime_error("LoadObj method is not implemented\n");
 }
 
 /// Grab image and/or point cloud
@@ -29,9 +30,20 @@ void MyLoader::getMesh(Object3D& mesh) const{
     throw std::runtime_error("getMesh method is not implemented\n");
 }
 
+/// Attach visualizer
+void MyLoader::attachVisualizer(QGLVisualizer* visualizer) {
+    attach(visualizer);
+}
+
 void MyLoader::computeMask(const Mat34 cameraPose, cv::Mat& mask){
-    std::cout << mask.rows << "\n";
-    throw std::runtime_error("compute Mask method is not implemented\n");
+    std::random_device rd;
+    std::mt19937 e2(rd());
+    std::default_random_engine generator;
+    std::normal_distribution<double> distribution(0.0,0.2);
+    Mat34 objPose(Mat34::Identity());
+    for (int i=0;i<3;i++)
+        objPose(i,3) = distribution(e2);
+    notify(objPose);
 }
 
 putar::ObjLoader* putar::createMyLoader(void) {

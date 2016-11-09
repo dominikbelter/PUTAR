@@ -11,11 +11,11 @@ using namespace putar;
 /// A single instance of Visualizer
 QGLVisualizer::Ptr visualizer;
 
-QGLVisualizer::QGLVisualizer(void){
+QGLVisualizer::QGLVisualizer(void) : objectPose(Mat34::Identity()){
 }
 
 /// Construction
-QGLVisualizer::QGLVisualizer(std::string configFilename) : config(configFilename){
+QGLVisualizer::QGLVisualizer(std::string configFilename) : config(configFilename), objectPose(Mat34::Identity()){
 }
 
 /// Destruction
@@ -27,6 +27,12 @@ QGLVisualizer::~QGLVisualizer(void) {
 
 /// draw objects
 void QGLVisualizer::draw(){
+    double GLmat[16]={objectPose(0,0), objectPose(1,0), objectPose(2,0), 0, objectPose(0,1), objectPose(1,1), objectPose(2,1), 0, objectPose(0,2), objectPose(1,2), objectPose(2,2), 0, objectPose(0,3), objectPose(1,3), objectPose(2,3), 1};
+    glPushMatrix();
+    glMultMatrixd(GLmat);
+    glutSolidTeapot(0.1);
+    glPopMatrix();
+
     drawAxis();
 }
 
@@ -36,20 +42,19 @@ void QGLVisualizer::animate(){
 
 /// update object state
 void QGLVisualizer::update(const putar::Mat34& objectState){
-    std::cout << objectState.matrix();
-    throw std::runtime_error("Visualizer Error: update method is not implemented\n");
+    objectPose = objectState;
 }
 
 /// initialize visualizer
 void QGLVisualizer::init(){
     // Light setup
-    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0);
-    GLfloat specular_color[4] = { 0.99f, 0.99f, 0.99f, 1.0f };
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  specular_color);
+//    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0);
+//    GLfloat specular_color[4] = { 0.99f, 0.99f, 0.99f, 1.0f };
+//    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  specular_color);
 
-    //Set global ambient light
-    GLfloat black[] = {0.99f, 0.99f, 0.99f, 1.0f};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, black);
+//    //Set global ambient light
+//    GLfloat black[] = {0.99f, 0.99f, 0.99f, 1.0f};
+//    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, black);
 
     glEnable(GL_AUTO_NORMAL);
     glEnable(GL_NORMALIZE);

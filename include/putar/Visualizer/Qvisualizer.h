@@ -98,6 +98,8 @@ private:
 
     bool shadowFlag = false;
 
+    /// object pose
+    Mat34 objectPose;
 };
 
 #endif // QVISUALIZER_H_INCLUDED

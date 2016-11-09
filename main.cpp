@@ -2,6 +2,9 @@
 #include "ObjLoader/MyLoader.h"
 #include "ImageVisualizer/imageVisualizerCV.h"
 #include "3rdParty/tinyXML/tinyxml2.h"
+#include "Visualizer/Qvisualizer.h"
+#include <GL/glut.h>
+#include <QApplication>
 #include <iostream>
 #include <thread>
 
@@ -9,7 +12,22 @@
 //    slam->process();
 //}
 
-int main()
+void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
+    while(1){
+        Mat34 camPose;
+        //slam.getPose(camPose);
+        cv::Mat rgbImg;
+        cv::Mat depthImg;
+        //slam.getFrame(rgbImg, depthImg);
+        cv::Mat mask;
+        objLoader->computeMask(camPose, mask);
+
+        visu2D->updateMask(mask);
+        visu2D->updateFrame(rgbImg,depthImg);
+    }
+}
+
+int main(int argc, char** argv)
 {
     try {
         using namespace putar;
@@ -19,9 +37,19 @@ int main()
         config.LoadFile("../../resources/configGlobal.xml");
         if (config.ErrorID())
             std::cout << "unable to load config file.\n";
-        //std::string simConfig = config.FirstChildElement( "Environment" )->Attribute("config");
+        std::string visualizerConfig(config.FirstChildElement( "Visualizer" )->FirstChildElement("config")->GetText());
+        std::string visualizerType(config.FirstChildElement( "Visualizer" )->FirstChildElement("type")->GetText());
+
+        QApplication application(argc,argv);
+        setlocale(LC_NUMERIC,"C");
+        glutInit(&argc, argv);
+
+        QGLVisualizer visu(visualizerConfig);
+        visu.setWindowTitle("Simulator viewer");
+        visu.show();
 
         ObjLoader* objLoader = putar::createMyLoader();
+        objLoader->attachVisualizer(&visu);
 
         objLoader->loadObj("kamien.obj");
 
@@ -31,20 +59,12 @@ int main()
 
         //std::thread processThr(processSLAM, &slam);
 
-        while(1){
-            Mat34 camPose;
-            //slam.getPose(camPose);
-            cv::Mat rgbImg;
-            cv::Mat depthImg;
-            //slam.getFrame(rgbImg, depthImg);
-            cv::Mat mask;
-            objLoader->computeMask(camPose, mask);
+        std::thread putarThr(processPUTAR, objLoader, visu2D);
 
-            visu2D->updateMask(mask);
-            visu2D->updateFrame(rgbImg,depthImg);
-        }
+        application.exec();
 
         //processThr.join();
+        putarThr.join();
 
         std::cout << "Done\n";
     }
