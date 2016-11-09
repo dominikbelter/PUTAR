@@ -11,13 +11,16 @@
 #include "Utilities/observer.h"
 #include <iostream>
 #include <string>
-#include <vector>
-#include <mutex>
 
 namespace putar{
 	class Hmi{
-		public:					
+        public:
+
+            Hmi() {}
+
 			virtual void updatePose(const Mat34& pose); 
+
+            virtual ~Hmi(){}
 	};
 }
 

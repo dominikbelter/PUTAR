@@ -1,24 +1,35 @@
-#ifndef HMIGAMEPAD_H_INCLUDED
-#define HMIGAMEPAD_H_INCLUDED
+#ifndef _HMIGAMEPAD_H_
+#define _HMIGAMEPAD_H_
 
 #include "hmi.h"
+#include "../Defs/defs.h"
+#include "Utilities/observer.h"
+#include <iostream>
+#include <string>
+#include "opencvCore.h"
 
 namespace putar {
 
-    class HmiGamepad : public Hmi {
+    Hmi* createMyHmiGamepad(void);
+}
+
+using namespace putar;
+
+
+class HmiGamepad : public Hmi {
     public:
 
-        /// Pointer
+        // Pointer
         typedef std::unique_ptr<HmiGamepad> Ptr;
 
-        /// overloaded constructor
+        // overloaded constructor
         HmiGamepad() {}
         
-        /// Updates pose
-        virtual void updatePose(const Mat34& pose);
+        // Updates pose
+        void updatePose(const Mat34& pose);
         
-        /// Virtual descrutor
-        virtual ~HmiGamepad() {}
+        // Virtual descrutor
+        ~HmiGamepad() {}
 };
 
 #endif

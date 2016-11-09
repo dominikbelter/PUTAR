@@ -5,11 +5,10 @@
 #include <thread>
 
 using namespace putar;
-using namespace std;
 
-HmiGamepad::Ptr HMIGamepad;
+HmiGamepad::Ptr HmiGamepad;
 
-virtual void updatePose(const Mat34& pose){
-        throw runtime_error("updatePose method is not implemented");
+void updatePose(const Mat34& pose){
+//        throw std::runtime_error("updatePose method is not implemented");
 }
 
