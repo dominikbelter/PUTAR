@@ -3,6 +3,7 @@
 #include "ImageVisualizer/imageVisualizerCV.h"
 #include "3rdParty/tinyXML/tinyxml2.h"
 #include "Visualizer/Qvisualizer.h"
+#include "HMIControl/hmiGamepad.h"
 #include <GL/glut.h>
 #include <QApplication>
 #include <iostream>
@@ -56,6 +57,8 @@ int main(int argc, char** argv)
         //PUTSLAM slam;
 
         ImageVisualizer* visu2D = putar::createMyImageVisualizer();
+
+        Hmi* hmiDev = putar::createMyHmiGamepad();
 
         //std::thread processThr(processSLAM, &slam);
 

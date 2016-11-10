@@ -9,7 +9,6 @@
 #include "opencvCore.h"
 
 namespace putar {
-
     Hmi* createMyHmiGamepad(void);
 }
 

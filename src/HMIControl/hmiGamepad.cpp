@@ -12,3 +12,6 @@ void updatePose(const Mat34& pose){
 //        throw std::runtime_error("updatePose method is not implemented");
 }
 
+Hmi* putar::createMyHmiGamepad(void){
+//todo
+}
