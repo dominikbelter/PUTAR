@@ -8,8 +8,14 @@
 #include <string>
 #include "opencvCore.h"
 
+
+#include "../../3rdParty/tinyXML/tinyxml2.h"
+#include <thread>
+#include <mutex>
+
 namespace putar {
     Hmi* createMyHmiGamepad(void);
+    Hmi* createMyHmiGamepad(std::string configFilename);
 }
 
 using namespace putar;
@@ -20,15 +26,49 @@ class HmiGamepad : public Hmi {
 
         // Pointer
         typedef std::unique_ptr<HmiGamepad> Ptr;
+    class Config
+    {
+
+      public:
+        Config(){
+        }
+
+        Config(std::string configFilename){
+            load(configFilename);
+        }
+
+        void load(std::string configFilename) {
+            tinyxml2::XMLDocument config;
+            std::string filename = "../../resources/" + configFilename;
+            config.LoadFile(filename.c_str());
+            if (config.ErrorID())
+                std::cout << "unable to load HmiGamepad config file: " + filename << std::endl;
+            tinyxml2::XMLElement * model = config.FirstChildElement( "HmiGamepadConfig" );
+            devicename = model->FirstChildElement( "parameters" )->Attribute("devicename");
+            model->FirstChildElement( "parameters" )->QueryFloatAttribute("delay", &delay);
+        }
+
+        public:
+            /// devicename
+            std::string devicename;
+            /// delay
+            float delay;
+    };
 
         // overloaded constructor
-        HmiGamepad() {}
+        HmiGamepad(void);
+
+        /// Construction
+        HmiGamepad(std::string configFilename);
         
         // Updates pose
         void updatePose(const Mat34& pose);
         
         // Virtual descrutor
-        ~HmiGamepad() {}
+        ~HmiGamepad(){}
+private:
+        ///config
+        Config config;
 };
 
 #endif

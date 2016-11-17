@@ -18,7 +18,7 @@ namespace putar{
 
             Hmi() {}
 
-			virtual void updatePose(const Mat34& pose); 
+            virtual void updatePose(const Mat34& pose) = 0;
 
             virtual ~Hmi(){}
 	};
