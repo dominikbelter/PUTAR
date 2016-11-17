@@ -12,6 +12,7 @@
 //void processSLAM(PUTSLAM* slam){
 //    slam->process();
 //}
+// test
 
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
     while(1){
