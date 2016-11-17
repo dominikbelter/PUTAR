@@ -43,7 +43,6 @@ class My3dsLoader : public ObjLoader, public Subject {
             fileName=posXML->Attribute("fileName");
             std::string textureFormat;
             textureFormat=posXML->Attribute("textureFormat");
-            std::cout<<"Loaded 3ds config file. FileName: " <<fileName <<std::endl;
         }
 
         /// Name of the grabber

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    
+
+<Configuration>
   <Visualizer useVisualizer="true">
 	<type>QGLViewer</type>
 	<config>QVisualizerConfig.xml</config>
   </Visualizer>
+
+  <Loader3ds>
+	<config>3dsLoaderConfig.xml</config>
+  </Loader3ds>
+</Configuration>
