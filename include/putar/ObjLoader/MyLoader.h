@@ -45,6 +45,15 @@ class MyLoader : public ObjLoader, public Subject {
             posXML->QueryDoubleAttribute("x", &queryPos[0]); posXML->QueryDoubleAttribute("y", &queryPos[1]); posXML->QueryDoubleAttribute("z", &queryPos[2]);
             pose = Quaternion (query[0], query[1], query[2], query[3])*Vec3(queryPos[0], queryPos[1], queryPos[2]);
             */
+
+            tinyxml2::XMLElement * posXML = config.FirstChildElement( "MyLoader" )->FirstChildElement("parameters");
+            std::string fileName;
+            fileName=posXML->Attribute("fileName");
+
+            std::cout<<"Loaded obj config file. FileName: " <<fileName <<std::endl;
+
+
+
         }
 
         /// Name of the grabber
