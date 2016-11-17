@@ -9,7 +9,7 @@ using namespace putar;
 /// A single instance of Kinect grabber
 My3dsLoader::Ptr my3dsLoader;
 
-My3dsLoader::My3dsLoader(void) : ObjLoader("My Loader", TYPE_3DS) {
+My3dsLoader::My3dsLoader(void) : ObjLoader("My 3dsLoader", TYPE_3DS) {
 
 }
 

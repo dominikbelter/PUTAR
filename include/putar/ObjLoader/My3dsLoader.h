@@ -37,13 +37,13 @@ class My3dsLoader : public ObjLoader, public Subject {
             config.LoadFile(filename.c_str());
             if (config.ErrorID())
                 std::cout << "unable to load ObjLoader config file.\n";
-            /*tinyxml2::XMLElement * posXML = config.FirstChildElement( "pose" );
-            double query[4];
-            posXML->QueryDoubleAttribute("qw", &query[0]); posXML->QueryDoubleAttribute("qx", &query[1]); posXML->QueryDoubleAttribute("qy", &query[2]); posXML->QueryDoubleAttribute("qz", &query[3]);
-            double queryPos[4];
-            posXML->QueryDoubleAttribute("x", &queryPos[0]); posXML->QueryDoubleAttribute("y", &queryPos[1]); posXML->QueryDoubleAttribute("z", &queryPos[2]);
-            pose = Quaternion (query[0], query[1], query[2], query[3])*Vec3(queryPos[0], queryPos[1], queryPos[2]);
-            */
+
+            tinyxml2::XMLElement * posXML = config.FirstChildElement( "My3dsLoader" )->FirstChildElement("parameters");
+            std::string fileName;
+            fileName=posXML->Attribute("fileName");
+            std::string textureFormat;
+            textureFormat=posXML->Attribute("textureFormat");
+            std::cout<<"Loaded 3ds config file. FileName: " <<fileName <<std::endl;
         }
 
         /// Name of the grabber

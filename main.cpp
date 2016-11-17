@@ -1,5 +1,6 @@
 #include "Defs/defs.h"
 #include "ObjLoader/MyLoader.h"
+#include "ObjLoader/My3dsLoader.h"
 #include "ImageVisualizer/imageVisualizerCV.h"
 #include "3rdParty/tinyXML/tinyxml2.h"
 #include "Visualizer/Qvisualizer.h"
@@ -49,7 +50,12 @@ int main(int argc, char** argv)
         visu.setWindowTitle("Simulator viewer");
         visu.show();
 
-        ObjLoader* objLoader = putar::createMyLoader();
+        ObjLoader* objLoader;// = putar::createMyLoader();
+        if (0)
+            objLoader = putar::createMyLoader();
+        else{
+            objLoader = putar::createMy3dsLoader("3dsLoaderConfig.xml");
+        }
         objLoader->attachVisualizer(&visu);
 
         objLoader->loadObj("kamien.obj");

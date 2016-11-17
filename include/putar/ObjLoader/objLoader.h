@@ -28,6 +28,7 @@ namespace putar {
                     TYPE_3DS
             };
 
+
             /// overloaded constructor
             ObjLoader(const std::string _name, Type _type) : name(_name), type(_type) {}
 
