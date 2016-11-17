@@ -23,7 +23,7 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
         cv::Mat mask;
         objLoader->computeMask(camPose, mask);
 
-        visu2D->updateMask(mask);
+        visu2D->updateMask(mask, mask);
         visu2D->updateFrame(rgbImg,depthImg);
     }
 }
@@ -56,7 +56,8 @@ int main(int argc, char** argv)
 
         //PUTSLAM slam;
 
-        ImageVisualizer* visu2D = putar::createMyImageVisualizer();
+        ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
+
 
         Hmi* hmiDev = putar::createMyHmiGamepad();
 
