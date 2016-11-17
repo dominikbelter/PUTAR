@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MyLoader>
+	<object>
+		<radBase></radBase>
+		<radTop></radTop>
+		<high></high>
+		
+		<colora></colora>
+		<colorb></colorb>
+		<colorc></colorc>
+	</object>
+</MyLoader>
+
