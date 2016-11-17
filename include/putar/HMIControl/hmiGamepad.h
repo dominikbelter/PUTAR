@@ -44,14 +44,8 @@ class HmiGamepad : public Hmi {
             if (config.ErrorID())
                 std::cout << "unable to load HmiGamepad config file: " + filename << std::endl;
             tinyxml2::XMLElement * model = config.FirstChildElement( "HmiGamepadConfig" );
-            //model->FirstChildElement( "parameters" )->QueryStringAttribute(&devicename);
-            //devicename = model->FirstChildElement("parameters")->FirstChildElement("devicename");
             devicename = model->FirstChildElement( "parameters" )->Attribute("devicename");
-            std::cout<<"test3\n";
             model->FirstChildElement( "parameters" )->QueryFloatAttribute("delay", &delay);
-            std::cout<<"test4\n";
-            std::cout<<"devicename:"<<devicename<<std::endl;
-            std::cout<<"delay:"<<delay<<std::endl;
         }
 
         public:
