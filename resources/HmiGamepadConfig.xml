@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!-- HmiGamepad configuration -->
+  <HmiGamepadConfig>
+  	<name>HmiGamepad</name>
+	<parameters devicename="gamepad" delay="0.1"></parameters>
+  </HmiGamepadConfig>

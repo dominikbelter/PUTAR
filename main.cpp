@@ -58,7 +58,7 @@ int main(int argc, char** argv)
 
         ImageVisualizer* visu2D = putar::createMyImageVisualizer();
 
-        Hmi* hmiDev = putar::createMyHmiGamepad();
+        Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
         //std::thread processThr(processSLAM, &slam);
 
