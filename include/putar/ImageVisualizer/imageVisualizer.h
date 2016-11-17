@@ -13,10 +13,10 @@ namespace putar{
 			ImageVisualizer() {}
 			
 			// update the Cloud
-            virtual void updateFrame(cv::Mat RGBD, cv::Mat depthImg) = 0;
+            virtual void updateFrame(cv::Mat RGB, cv::Mat depthImg) = 0;
 			
 			// update Mask
-            virtual void updateMask(cv::Mat Mask) = 0;
+            virtual void updateMask(cv::Mat mask, cv::Mat depthMask) = 0;
 			
 			// Virtual destructor
 			virtual ~ImageVisualizer(){}

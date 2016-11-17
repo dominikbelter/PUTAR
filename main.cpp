@@ -13,6 +13,7 @@
 //void processSLAM(PUTSLAM* slam){
 //    slam->process();
 //}
+// test
 
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
     while(1){
@@ -24,7 +25,7 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
         cv::Mat mask;
         objLoader->computeMask(camPose, mask);
 
-        visu2D->updateMask(mask);
+        visu2D->updateMask(mask, mask);
         visu2D->updateFrame(rgbImg,depthImg);
     }
 }
@@ -62,9 +63,10 @@ int main(int argc, char** argv)
 
         //PUTSLAM slam;
 
-        ImageVisualizer* visu2D = putar::createMyImageVisualizer();
+        ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
 
-        Hmi* hmiDev = putar::createMyHmiGamepad();
+
+        Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
         //std::thread processThr(processSLAM, &slam);
 
