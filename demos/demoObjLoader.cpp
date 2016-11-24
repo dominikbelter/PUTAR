@@ -1,62 +1,76 @@
-/** @file objLoader.h
- *
- * Obj Loade interface
- *
- */
 
-#ifndef _OBJLOADER_H_
-#define _OBJLOADER_H_
-
-#include "../Defs/defs.h"
-#include "Utilities/observer.h"
+#include "Defs/defs.h"
+#include "ObjLoader/MyLoader.h"
+#include "ObjLoader/My3dsLoader.h"
+#include "ImageVisualizer/imageVisualizerCV.h"
+#include "3rdParty/tinyXML/tinyxml2.h"
 #include "Visualizer/Qvisualizer.h"
+#include "HMIControl/hmiGamepad.h"
+#include <GL/glut.h>
+#include <QApplication>
 #include <iostream>
-#include <string>
-#include <vector>
-#include <mutex>
+#include <thread>
 
-namespace putar {
-    /// OBJLOADER interface
-    class ObjLoader {
-        public:
+//void processSLAM(PUTSLAM* slam){
+//    slam->process();
+//}
+// test
 
-            /// ObjLoader type
-            enum Type {
-                    /// OBJ camera
-                    TYPE_OBJ,
-                    /// 3ds
-                    TYPE_3DS
-            };
+void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
+    while(1){
+        Mat34 camPose;
+        //slam.getPose(camPose);
+        cv::Mat rgbImg;
+        cv::Mat depthImg;
+        //slam.getFrame(rgbImg, depthImg);
+        cv::Mat mask;
+        objLoader->computeMask(camPose, mask);
 
+        visu2D->updateMask(mask, mask);
+        visu2D->updateFrame(rgbImg,depthImg);
+    }
 
-            /// overloaded constructor
-            ObjLoader(const std::string _name, Type _type) : name(_name), type(_type) {}
-
-            /// Name of the grabber
-            virtual const std::string& getName() const = 0;
-
-            /// Returns the current 2D image
-            virtual void loadObj(std::string filename) = 0;
-
-            /// Grab image and/or point cloud
-            virtual void getMesh(Object3D& mesh) const = 0;
-
-            virtual void computeMask(const Mat34 cameraPose,cv::Mat& mask) = 0;
-
-            /// Attach visualizer
-            virtual void attachVisualizer(QGLVisualizer* visualizer) = 0;
-
-            /// Virtual descrutor
-            virtual ~ObjLoader() {}
-
-        protected:
-            /// Grabber name
-            const std::string name;
-
-            /// Grabber type
-            Type type;
-
-    };
 }
 
-#endif // _OBJLOADER_H_
+int main(int argc, char** argv)
+{
+    try {
+        using namespace putar;
+        using namespace std;
+
+        tinyxml2::XMLDocument config;
+        config.LoadFile("../../resources/configGlobal.xml");
+        if (config.ErrorID())
+            std::cout << "unable to load config file.\n";
+        std::string visualizerConfig(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("config")->GetText());
+        std::string visualizerType(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("type")->GetText());
+        std::string Loader3dsConfig(config.FirstChildElement("Configuration")->FirstChildElement("Loader3ds")->FirstChildElement("config")->GetText());
+
+        QApplication application(argc,argv);
+        setlocale(LC_NUMERIC,"C");
+        glutInit(&argc, argv);
+
+        QGLVisualizer visu(visualizerConfig);
+        visu.setWindowTitle("Simulator viewer");
+        visu.show();
+
+
+ObjLoader* objLoader;// = putar::createMyLoader();
+if (1)
+    objLoader = putar::createMyLoader();
+else{
+    objLoader = putar::createMy3dsLoader(Loader3dsConfig);
+}
+objLoader->attachVisualizer(&visu);
+
+objLoader->loadObj("stone.obj");
+
+std::cout << "Done\n";
+}
+catch (const std::exception& ex) {
+std::cerr << ex.what() << std::endl;
+return 1;
+}
+
+return 0;
+}
