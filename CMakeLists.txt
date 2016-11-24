@@ -45,6 +45,8 @@ option(BUILD_PUTAR_DEMO_MAIN "Build main PUTAR test" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_MAIN)
 option(BUILD_PUTAR_DEMO_VISUALIZER "Build PUTAR visualizer demo" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_VISUALIZER)
+option(BUILD_PUTAR_DEMO_OBJLOADER "Build PUTAR objloader demo" ON)
+mark_as_advanced(BUILD_PUTAR_DEMO_OBJLOADER)
 
 #additional dependencies
 # Boost
