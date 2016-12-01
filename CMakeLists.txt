@@ -252,6 +252,30 @@ endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_VISUALIZER)
 ###############################################################################
 #
 #
+# PUTAR demo ObjLoader
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_OBJLOADER)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/demoObjLoader.cpp)
+        ADD_EXECUTABLE(demoObjLoader ${DEMO_SOURCES})
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(demoObjLoader ObjLoader tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+        else()
+            TARGET_LINK_LIBRARIES(demoObjLoader ObjLoader tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+        endif()
+        INSTALL(TARGETS demoObjLoader RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_OBJLOADER)
+
+
+
+
+
+###############################################################################
+#
+#
 # PUTAR demo PUTSLAM
 #
 ###############################################################################
