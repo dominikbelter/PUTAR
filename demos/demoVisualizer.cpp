@@ -15,8 +15,9 @@ int main(int argc, char** argv)
         config.LoadFile("../../resources/configGlobal.xml");
         if (config.ErrorID())
             std::cout << "unable to load config file.\n";
-        std::string visualizerConfig(config.FirstChildElement( "Visualizer" )->FirstChildElement("config")->GetText());
-        std::string visualizerType(config.FirstChildElement( "Visualizer" )->FirstChildElement("type")->GetText());
+        std::string visualizerConfig(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("config")->GetText());
+        std::string visualizerType(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("type")->GetText());
+        std::string Loader3dsConfig(config.FirstChildElement("Configuration")->FirstChildElement("Loader3ds")->FirstChildElement("config")->GetText());
 
         QApplication application(argc,argv);
         setlocale(LC_NUMERIC,"C");

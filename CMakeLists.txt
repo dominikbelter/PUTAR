@@ -49,6 +49,8 @@ option(BUILD_PUTAR_DEMO_OBJLOADER "Build PUTAR objloader demo" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_OBJLOADER)
 option(BUILD_PUTAR_DEMO_PUTSLAM "Build PUTAR PUTSLAM demo" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_PUTSLAM)
+option(BUILD_PUTAR_DEMO_HMICONTROL "Build PUTAR HMIControl demo" ON)
+mark_as_advanced(BUILD_PUTAR_DEMO_HMICONTROL)
 
 #additional dependencies
 # Boost
@@ -268,6 +270,26 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_PUTSLAM)
         INSTALL(TARGETS demoPUTSLAM RUNTIME DESTINATION bin)
 
 endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_PUTSLAM)
+
+###############################################################################
+#
+#
+# PUTAR demo HMIControl
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_HMICONTROL)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/demoHMIControl.cpp)
+        ADD_EXECUTABLE(demoHMIControl ${DEMO_SOURCES})
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(demoHMIControl HMIControl Visualizer tinyxml2 ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+        else()
+            TARGET_LINK_LIBRARIES(demoHMIControl HMIControl Visualizer tinyxml2 ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+        endif()
+        INSTALL(TARGETS demoHMIControl RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_HMICONTROL)
 
 ###############################################################################
 #
