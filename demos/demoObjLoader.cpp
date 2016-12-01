@@ -12,6 +12,7 @@
 #include <thread>
 
 
+
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
     while(1){
         Mat34 camPose;
