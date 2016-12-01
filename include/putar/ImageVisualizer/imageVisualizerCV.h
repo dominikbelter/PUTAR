@@ -45,6 +45,7 @@ class ImageVisualizerCV: public ImageVisualizer{
                 std::cout << "unable to load Visualizer config file: " + filename << std::endl;
             tinyxml2::XMLElement * model = config.FirstChildElement( "ImageVisualizer" );
             windowName=model->FirstChildElement( "parameters" )->Attribute("windowName");
+
         }
     
         public:

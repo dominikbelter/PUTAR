@@ -49,6 +49,8 @@ option(BUILD_PUTAR_DEMO_OBJLOADER "Build PUTAR objloader demo" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_OBJLOADER)
 option(BUILD_PUTAR_DEMO_PUTSLAM "Build PUTAR PUTSLAM demo" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_PUTSLAM)
+option(BUILD_PUTAR_DEMO_IMAGEVISUALIZER "Build main PUTAR test" ON)
+mark_as_advanced(BUILD_PUTAR_DEMO_IMAGEVISUALIZER)
 
 #additional dependencies
 # Boost
@@ -292,6 +294,28 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_PUTSLAM)
         INSTALL(TARGETS demoPUTSLAM RUNTIME DESTINATION bin)
 
 endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_PUTSLAM)
+
+###############################################################################
+#
+#
+# PUTAR  demo ImageVisualizer
+#
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_IMAGEVISUALIZER)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/demoImageVisualizer.cpp)
+        ADD_EXECUTABLE(demoImageVisualizer ${DEMO_SOURCES})
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(demoImageVisualizer  tinyxml2  )
+        else()
+            TARGET_LINK_LIBRARIES(demoImageVisualizer tinyxml2 )
+        endif()
+        INSTALL(TARGETS demoImageVisualizer RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_IMAGEVISUALIZER)
+
 
 ###############################################################################
 #
