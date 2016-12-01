@@ -56,33 +56,7 @@ int main(int argc, char** argv)
         visu.setWindowTitle("Simulator viewer");
         visu.show();
 
-        ObjLoader* objLoader;// = putar::createMyLoader();
-        if (1)
-            objLoader = putar::createMyLoader();
-        else{
-            objLoader = putar::createMy3dsLoader(Loader3dsConfig);
-        }
-        objLoader->attachVisualizer(&visu);
 
-        objLoader->loadObj("kamien.obj");
-
-        //PUTSLAM slam;
-
-        ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
-
-
-        Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
-
-        //std::thread processThr(processSLAM, &slam);
-
-        std::thread putarThr(processPUTAR, objLoader, visu2D);
-
-        application.exec();
-
-        //processThr.join();
-        putarThr.join();
-
-        std::cout << "Done\n";
     }
     catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;

@@ -7,6 +7,11 @@
 
 using namespace putar;
 
+
+
+
+
+
 /// A single instance of Kinect grabber
 MyLoader::Ptr myLoader;
 

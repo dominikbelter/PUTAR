@@ -6,7 +6,9 @@
 
 using namespace putar;
 
-/// A single instance of Kinect grabber
+
+
+/// A single instance of 3ds Loader grabber
 My3dsLoader::Ptr my3dsLoader;
 
 My3dsLoader::My3dsLoader(void) : ObjLoader("My 3dsLoader", TYPE_3DS) {

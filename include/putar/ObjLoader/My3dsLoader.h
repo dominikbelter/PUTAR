@@ -12,6 +12,7 @@
 #include <iostream>
 #include <memory>
 
+
 namespace putar {
     /// create a single ObjLoader
     ObjLoader* createMy3dsLoader(void);
@@ -23,6 +24,7 @@ using namespace putar;
 /// ObjLoader implementation
 class My3dsLoader : public ObjLoader, public Subject {
     public:
+
 
         /// Pointer
         typedef std::unique_ptr<My3dsLoader> Ptr;
