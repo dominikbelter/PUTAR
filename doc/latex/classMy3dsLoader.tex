@@ -1,0 +1,73 @@
+\hypertarget{classMy3dsLoader}{}\section{My3ds\+Loader Class Reference}
+\label{classMy3dsLoader}\index{My3ds\+Loader@{My3ds\+Loader}}
+
+
+Obj\+Loader implementation.  
+
+
+
+
+{\ttfamily \#include $<$My3ds\+Loader.\+h$>$}
+
+
+
+Inheritance diagram for My3ds\+Loader\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=238pt]{classMy3dsLoader__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for My3ds\+Loader\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=238pt]{classMy3dsLoader__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::unique\+\_\+ptr$<$ \hyperlink{classMy3dsLoader}{My3ds\+Loader} $>$ \hyperlink{classMy3dsLoader_a975e85ff57c2fe95a09e5c2c26377441}{Ptr}\hypertarget{classMy3dsLoader_a975e85ff57c2fe95a09e5c2c26377441}{}\label{classMy3dsLoader_a975e85ff57c2fe95a09e5c2c26377441}
+
+\begin{DoxyCompactList}\small\item\em Pointer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMy3dsLoader_a2ec15764e6501b488b47ebf85f7dfb84}{My3ds\+Loader} (void)\hypertarget{classMy3dsLoader_a2ec15764e6501b488b47ebf85f7dfb84}{}\label{classMy3dsLoader_a2ec15764e6501b488b47ebf85f7dfb84}
+
+\begin{DoxyCompactList}\small\item\em Construction. \end{DoxyCompactList}\item 
+\hyperlink{classMy3dsLoader_aa4ea934dd34962146a209cb5036e0b64}{My3ds\+Loader} (std\+::string config\+Filename)\hypertarget{classMy3dsLoader_aa4ea934dd34962146a209cb5036e0b64}{}\label{classMy3dsLoader_aa4ea934dd34962146a209cb5036e0b64}
+
+\begin{DoxyCompactList}\small\item\em Construction. \end{DoxyCompactList}\item 
+const std\+::string \& \hyperlink{classMy3dsLoader_ac42bea72ba58d139c98dd1a61267f8f8}{get\+Name} () const \hypertarget{classMy3dsLoader_ac42bea72ba58d139c98dd1a61267f8f8}{}\label{classMy3dsLoader_ac42bea72ba58d139c98dd1a61267f8f8}
+
+\begin{DoxyCompactList}\small\item\em Name of the grabber. \end{DoxyCompactList}\item 
+long \hyperlink{classMy3dsLoader_a1dc2902c070dc92b5960124cdaf11c0d}{filelength} (int f)\hypertarget{classMy3dsLoader_a1dc2902c070dc92b5960124cdaf11c0d}{}\label{classMy3dsLoader_a1dc2902c070dc92b5960124cdaf11c0d}
+
+\begin{DoxyCompactList}\small\item\em Calculate length of the file. \end{DoxyCompactList}\item 
+void \hyperlink{classMy3dsLoader_aff153c852f8e537b7ddfd961ea1231f8}{load\+Obj} ()\hypertarget{classMy3dsLoader_aff153c852f8e537b7ddfd961ea1231f8}{}\label{classMy3dsLoader_aff153c852f8e537b7ddfd961ea1231f8}
+
+\begin{DoxyCompactList}\small\item\em Returns the current 2D image. \end{DoxyCompactList}\item 
+void \hyperlink{classMy3dsLoader_a90c273b63662560b3b873794a0f54d4d}{get\+Mesh} (\hyperlink{structputar_1_1obj__type}{obj\+\_\+type} \&p\+\_\+object) const \hypertarget{classMy3dsLoader_a90c273b63662560b3b873794a0f54d4d}{}\label{classMy3dsLoader_a90c273b63662560b3b873794a0f54d4d}
+
+\begin{DoxyCompactList}\small\item\em Grab image and/or point cloud. \end{DoxyCompactList}\item 
+void \hyperlink{classMy3dsLoader_a38212071c23780b420da74ed5220192e}{attach\+Visualizer} (\hyperlink{classQGLVisualizer}{Q\+G\+L\+Visualizer} $\ast$visualizer)\hypertarget{classMy3dsLoader_a38212071c23780b420da74ed5220192e}{}\label{classMy3dsLoader_a38212071c23780b420da74ed5220192e}
+
+\begin{DoxyCompactList}\small\item\em Attach visualizer. \end{DoxyCompactList}\item 
+void {\bfseries compute\+Mask} (const \hyperlink{namespaceputar_a8bf3c8025ae8f60f553a752014c9849a}{Mat34} camera\+Pose, cv\+::\+Mat \&mask)\hypertarget{classMy3dsLoader_a7df0bbbf73e73a1ee59c3e0316111bbc}{}\label{classMy3dsLoader_a7df0bbbf73e73a1ee59c3e0316111bbc}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Obj\+Loader implementation. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Obj\+Loader/\hyperlink{My3dsLoader_8h}{My3ds\+Loader.\+h}\end{DoxyCompactItemize}
