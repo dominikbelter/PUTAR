@@ -11,7 +11,7 @@
 #include "../../3rdParty/tinyXML/tinyxml2.h"
 #include <iostream>
 #include <memory>
-
+#include <sys/stat.h>
 
 namespace putar {
     /// create a single ObjLoader
@@ -26,8 +26,12 @@ class My3dsLoader : public ObjLoader, public Subject {
     public:
 
 
+
         /// Pointer
         typedef std::unique_ptr<My3dsLoader> Ptr;
+
+
+
 
         /// Construction
         My3dsLoader(void);
@@ -41,20 +45,23 @@ class My3dsLoader : public ObjLoader, public Subject {
                 std::cout << "unable to load ObjLoader config file.\n";
 
             tinyxml2::XMLElement * posXML = config.FirstChildElement( "My3dsLoader" )->FirstChildElement("parameters");
-            std::string fileName;
-            fileName=posXML->Attribute("fileName");
-            std::string textureFormat;
-            textureFormat=posXML->Attribute("textureFormat");
+            //std::string fileName;
+            this->fileName=posXML->Attribute("fileName");
+            //std::string textureFormat;
+            //textureFormat=posXML->Attribute("textureFormat");
         }
 
         /// Name of the grabber
         const std::string& getName() const;
 
+        /// Calculate length of the file
+        long filelength(int f);
+
         /// Returns the current 2D image
-        void loadObj(std::string filename);
+        void loadObj();
 
         /// Grab image and/or point cloud
-        void getMesh(Object3D& mesh) const;
+        void getMesh(obj_type &p_object) const;
 
         ///Attach visualizer
         void attachVisualizer(QGLVisualizer* visualizer);
@@ -62,6 +69,8 @@ class My3dsLoader : public ObjLoader, public Subject {
         void computeMask(const Mat34 cameraPose,cv::Mat& mask);
 
     private:
+        std::string fileName;
+        obj_type object;
         Mat34 poseVis;
 };
 

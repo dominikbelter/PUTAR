@@ -57,14 +57,14 @@ int main(int argc, char** argv)
         visu.show();
 
         ObjLoader* objLoader;// = putar::createMyLoader();
-        if (1)
+        if (0)
             objLoader = putar::createMyLoader();
         else{
             objLoader = putar::createMy3dsLoader(Loader3dsConfig);
         }
         objLoader->attachVisualizer(&visu);
 
-        objLoader->loadObj("kamien.obj");
+        //objLoader->loadObj("kamien.obj");
 
         //PUTSLAM slam;
 

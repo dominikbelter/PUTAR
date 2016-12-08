@@ -1,4 +1,6 @@
+
 #include "Defs/defs.h"
+#include "ObjLoader/objLoader.h"
 #include "ObjLoader/MyLoader.h"
 #include "ObjLoader/My3dsLoader.h"
 #include "ImageVisualizer/imageVisualizerCV.h"
@@ -9,13 +11,6 @@
 #include <QApplication>
 #include <iostream>
 #include <thread>
-
-//void processSLAM(PUTSLAM* slam){
-//    slam->process();
-//}
-// test
-
-
 
 
 
@@ -32,6 +27,7 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
         visu2D->updateMask(mask, mask);
         visu2D->updateFrame(rgbImg,depthImg);
     }
+
 }
 
 int main(int argc, char** argv)
@@ -57,11 +53,32 @@ int main(int argc, char** argv)
         visu.show();
 
 
-    }
-    catch (const std::exception& ex) {
-        std::cerr << ex.what() << std::endl;
-        return 1;
-    }
+        ObjLoader* objLoader;// = putar::createMyLoader();
+        if (0)
+            objLoader = putar::createMyLoader();
+        else{
+            objLoader = putar::createMy3dsLoader(Loader3dsConfig);
+        }
+        objLoader->attachVisualizer(&visu);
 
-    return 0;
+        //objLoader->loadObj("stone.obj");
+        putar::obj_type object;
+
+        objLoader->loadObj();
+
+        objLoader->getMesh(object);
+
+        cout<<endl
+           <<"-----------------------"
+          <<endl
+         <<"Polygons quantity:  "<<object.polygons_qty<<endl;
+
+        std::cout << "Done\n";
+}
+catch (const std::exception& ex) {
+std::cerr << ex.what() << std::endl;
+return 1;
+}
+
+return 0;
 }

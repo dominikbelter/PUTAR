@@ -373,13 +373,34 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_3DSLOADER)
         SET(DEMO_SOURCES ./demos/demo3dsLoader.cpp)
         ADD_EXECUTABLE(demo3dsLoader ${DEMO_SOURCES})
         if(APPLE)
-            TARGET_LINK_LIBRARIES(demo3dsLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+            TARGET_LINK_LIBRARIES(demo3dsLoader ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
         else()
-            TARGET_LINK_LIBRARIES(demo3dsLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+            TARGET_LINK_LIBRARIES(demo3dsLoader ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
         endif()
         INSTALL(TARGETS demo3dsLoader RUNTIME DESTINATION bin)
 
 endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_3DSLOADER)
+
+
+################################################################################
+##
+##
+## PUTAR demo ObjLoader
+##
+################################################################################
+
+#if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_OBJLOADER)
+#        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+#        SET(DEMO_SOURCES ./demos/demoObjLoader.cpp)
+#        ADD_EXECUTABLE(demoObjLoader ${DEMO_SOURCES})
+#        if(APPLE)
+#            TARGET_LINK_LIBRARIES(demoObjLoader ObjLoader Visualizer tinyxml2 ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+#        else()
+#            TARGET_LINK_LIBRARIES(demoObjLoader ObjLoader Visualizer tinyxml2 ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+#        endif()
+#        INSTALL(TARGETS demoObjLoader RUNTIME DESTINATION bin)
+
+#endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_OBJLOADER)
 
 ###############################################################################
 #

@@ -52,15 +52,15 @@ int main(int argc, char** argv)
         visu.show();
 
 
-ObjLoader* objLoader;// = putar::createMyLoader();
-if (1)
-    objLoader = putar::createMyLoader();
-else{
-    objLoader = putar::createMy3dsLoader(Loader3dsConfig);
-}
-objLoader->attachVisualizer(&visu);
+//ObjLoader* objLoader;// = putar::createMyLoader();
+//if (1)
+//    objLoader = putar::createMyLoader();
+//else{
+//    objLoader = putar::createMy3dsLoader(Loader3dsConfig);
+//}
+//objLoader->attachVisualizer(&visu);
 
-objLoader->loadObj("stone.obj");
+//objLoader->loadObj("stone.obj");
 
 std::cout << "Done\n";
 }
