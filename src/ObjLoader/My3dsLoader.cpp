@@ -33,7 +33,7 @@ void My3dsLoader::loadObj()
 {
     obj_type_ptr p_object(&object);
     //&object;
-    std::string path = "../../resources/" + fileName;
+    std::string path = fileDIR + fileName;
 
     const char* p_filename = path.c_str();
     int i; //Index variable

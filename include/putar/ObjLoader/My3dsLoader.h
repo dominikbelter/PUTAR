@@ -45,10 +45,10 @@ class My3dsLoader : public ObjLoader, public Subject {
                 std::cout << "unable to load ObjLoader config file.\n";
 
             tinyxml2::XMLElement * posXML = config.FirstChildElement( "My3dsLoader" )->FirstChildElement("parameters");
-            //std::string fileName;
+
             this->fileName=posXML->Attribute("fileName");
-            //std::string textureFormat;
-            //textureFormat=posXML->Attribute("textureFormat");
+
+            this->fileDIR=posXML->Attribute("fileDIR");
         }
 
         /// Name of the grabber
@@ -70,6 +70,7 @@ class My3dsLoader : public ObjLoader, public Subject {
 
     private:
         std::string fileName;
+        std::string fileDIR;
         obj_type object;
         Mat34 poseVis;
 };

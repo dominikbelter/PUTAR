@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <My3dsLoader>
-	<parameters fileName="spaceship.3ds" textureFormat="BMP"></parameters>
+	<parameters fileName="spaceship.3ds" fileDIR="../../resources/"></parameters>
 </My3dsLoader>
