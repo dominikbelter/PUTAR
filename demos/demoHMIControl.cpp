@@ -19,35 +19,31 @@
 
 
 #define JOY_DEV "/dev/input/js1"
-
-
-int main()
+void Thread2(int argc, char** argv)
 {
-    int joy_fd, *axis=NULL, num_of_axis=0, num_of_buttons=0, x;
-    char *button=NULL, name_of_joystick[80];
-    struct js_event js;
+    tinyxml2::XMLDocument config;
+    config.LoadFile("../../resources/configGlobal.xml");
+    if (config.ErrorID())
+        std::cout << "unable to load config file.\n";
+    std::string visualizerConfig(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("config")->GetText());
+    std::string visualizerType(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("type")->GetText());
+    std::string Loader3dsConfig(config.FirstChildElement("Configuration")->FirstChildElement("Loader3ds")->FirstChildElement("config")->GetText());
 
-    if( ( joy_fd = open( JOY_DEV , O_RDONLY)) == -1 )
-    {
-        printf( "Couldn't open joystick\n" );
-        return -1;
-    }
+    QApplication application(argc,argv);
+    setlocale(LC_NUMERIC,"C");
+    glutInit(&argc, argv);
 
-    ioctl( joy_fd, JSIOCGAXES, &num_of_axis );
-    ioctl( joy_fd, JSIOCGBUTTONS, &num_of_buttons );
-    ioctl( joy_fd, JSIOCGNAME(80), &name_of_joystick );
-
-    axis = (int *) calloc( num_of_axis, sizeof( int ) );
-    button = (char *) calloc( num_of_buttons, sizeof( char ) );
-
-    printf("Joystick detected: %s\n\t%d axis\n\t%d buttons\n\n"
-        , name_of_joystick
-        , num_of_axis
-        , num_of_buttons );
-
-    fcntl( joy_fd, F_SETFL, O_NONBLOCK );	/* use non-blocking mode */
+    QGLVisualizer visu(visualizerConfig);
+    visu.setWindowTitle("Simulator viewer");
+    visu.show();
 
 
+    application.exec();
+    std::cout << "Finished\n";
+}
+
+void Thread(int joy_fd, struct js_event js, int *axis, char *button, int num_of_axis, int x, int num_of_buttons, int argc, char** argv)
+{
     while( 1 ) 	/* infinite loop */
     {
 
@@ -80,6 +76,42 @@ int main()
         printf("  \r");
         fflush(stdout);
     }
+}
+
+int main(int argc, char** argv)
+{
+    int joy_fd, *axis=NULL, num_of_axis=0, num_of_buttons=0, x;
+    char *button=NULL, name_of_joystick[80];
+    struct js_event js;
+
+    if( ( joy_fd = open( JOY_DEV , O_RDONLY)) == -1 )
+    {
+        printf( "Couldn't open joystick\n" );
+        return -1;
+    }
+
+    ioctl( joy_fd, JSIOCGAXES, &num_of_axis );
+    ioctl( joy_fd, JSIOCGBUTTONS, &num_of_buttons );
+    ioctl( joy_fd, JSIOCGNAME(80), &name_of_joystick );
+
+    axis = (int *) calloc( num_of_axis, sizeof( int ) );
+    button = (char *) calloc( num_of_buttons, sizeof( char ) );
+
+    printf("Joystick detected: %s\n\t%d axis\n\t%d buttons\n\n"
+        , name_of_joystick
+        , num_of_axis
+        , num_of_buttons );
+
+    fcntl( joy_fd, F_SETFL, O_NONBLOCK );	/* use non-blocking mode */
+
+
+    std::thread t(&Thread, joy_fd, js, axis, button, num_of_axis, x, num_of_buttons,argc ,argv);
+    std::thread t2(&Thread2, argc, argv);
+    t.join();
+        t2.join();
+
+
+
 
     close( joy_fd );	/* too bad we never get here */
     return 0;
