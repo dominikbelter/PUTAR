@@ -78,6 +78,17 @@ namespace putar {
             /// normal vectors
             std::vector<Vec3> normals;
     };
+
+    /// Mesh
+    class Mesh {
+        public:
+            /// vertices
+            std::vector<Eigen::Vector3f> vertices;
+            /// texture coordinates
+            std::vector<Eigen::Vector2f>  uvs;
+            /// normal vectors
+            std::vector<Eigen::Vector3f>  normals;
+    };
 }
 
 #endif // DEFS_H_INCLUDED
