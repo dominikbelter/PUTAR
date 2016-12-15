@@ -1,4 +1,4 @@
-
+#include <GL/glew.h>
 #include "Defs/defs.h"
 #include "ObjLoader/objLoader.h"
 #include "ObjLoader/MyLoader.h"
@@ -8,10 +8,27 @@
 #include "Visualizer/Qvisualizer.h"
 #include "HMIControl/hmiGamepad.h"
 #include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <QApplication>
 #include <iostream>
 #include <thread>
 
+
+
+/**********************************************************
+ *
+ * VARIABLES DECLARATION
+ *
+ *********************************************************/
+
+
+//// The width and height of your window, change them as you like
+int screen_width=640;
+int screen_height=480;
+
+
+//Now the object is generic, the cube has annoyed us a little bit, or not?
+obj_type object;
 
 
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
@@ -68,10 +85,24 @@ int main(int argc, char** argv)
 
         objLoader->getMesh(object);
 
-        cout<<endl
-           <<"-----------------------"
-          <<endl
-         <<"Polygons quantity:  "<<object.polygons_qty<<endl;
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        cv::Mat dst;
+        Mat34 cameraPose;
+
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+        glutInitWindowSize(screen_width,screen_height);
+        glutInitWindowPosition(0,0);
+        glutCreateWindow("At the moment unfortunately nesessery window");
+
+        objLoader->computeMask(cameraPose, dst);
+
+        cv::namedWindow("imgMAT");
+        cv::imshow("imgMAT", dst);
+
+        cv::waitKey(1000);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         std::cout << "Done\n";
 }

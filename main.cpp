@@ -19,7 +19,7 @@
 
 
 
-void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
+void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D, Hmi* hmiDev){
     while(1){
         Mat34 camPose;
         //slam.getPose(camPose);
@@ -27,6 +27,8 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
         cv::Mat depthImg;
         //slam.getFrame(rgbImg, depthImg);
         cv::Mat mask;
+        Mat34 objPose;
+        hmiDev->updatePose(objPose);
         objLoader->computeMask(camPose, mask);
 
         visu2D->updateMask(mask, mask);
@@ -75,7 +77,7 @@ int main(int argc, char** argv)
 
         //std::thread processThr(processSLAM, &slam);
 
-        std::thread putarThr(processPUTAR, objLoader, visu2D);
+        std::thread putarThr(processPUTAR, objLoader, visu2D, hmiDev);
 
         application.exec();
 

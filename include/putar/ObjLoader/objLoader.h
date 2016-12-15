@@ -46,6 +46,9 @@ namespace putar {
             /// Attach visualizer
             virtual void attachVisualizer(QGLVisualizer* visualizer) = 0;
 
+            ///Texture loader
+            virtual void LoadBitmap() = 0;
+
             /// Virtual descrutor
             virtual ~ObjLoader() {}
 

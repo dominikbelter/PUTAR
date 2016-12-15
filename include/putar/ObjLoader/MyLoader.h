@@ -70,6 +70,9 @@ class MyLoader : public ObjLoader, public Subject {
 
         void computeMask(const Mat34 cameraPose, cv::Mat& mask);
 
+        ///Texture loader
+        void LoadBitmap();
+
     private:
         Mat34 poseVis;
 };

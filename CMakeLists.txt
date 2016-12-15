@@ -15,6 +15,7 @@ endif()
 
 #add_definitions(-DDEBUG)
 
+
 # Folders
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -58,6 +59,13 @@ mark_as_advanced(BUILD_PUTAR_DEMO_IMAGEVISUALIZER)
 
 
 #additional dependencies
+# Glew
+find_package(GLEW REQUIRED)
+if (GLEW_FOUND)
+    include_directories(${GLEW_INCLUDE_DIRS})
+    link_libraries(${GLEW_LIBRARIES})
+endif()
+
 # Boost
 FIND_PACKAGE(Boost COMPONENTS system filesystem thread asio)
 
