@@ -9,11 +9,14 @@
 #include <QApplication>
 #include <iostream>
 #include <thread>
+#include <PUTSLAM/PUTSLAM.h>
 
-//void processSLAM(PUTSLAM* slam){
-//    slam->process();
-//}
-// test
+PUTSLAM slam;
+
+void processSLAM(PUTSLAM* _slam){
+    _slam->startProcessing();
+}
+ //test
 
 
 
@@ -22,10 +25,10 @@
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D, Hmi* hmiDev){
     while(1){
         Mat34 camPose;
-        //slam.getPose(camPose);
+        slam.getCurrentPose(camPose);
         cv::Mat rgbImg;
         cv::Mat depthImg;
-        //slam.getFrame(rgbImg, depthImg);
+        slam.getCurrentFrame(rgbImg, depthImg);
         cv::Mat mask;
         Mat34 objPose;
         hmiDev->updatePose(objPose);
@@ -41,6 +44,8 @@ int main(int argc, char** argv)
     try {
         using namespace putar;
         using namespace std;
+
+
 
         tinyxml2::XMLDocument config;
         config.LoadFile("../../resources/configGlobal.xml");
@@ -68,20 +73,20 @@ int main(int argc, char** argv)
 
         //objLoader->loadObj("kamien.obj");
 
-        //PUTSLAM slam;
+
 
         ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
 
 
         Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
-        //std::thread processThr(processSLAM, &slam);
+        std::thread processThr(processSLAM, &slam);
 
         std::thread putarThr(processPUTAR, objLoader, visu2D, hmiDev);
 
         application.exec();
 
-        //processThr.join();
+        processThr.join();
         putarThr.join();
 
         std::cout << "Done\n";
