@@ -84,6 +84,9 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 add_definitions(-Wno-deprecated -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT)
 
+# Boost
+FIND_PACKAGE(Boost COMPONENTS system filesystem thread asio)
+
 if (BUILD_PUTAR)
     #QGLViewer library
     set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
@@ -409,6 +412,26 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_3DSLOADER)
 
 endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_3DSLOADER)
 
+
+###############################################################################
+#
+#
+# PUTAR demo Serial
+#
+###############################################################################
+
+if(BUILD_PUTAR)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/demoSerial.cpp)
+        ADD_EXECUTABLE(demoSerial ${DEMO_SOURCES})
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(demoSerial serial boost_system)
+        else()
+            TARGET_LINK_LIBRARIES(demoSerial serial boost_system)
+        endif()
+        INSTALL(TARGETS demoSerial RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR)
 
 ################################################################################
 ##
