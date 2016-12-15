@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include "Defs/defs.h"
 #include "ObjLoader/objLoader.h"
 #include "ObjLoader/MyLoader.h"
