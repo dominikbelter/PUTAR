@@ -13,6 +13,8 @@
 #include <thread>
 #include <mutex>
 
+
+
 namespace putar {
     Hmi* createMyHmiGamepad(void);
     Hmi* createMyHmiGamepad(std::string configFilename);
