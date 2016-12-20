@@ -258,7 +258,7 @@ void My3dsLoader:: LoadBitmap()
     glTexImage2D(GL_TEXTURE_2D, 0, 3, infoheader.biWidth, infoheader.biHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, infoheader.data);
 
     // And create 2d mipmaps for the minifying function
-    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, infoheader.biWidth, infoheader.biHeight, GL_RGB, GL_UNSIGNED_BYTE, infoheader.data);
+    //DB gluBuild2DMipmaps(GL_TEXTURE_2D, 3, infoheader.biWidth, infoheader.biHeight, GL_RGB, GL_UNSIGNED_BYTE, infoheader.data);
 
     free(infoheader.data); // Free the memory we used to load the texture
 }
@@ -274,7 +274,7 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask)
     // Projection transformation
     glMatrixMode(GL_PROJECTION); // Specifies which matrix stack is the target for matrix operations
     glLoadIdentity(); // We initialize the projection matrix as identity
-    gluPerspective(45.0f,(GLfloat)screen_width/(GLfloat)screen_height,10.0f,10000.0f); // We define the "viewing volume"
+    //DB gluPerspective(45.0f,(GLfloat)screen_width/(GLfloat)screen_height,10.0f,10000.0f); // We define the "viewing volume"
 
     glEnable(GL_DEPTH_TEST); // We enable the depth test (also called z buffer)
     glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)
