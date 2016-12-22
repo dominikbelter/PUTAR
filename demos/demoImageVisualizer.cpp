@@ -2,11 +2,14 @@
 #include "../3rdParty/tinyXML/tinyxml2.h"
 #include <iostream>
 #include <thread>
+#include "ImageVisualizer/imageVisualizerCV.h"
+#include "ImageVisualizer/imageVisualizer.h"
 
 using namespace std;
 
 int main(int argc, char** argv)
 {
+    /*
     try {
         tinyxml2::XMLDocument config;
         config.LoadFile("../../resources/configGlobal.xml");
@@ -20,6 +23,11 @@ int main(int argc, char** argv)
         std::cerr << ex.what() << std::endl;
         return 1;
     }
+    */
+    ImageVisualizer* x = putar::createMyImageVisualizer();
+
+    x->UpdateImage();
+
     return 0;
 }
 

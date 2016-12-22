@@ -243,6 +243,29 @@ endif(BUILD_PUTAR AND BUILD_VISUALIZER)
 
 ###############################################################################
 #
+# PUTAR ImageVisualizer
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_IMAGEVISUALIZER)
+
+        file(GLOB IMAGEVISUALIZER_SOURCES
+            "${CMAKE_SOURCE_DIR}/src/ImageVisualizer/*.cpp"
+        )
+        file(GLOB IMAGEVISUALIZER_HEADERS
+            "${CMAKE_SOURCE_DIR}/include/putar/ImageVisualizer/*.h"
+        )
+        ADD_LIBRARY(ImageVisualizer STATIC ${IMAGEVISUALIZER_SOURCES} ${IMAGEVISUALIZER_HEADERS})
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(ImageVisualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY})
+        else()
+            TARGET_LINK_LIBRARIES(ImageVisualizer tinyxml2 ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY})
+        endif()
+
+endif(BUILD_PUTAR AND BUILD_IMAGEVISUALIZER)
+
+###############################################################################
+#
 # PUTAR ObjLoader library
 #
 ###############################################################################
@@ -291,7 +314,7 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_VISUALIZER)
         if(APPLE)
             TARGET_LINK_LIBRARIES(demoVisualizer Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
         else()
-            TARGET_LINK_LIBRARIES(demoVisualizer Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+            TARGET_LINK_LIBRARIES(demoVisualizer Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut ${OpenCV_LIBS})
         endif()
         INSTALL(TARGETS demoVisualizer RUNTIME DESTINATION bin)
 
@@ -331,7 +354,7 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_PUTSLAM)
         if(APPLE)
             TARGET_LINK_LIBRARIES(demoPUTSLAM Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
         else()
-            TARGET_LINK_LIBRARIES(demoPUTSLAM Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+            TARGET_LINK_LIBRARIES(demoPUTSLAM Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut ${OpenCV_LIBS})
         endif()
         INSTALL(TARGETS demoPUTSLAM RUNTIME DESTINATION bin)
 
@@ -370,37 +393,16 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_IMAGEVISUALIZER)
         SET(DEMO_SOURCES ./demos/demoImageVisualizer.cpp)
         ADD_EXECUTABLE(demoImageVisualizer ${DEMO_SOURCES})
         if(APPLE)
-            TARGET_LINK_LIBRARIES(demoImageVisualizer  tinyxml2 ${OpenCV_LIBS} )
+            TARGET_LINK_LIBRARIES(demoImageVisualizer  tinyxml2 ${OpenCV_LIBS} ImageVisualizer )
         else()
-            TARGET_LINK_LIBRARIES(demoImageVisualizer tinyxml2 ${OpenCV_LIBS} )
+            TARGET_LINK_LIBRARIES(demoImageVisualizer tinyxml2 ${OpenCV_LIBS} ImageVisualizer )
         endif()
         INSTALL(TARGETS demoImageVisualizer RUNTIME DESTINATION bin)
 
 endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_IMAGEVISUALIZER)
 
 
-###############################################################################
-#
-# PUTAR ImageVisualizer
-#
-###############################################################################
 
-if(BUILD_PUTAR AND BUILD_IMAGEVISUALIZER)
-
-        file(GLOB IMAGEVISUALIZER_SOURCES
-            "${CMAKE_SOURCE_DIR}/src/ImageVisualizer/*.cpp"
-        )
-        file(GLOB IMAGEVISUALIZER_HEADERS
-            "${CMAKE_SOURCE_DIR}/include/putar/ImageVisualizer/*.h"
-        )
-        ADD_LIBRARY(ImageVisualizer STATIC ${IMAGEVISUALIZER_SOURCES} ${IMAGEVISUALIZER_HEADERS})
-        if(APPLE)
-            TARGET_LINK_LIBRARIES(Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY})
-        else()
-            TARGET_LINK_LIBRARIES(Visualizer tinyxml2 ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY})
-        endif()
-
-endif(BUILD_PUTAR AND BUILD_IMAGEVISUALIZER)
 
 ###############################################################################
 #
@@ -436,7 +438,7 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_3DSLOADER)
         if(APPLE)
             TARGET_LINK_LIBRARIES(demo3dsLoader ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
         else()
-            TARGET_LINK_LIBRARIES(demo3dsLoader ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+            TARGET_LINK_LIBRARIES(demo3dsLoader ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut  ${OpenCV_LIBS})
         endif()
         INSTALL(TARGETS demo3dsLoader RUNTIME DESTINATION bin)
 
