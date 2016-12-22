@@ -39,6 +39,8 @@ option(BUILD_OBJLOADER "Build ObjLoader" ON)
 mark_as_advanced(BUILD_OBJLOADER)
 option(BUILD_HMIControl "Build HMIControl" ON)
 mark_as_advanced(BUILD_HMIControl)
+option(BUILD_RPC "Build Remote Procedure Call interface library" ON)
+mark_as_advanced(BUILD_RPC)
 
 # demos
 option(BUILD_PUTAR_DEMO "Build PUTAR demonstration programs and libraries" ON)
@@ -402,6 +404,26 @@ endif(BUILD_PUTAR AND BUILD_IMAGEVISUALIZER)
 
 ###############################################################################
 #
+# PUTAR Remote Procedure Call library
+#
+###############################################################################
+
+if(BUILD_RPC)
+        file(GLOB RPC_SOURCES
+            "${CMAKE_SOURCE_DIR}/src/RPC/*.cpp"
+        )
+        file(GLOB RPC_HEADERS
+            "${CMAKE_SOURCE_DIR}/include/putar/RPC/*.h"
+        )
+
+        ADD_LIBRARY(RPC STATIC ${RPC_SOURCES} ${RPC_HEADERS})
+        TARGET_LINK_LIBRARIES(RPC boost_system)
+#        INSTALL(TARGETS Controller RUNTIME DESTINATION bin LIBRARY DESTINATION bin ARCHIVE DESTINATION lib)
+#        INSTALL(FILES ${CONTROLLER_HEADERS} DESTINATION include/walkers/Utilities/)
+endif(BUILD_RPC)
+
+###############################################################################
+#
 #
 # PUTAR demo 3dsLoader
 #
@@ -460,6 +482,36 @@ endif(BUILD_PUTAR)
 #        INSTALL(TARGETS demoObjLoader RUNTIME DESTINATION bin)
 
 #endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_OBJLOADER)
+
+###############################################################################
+#
+# server demo
+#
+###############################################################################
+
+if(BUILD_PUTAR)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/serverRPC.cpp)
+        ADD_EXECUTABLE(serverRPC ${DEMO_SOURCES})
+        TARGET_LINK_LIBRARIES(serverRPC RPC tinyxml2  boost_system)
+#        INSTALL(TARGETS simulator RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR)
+
+###############################################################################
+#
+# client demo
+#
+###############################################################################
+
+if(BUILD_PUTAR)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/clientRPC.cpp)
+        ADD_EXECUTABLE(clientRPC ${DEMO_SOURCES})
+        TARGET_LINK_LIBRARIES(clientRPC RPC tinyxml2 boost_system)
+#        INSTALL(TARGETS simulator RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR)
 
 ###############################################################################
 #
