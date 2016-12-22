@@ -89,13 +89,14 @@ int main(int argc, char** argv)
 
         cv::Mat dst;
         Mat34 cameraPose;
+        GLfloat depth;
 
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
         glutInitWindowSize(screen_width,screen_height);
         glutInitWindowPosition(0,0);
-        glutCreateWindow("At the moment unfortunately nesessery window");
+        glutCreateWindow("At the moment unfortunately this window is nesessery");
 
-        objLoader->computeMask(cameraPose, dst);
+        objLoader->computeMask(cameraPose, dst, depth);
 
         cv::namedWindow("imgMAT");
         cv::imshow("imgMAT", dst);
