@@ -24,14 +24,20 @@ void ImageVisualizerCV::updateMask(cv::Mat mask, cv::Mat depthMask){
 cv::Mat ImageVisualizerCV::UpdateImage(/*cv::Mat mask, cv::Mat depthMask, cv::Mat RGB, cv::Mat depthImg*/)
 {
     cv::Mat mask, depthMask, RGB, depthImg;
-    mask =cv::imread("/home/bw/PUTAR/PUTAR/resources/IMGVisualizer/rgb_00849.png");
-    //depthMask = cv::imread("/home/bw/PUTAR/PUTAR/resources/IMGVisualizer/depth_00849.png", CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR | 0);
-    //RGB = cv::imread("/home/bw/PUTAR/PUTAR/resources/IMGVisualizer/rgb_00752.png");
-    //depthImg = cv::imread("/home/bw/PUTAR/PUTAR/resources/IMGVisualizer/depth_00752.png", CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR | 0);
+    mask = cv::imread("/home/bw/PUTAR/PUTAR/resources/IMGVisualizer/rgb_00849.png");
+    depthMask = cv::imread("/home/bw/PUTAR/PUTAR/resources/IMGVisualizer/depth_00849.png", CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR | 0);
+    RGB = cv::imread("/home/bw/PUTAR/PUTAR/resources/IMGVisualizer/rgb_00752.png");
+    depthImg = cv::imread("/home/bw/PUTAR/PUTAR/resources/IMGVisualizer/depth_00752.png", CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR | 0);
+
+    if (!mask.empty()) {
+        cv::namedWindow("mask");
+        cv::imshow("mask",mask);
+    }
+    else{
+        std::cout<<"error while loading image"<<std::endl;
+    }
 
 
-   imshow("mask",mask);
-   /*
    unsigned short dst, dst1;
     cv::imshow("Image", RGB);
     cv::imshow("Mask", mask);
@@ -47,8 +53,10 @@ cv::Mat ImageVisualizerCV::UpdateImage(/*cv::Mat mask, cv::Mat depthMask, cv::Ma
         }
 
       }
-      */
+
     imshow("Updated Image",RGB);
+
+    cv::waitKey(0);
     return RGB;
 }
 

@@ -117,7 +117,7 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
         cv::Mat depthImg;
         //slam.getFrame(rgbImg, depthImg);
         cv::Mat mask;
-        objLoader->computeMask(camPose, mask);
+        //DB objLoader->computeMask(camPose, mask);
 
         visu2D->updateMask(mask, mask);
         visu2D->updateFrame(rgbImg,depthImg);

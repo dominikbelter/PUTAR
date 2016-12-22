@@ -361,7 +361,7 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, GLfloat& dep
     cv::flip(img, mask, 0);
 
     //get the depth Buffor
-    glReadPixels (0, 0, screen_width, screen_height, GL_DEPTH_COMPONENT, GL_FLOAT, depth);
+    //DB glReadPixels (0, 0, screen_width, screen_height, GL_DEPTH_COMPONENT, GL_FLOAT, depth);
 }
 
 /// Attach visualizer

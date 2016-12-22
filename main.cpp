@@ -23,16 +23,21 @@ void processSLAM(PUTSLAM* _slam){
 
 
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D, Hmi* hmiDev){
+    usleep(2000000);
     while(1){
         Mat34 camPose;
         slam.getCurrentPose(camPose);
         cv::Mat rgbImg;
         cv::Mat depthImg;
+        std::cout << "get frame\n";
         slam.getCurrentFrame(rgbImg, depthImg);
+        std::cout << "got frame\n";
+        cv::imshow("putar rgb",depthImg);
+        cv::waitKey(30);
         cv::Mat mask;
         Mat34 objPose;
         hmiDev->updatePose(objPose);
-        objLoader->computeMask(camPose, mask);
+        //DB objLoader->computeMask(camPose, mask);
 
         visu2D->updateMask(mask, mask);
         visu2D->updateFrame(rgbImg,depthImg);
@@ -55,13 +60,13 @@ int main(int argc, char** argv)
         std::string visualizerType(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("type")->GetText());
         std::string Loader3dsConfig(config.FirstChildElement("Configuration")->FirstChildElement("Loader3ds")->FirstChildElement("config")->GetText());
 
-        QApplication application(argc,argv);
-        setlocale(LC_NUMERIC,"C");
-        glutInit(&argc, argv);
+        //QApplication application(argc,argv);
+        //setlocale(LC_NUMERIC,"C");
+        //glutInit(&argc, argv);
 
-        QGLVisualizer visu(visualizerConfig);
-        visu.setWindowTitle("Simulator viewer");
-        visu.show();
+        //QGLVisualizer visu(visualizerConfig);
+        //visu.setWindowTitle("Simulator viewer");
+        //visu.show();
 
         ObjLoader* objLoader;// = putar::createMyLoader();
         if (0)
@@ -69,7 +74,7 @@ int main(int argc, char** argv)
         else{
             objLoader = putar::createMy3dsLoader(Loader3dsConfig);
         }
-        objLoader->attachVisualizer(&visu);
+        //objLoader->attachVisualizer(&visu);
 
         //objLoader->loadObj("kamien.obj");
 
@@ -84,7 +89,7 @@ int main(int argc, char** argv)
 
         std::thread putarThr(processPUTAR, objLoader, visu2D, hmiDev);
 
-        application.exec();
+//        application.exec();
 
         processThr.join();
         putarThr.join();
