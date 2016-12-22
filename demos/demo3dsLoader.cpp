@@ -89,7 +89,7 @@ int main(int argc, char** argv)
 
         cv::Mat dst;
         Mat34 cameraPose;
-        GLfloat depth;
+        GLfloat depth[640*480];
 
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
         glutInitWindowSize(screen_width,screen_height);
@@ -97,6 +97,12 @@ int main(int argc, char** argv)
         glutCreateWindow("At the moment unfortunately this window is nesessery");
 
         objLoader->computeMask(cameraPose, dst, depth);
+
+        for (int i=0; i<depth.length; i++)
+        {
+            cout<<depths[i]<<endl;
+        }
+
 
         cv::namedWindow("imgMAT");
         cv::imshow("imgMAT", dst);
