@@ -8,12 +8,13 @@ SET(CMAKE_BUILD_TYPE "Release" CACHE PATH "Current build configuration")
 # Example Project configuration
 PROJECT(PUTAR)
 if(APPLE)
-    SET(CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -std=c++11 -pthread")
+    SET(CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -std=c++11 -pthread -fopenmp")
 else()
-    SET(CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -std=c++11 -pthread -malign-double")
+    SET(CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -std=c++11 -pthread -malign-double -fopenmp")
 endif()
 
 #add_definitions(-DDEBUG)
+
 
 # Folders
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -38,6 +39,8 @@ option(BUILD_OBJLOADER "Build ObjLoader" ON)
 mark_as_advanced(BUILD_OBJLOADER)
 option(BUILD_HMIControl "Build HMIControl" ON)
 mark_as_advanced(BUILD_HMIControl)
+option(BUILD_RPC "Build Remote Procedure Call interface library" ON)
+mark_as_advanced(BUILD_RPC)
 
 # demos
 option(BUILD_PUTAR_DEMO "Build PUTAR demonstration programs and libraries" ON)
@@ -47,20 +50,41 @@ option(BUILD_PUTAR_DEMO_VISUALIZER "Build PUTAR visualizer demo" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_VISUALIZER)
 option(BUILD_PUTAR_DEMO_OBJLOADER "Build PUTAR objloader demo" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_OBJLOADER)
+option(BUILD_PUTAR_DEMO_3DSLOADER "Build PUTAR 3dsLoader demo" ON)
+mark_as_advanced(BUILD_PUTAR_DEMO_3DSLOADER)
 option(BUILD_PUTAR_DEMO_PUTSLAM "Build PUTAR PUTSLAM demo" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_PUTSLAM)
 option(BUILD_PUTAR_DEMO_HMICONTROL "Build PUTAR HMIControl demo" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_HMICONTROL)
-option(BUILD_PUTAR_DEMO_IMAGEVISUALIZER "Build main PUTAR test" ON)
+option(BUILD_PUTAR_DEMO_IMAGEVISUALIZER "Build PUTAR imagevisualizer demo" ON)
 mark_as_advanced(BUILD_PUTAR_DEMO_IMAGEVISUALIZER)
 
+
 #additional dependencies
+## Glew
+#find_package(GLEW REQUIRED)
+#if (GLEW_FOUND)
+#    include_directories(${GLEW_INCLUDE_DIRS})
+#    link_libraries(${GLEW_LIBRARIES})
+#endif()
+
 # Boost
 FIND_PACKAGE(Boost COMPONENTS system filesystem thread asio)
 
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
 include_directories( ${OpenCV_INCLUDE_DIRS} )
+
+#octomap library
+find_package(octomap REQUIRED)
+include_directories(${OCTOMAP_INCLUDE_DIRS})
+link_libraries(${OCTOMAP_LIBRARIES})
+
+#g2o library
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+find_package(G2O REQUIRED)
+include_directories(${G2O_INCLUDE_DIR})
+link_directories(${G2O_LIBRARY_DIRS})
 
 #Eigen
 if(NOT APPLE)
@@ -69,6 +93,9 @@ endif()
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 add_definitions(-Wno-deprecated -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT)
+
+# Boost
+FIND_PACKAGE(Boost COMPONENTS system filesystem thread asio)
 
 if (BUILD_PUTAR)
     #QGLViewer library
@@ -82,6 +109,23 @@ if (BUILD_PUTAR)
     include_directories(${QGLVIEWER_INCLUDE_DIR})
     include_directories(${QT_INCLUDES})
     link_directories(${QGLVIEWER_LIBRARY})
+
+    #CSparse library
+    FIND_PACKAGE(CSparse)
+    include_directories(${LIBCSPARSE_INCLUDE_DIR})
+    link_directories(${LIBCSPARSE_LIBRARY})
+
+    # PUTSLAM
+    set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+    FIND_PACKAGE(PUTSLAM)
+    include_directories(${PUTSLAM_INCLUDE_DIR})
+    set(PUTSLAM_INCLUDE_DIR "/usr/local/include/putslam")
+    MESSAGE(${PUTSLAM_INCLUDE_DIR})
+    #include_directories("/usr/local/include/putslam")
+    #include_directories("${PUTSLAM_INCLUDE_DIR}/include/putslam")
+    link_directories(${PUTSLAM_LIBRARY})
+    set(PUTSLAM_LIBRARY_DIR "/usr/local/lib")
+    MESSAGE(${PUTSLAM_LIBRARY_DIR})
 
     # Architecture
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -362,18 +406,130 @@ endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_IMAGEVISUALIZER)
 
 ###############################################################################
 #
+# PUTAR Remote Procedure Call library
+#
+###############################################################################
+
+if(BUILD_RPC)
+        file(GLOB RPC_SOURCES
+            "${CMAKE_SOURCE_DIR}/src/RPC/*.cpp"
+        )
+        file(GLOB RPC_HEADERS
+            "${CMAKE_SOURCE_DIR}/include/putar/RPC/*.h"
+        )
+
+        ADD_LIBRARY(RPC STATIC ${RPC_SOURCES} ${RPC_HEADERS})
+        TARGET_LINK_LIBRARIES(RPC boost_system)
+#        INSTALL(TARGETS Controller RUNTIME DESTINATION bin LIBRARY DESTINATION bin ARCHIVE DESTINATION lib)
+#        INSTALL(FILES ${CONTROLLER_HEADERS} DESTINATION include/walkers/Utilities/)
+endif(BUILD_RPC)
+
+###############################################################################
+#
+#
+# PUTAR demo 3dsLoader
+#
+###############################################################################
+
+if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_3DSLOADER)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/demo3dsLoader.cpp)
+        ADD_EXECUTABLE(demo3dsLoader ${DEMO_SOURCES})
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(demo3dsLoader ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+        else()
+            TARGET_LINK_LIBRARIES(demo3dsLoader ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+        endif()
+        INSTALL(TARGETS demo3dsLoader RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_3DSLOADER)
+
+
+###############################################################################
+#
+#
+# PUTAR demo Serial
+#
+###############################################################################
+
+if(BUILD_PUTAR)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/demoSerial.cpp)
+        ADD_EXECUTABLE(demoSerial ${DEMO_SOURCES})
+        if(APPLE)
+            TARGET_LINK_LIBRARIES(demoSerial serial boost_system)
+        else()
+            TARGET_LINK_LIBRARIES(demoSerial serial boost_system)
+        endif()
+        INSTALL(TARGETS demoSerial RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR)
+
+################################################################################
+##
+##
+## PUTAR demo ObjLoader
+##
+################################################################################
+
+#if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_OBJLOADER)
+#        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+#        SET(DEMO_SOURCES ./demos/demoObjLoader.cpp)
+#        ADD_EXECUTABLE(demoObjLoader ${DEMO_SOURCES})
+#        if(APPLE)
+#            TARGET_LINK_LIBRARIES(demoObjLoader ObjLoader Visualizer tinyxml2 ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+#        else()
+#            TARGET_LINK_LIBRARIES(demoObjLoader ObjLoader Visualizer tinyxml2 ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut)
+#        endif()
+#        INSTALL(TARGETS demoObjLoader RUNTIME DESTINATION bin)
+
+#endif(BUILD_PUTAR AND BUILD_PUTAR_DEMO_OBJLOADER)
+
+###############################################################################
+#
+# server demo
+#
+###############################################################################
+
+if(BUILD_PUTAR)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/serverRPC.cpp)
+        ADD_EXECUTABLE(serverRPC ${DEMO_SOURCES})
+        TARGET_LINK_LIBRARIES(serverRPC RPC tinyxml2  boost_system)
+#        INSTALL(TARGETS simulator RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR)
+
+###############################################################################
+#
+# client demo
+#
+###############################################################################
+
+if(BUILD_PUTAR)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
+        SET(DEMO_SOURCES ./demos/clientRPC.cpp)
+        ADD_EXECUTABLE(clientRPC ${DEMO_SOURCES})
+        TARGET_LINK_LIBRARIES(clientRPC RPC tinyxml2 boost_system)
+#        INSTALL(TARGETS simulator RUNTIME DESTINATION bin)
+
+endif(BUILD_PUTAR)
+
+###############################################################################
+#
 # PUTAR demo
 #
 ###############################################################################
 
 if(BUILD_PUTAR AND BUILD_PUTAR_DEMO AND BUILD_PUTAR_DEMO_MAIN)
+
         SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath ./")
         SET(DEMO_SOURCES ./main.cpp)
         ADD_EXECUTABLE(putar ${DEMO_SOURCES})
         if(APPLE)
-            TARGET_LINK_LIBRARIES(putar PUTARDefs ImageVisualizer HMIControl Utilities ObjLoader Visualizer tinyxml2 ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+            TARGET_LINK_LIBRARIES(putar PUTSLAM PutslamMatcher PutslamTransformEst PutslamRGBD  PutslamGrabber OpenNI2 PutslamUtilities  PutslamMap PutslamLoopClosure PutslamVisualPlaceRecognition PutslamPoseGraph csparse g2o_types_slam2d g2o_types_slam3d g2o_csparse_extension g2o_stuff g2o_core g2o_solver_csparse PUTARDefs ImageVisualizer HMIControl Utilities ObjLoader Visualizer tinyxml2  ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
         else()
-            TARGET_LINK_LIBRARIES(putar PUTARDefs ImageVisualizer HMIControl Utilities ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} ${OpenCV_LIBS} glut)
+            TARGET_LINK_LIBRARIES(putar PUTSLAM PutslamMatcher PutslamTransformEst PutslamRGBD PutslamGrabber OpenNI2 PutslamUtilities  PutslamMap PutslamLoopClosure PutslamVisualPlaceRecognition PutslamPoseGraph csparse g2o_types_slam2d g2o_types_slam3d g2o_csparse_extension g2o_stuff g2o_core g2o_solver_csparse PUTARDefs ImageVisualizer HMIControl Utilities ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} ${OpenCV_LIBS} glut)
         endif()
         INSTALL(TARGETS putar RUNTIME DESTINATION bin)
 

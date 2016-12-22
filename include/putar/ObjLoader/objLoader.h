@@ -36,15 +36,18 @@ namespace putar {
             virtual const std::string& getName() const = 0;
 
             /// Returns the current 2D image
-            virtual void loadObj(std::string filename) = 0;
+            virtual void loadObj() = 0;
 
             /// Grab image and/or point cloud
-            virtual void getMesh(Object3D& mesh) const = 0;
+            virtual void getMesh(obj_type &p_object) const = 0;
 
             virtual void computeMask(const Mat34 cameraPose,cv::Mat& mask) = 0;
 
             /// Attach visualizer
             virtual void attachVisualizer(QGLVisualizer* visualizer) = 0;
+
+            ///Texture loader
+            virtual void LoadBitmap() = 0;
 
             /// Virtual descrutor
             virtual ~ObjLoader() {}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <My3dsLoader>
-	<parameters fileName="Plik.3ds" textureFormat="BMP"></parameters>
+	<file3ds fileName="spaceship.3ds" fileDIR="../../resources/"></file3ds>
+	<bitMap bitMapName="spaceshiptexture.bmp" bitMapDIR="../../resources/"></bitMap>
 </My3dsLoader>

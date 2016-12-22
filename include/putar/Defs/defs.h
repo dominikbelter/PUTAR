@@ -17,6 +17,9 @@
 /// putslam name space
 namespace putar {
 
+    #define MAX_VERTICES 8000 // Max number of vertices (for each object)
+    #define MAX_POLYGONS 8000 // Max number of polygons (for each object)
+
     /// 3 element vector class
     typedef Eigen::Translation<double,3> Vec3;
 
@@ -32,6 +35,54 @@ namespace putar {
     /// Image
     typedef cv::Mat Image;
 
+
+    // For Texture Loader
+    typedef struct                       /**** BMP file info structure ****/
+        {
+        unsigned int   biSize;           /* Size of info header */
+        int            biWidth;          /* Width of image */
+        int            biHeight;         /* Height of image */
+        unsigned short biPlanes;         /* Number of color planes */
+        unsigned short biBitCount;       /* Number of bits per pixel */
+        unsigned int   biCompression;    /* Type of compression to use */
+        unsigned int   biSizeImage;      /* Size of image data */
+        int            biXPelsPerMeter;  /* X pixels per meter */
+        int            biYPelsPerMeter;  /* Y pixels per meter */
+        unsigned int   biClrUsed;        /* Number of colors used */
+        unsigned int   biClrImportant;   /* Number of important colors */
+        char *data;
+        } BITMAPINFOHEADER;
+
+
+    // Our vertex type
+    typedef struct{
+        float x,y,z;
+    }vertex_type;
+
+    // The polygon (triangle), 3 numbers that aim 3 vertices
+    typedef struct{
+        int a,b,c;
+    }polygon_type;
+
+    // The mapcoord type, 2 texture coordinates for each vertex
+    typedef struct{
+        float u,v;
+    }mapcoord_type;
+
+    // The object type
+    typedef struct {
+        char name[20];
+
+        int vertices_qty;
+        int polygons_qty;
+
+        vertex_type vertex[MAX_VERTICES];
+        polygon_type polygon[MAX_POLYGONS];
+        mapcoord_type mapcoord[MAX_VERTICES];
+        int id_texture;
+    } obj_type, *obj_type_ptr;
+
+
     /// 3D object
     class Object3D {
         public:
@@ -44,6 +95,17 @@ namespace putar {
             std::vector<Vec3> uvs;
             /// normal vectors
             std::vector<Vec3> normals;
+    };
+
+    /// Mesh
+    class Mesh {
+        public:
+            /// vertices
+            std::vector<Eigen::Vector3f> vertices;
+            /// texture coordinates
+            std::vector<Eigen::Vector2f>  uvs;
+            /// normal vectors
+            std::vector<Eigen::Vector3f>  normals;
     };
 }
 

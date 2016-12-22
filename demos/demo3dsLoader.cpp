@@ -1,4 +1,6 @@
+//#include <GL/glew.h>
 #include "Defs/defs.h"
+#include "ObjLoader/objLoader.h"
 #include "ObjLoader/MyLoader.h"
 #include "ObjLoader/My3dsLoader.h"
 #include "ImageVisualizer/imageVisualizerCV.h"
@@ -6,37 +8,43 @@
 #include "Visualizer/Qvisualizer.h"
 #include "HMIControl/hmiGamepad.h"
 #include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <QApplication>
 #include <iostream>
 #include <thread>
-#include <PUTSLAM/PUTSLAM.h>
-
-PUTSLAM slam;
-
-void processSLAM(PUTSLAM* _slam){
-    _slam->startProcessing();
-}
- //test
 
 
 
+/**********************************************************
+ *
+ * VARIABLES DECLARATION
+ *
+ *********************************************************/
 
 
-void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D, Hmi* hmiDev){
+//// The width and height of your window, change them as you like
+int screen_width=640;
+int screen_height=480;
+
+
+//Now the object is generic, the cube has annoyed us a little bit, or not?
+obj_type object;
+
+
+void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
     while(1){
         Mat34 camPose;
-        slam.getCurrentPose(camPose);
+        //slam.getPose(camPose);
         cv::Mat rgbImg;
         cv::Mat depthImg;
-        slam.getCurrentFrame(rgbImg, depthImg);
+        //slam.getFrame(rgbImg, depthImg);
         cv::Mat mask;
-        Mat34 objPose;
-        hmiDev->updatePose(objPose);
         objLoader->computeMask(camPose, mask);
 
         visu2D->updateMask(mask, mask);
         visu2D->updateFrame(rgbImg,depthImg);
     }
+
 }
 
 int main(int argc, char** argv)
@@ -44,8 +52,6 @@ int main(int argc, char** argv)
     try {
         using namespace putar;
         using namespace std;
-
-
 
         tinyxml2::XMLDocument config;
         config.LoadFile("../../resources/configGlobal.xml");
@@ -63,6 +69,7 @@ int main(int argc, char** argv)
         visu.setWindowTitle("Simulator viewer");
         visu.show();
 
+
         ObjLoader* objLoader;// = putar::createMyLoader();
         if (0)
             objLoader = putar::createMyLoader();
@@ -71,30 +78,38 @@ int main(int argc, char** argv)
         }
         objLoader->attachVisualizer(&visu);
 
-        //objLoader->loadObj("kamien.obj");
+        //objLoader->loadObj("stone.obj");
+        putar::obj_type object;
 
+        objLoader->loadObj();
 
+        objLoader->getMesh(object);
 
-        ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        cv::Mat dst;
+        Mat34 cameraPose;
 
-        Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+        glutInitWindowSize(screen_width,screen_height);
+        glutInitWindowPosition(0,0);
+        glutCreateWindow("At the moment unfortunately nesessery window");
 
-        std::thread processThr(processSLAM, &slam);
+        objLoader->computeMask(cameraPose, dst);
 
-        std::thread putarThr(processPUTAR, objLoader, visu2D, hmiDev);
+        cv::namedWindow("imgMAT");
+        cv::imshow("imgMAT", dst);
 
-        application.exec();
+        cv::waitKey(1000);
 
-        processThr.join();
-        putarThr.join();
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         std::cout << "Done\n";
-    }
-    catch (const std::exception& ex) {
-        std::cerr << ex.what() << std::endl;
-        return 1;
-    }
+}
+catch (const std::exception& ex) {
+std::cerr << ex.what() << std::endl;
+return 1;
+}
 
-    return 0;
+return 0;
 }

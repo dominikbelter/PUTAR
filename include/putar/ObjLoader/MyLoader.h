@@ -60,15 +60,18 @@ class MyLoader : public ObjLoader, public Subject {
         const std::string& getName() const;
 
         /// Returns the current 2D image
-        void loadObj(std::string filename);
+        void loadObj();
 
         /// Grab image and/or point cloud
-        void getMesh(Object3D& mesh) const;
+        void getMesh(obj_type &p_object) const;
 
         ///Attach visualizer
         void attachVisualizer(QGLVisualizer* visualizer);
 
         void computeMask(const Mat34 cameraPose, cv::Mat& mask);
+
+        ///Texture loader
+        void LoadBitmap();
 
     private:
         Mat34 poseVis;
