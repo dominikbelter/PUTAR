@@ -7,6 +7,7 @@
 #include <string>
 #include "opencvCore.h"
 #include "imageVisualizer.h"
+#include "opencv2/opencv.hpp"
 #include "../../3rdParty/tinyXML/tinyxml2.h"
 
 
@@ -62,6 +63,8 @@ class ImageVisualizerCV: public ImageVisualizer{
 	
 	// update Mask
     void updateMask(cv::Mat mask, cv::Mat depthMask);
+
+    cv::Mat UpdateImage(/*cv::Mat mask, cv::Mat depthMask, cv::Mat RGB, cv::Mat depthImg*/);
 	
 	// Desctructor
 	~ImageVisualizerCV(){}
