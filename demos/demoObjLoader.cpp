@@ -43,17 +43,17 @@ bool loadOBJ(const char* path, Mesh& mesh)
 
         if ( strcmp( lineHeader, "v" ) == 0 ){
             Eigen::Vector3f vertex;
-            float x,y,z;
-            fscanf(file, "%f %f %f\n", &vertex(0), &vertex(1), &vertex(2) );
+           //WUNUSED? BŁĄD? float x,y,z;
+           //WUNUSED? BŁĄD? fscanf(file, "%f %f %f\n", &vertex(0), &vertex(1), &vertex(2) );
             temp_vertices.push_back(vertex);
         }else if ( strcmp( lineHeader, "vt" ) == 0 ){
             Eigen::Vector2f uv;
-            fscanf(file, "%f %f\n", &uv(0), &uv(1) );
+           //WUNUSED? BŁĄD? fscanf(file, "%f %f\n", &uv(0), &uv(1) );
             uv(1) = -uv(1); // Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
             temp_uvs.push_back(uv);
         }else if ( strcmp( lineHeader, "vn" ) == 0 ){
             Eigen::Vector3f normal;
-            fscanf(file, "%f %f %f\n", &normal(0), &normal(1), &normal(2) );
+           //WUNUSED? BŁĄD? fscanf(file, "%f %f %f\n", &normal(0), &normal(1), &normal(2) );
             temp_normals.push_back(normal);
         }else if ( strcmp( lineHeader, "f" ) == 0 ){
             std::string vertex1, vertex2, vertex3;
@@ -75,8 +75,8 @@ bool loadOBJ(const char* path, Mesh& mesh)
             normalIndices.push_back(normalIndex[2]);
 
 
-            cout<<vertexIndex[0]<<endl;
-            cout<<vertexIndex[1]<<endl;
+
+
         }else{
             // Probably a comment, eat up the rest of the line
             char stupidBuffer[1000];
@@ -150,7 +150,7 @@ int main(int argc, char** argv)
 
         Mesh mesh;
         loadOBJ("/media/user/901E247A1E245B8A/LINUX/PROJEKT/PUTAR/resources/cube.obj", mesh);
-
+         cout<<"Object loadin process ended"<<endl;
 //ObjLoader* objLoader;// = putar::createMyLoader();
 //if (1)
 //    objLoader = putar::createMyLoader();
@@ -160,6 +160,16 @@ int main(int argc, char** argv)
 //objLoader->attachVisualizer(&visu);
 
 //objLoader->loadObj("stone.obj");
+
+//------------------CREATING MASK----------------------
+
+         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+         glutInitWindowSize(640,480);
+         glutInitWindowPosition(0,0);
+         glutCreateWindow("MASKOWNICA");
+
+ cv::waitKey(0);
+
 
 std::cout << "Done\n";
 }
