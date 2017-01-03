@@ -19,7 +19,7 @@
 
 
 #define JOY_DEV "/dev/input/js1"
-int i=0;
+#define GLUT_JOYSTICK_BUTTON_E 0x80
 
 void display () {
 
@@ -33,8 +33,55 @@ void display () {
     glFlush();
 
 }
+void joyFunc(unsigned int btn,int x,int y, int z)
+{
 
-void Thread2(int argc, char** argv, int *axis, char *button)
+ if (btn==GLUT_JOYSTICK_BUTTON_A)
+ {
+ glTranslated(0,0.02,0);
+ }
+ if (btn==GLUT_JOYSTICK_BUTTON_B)
+ {
+ glTranslated(0.02,0,0);
+ }
+ if (btn==GLUT_JOYSTICK_BUTTON_C)
+ {
+ glTranslated(0,-0.02,0);
+ }
+ if (btn==GLUT_JOYSTICK_BUTTON_D)
+ {
+ glTranslated(-0.02,0,0);
+ }
+ if (btn & 0x80)
+ {
+    glTranslated(0,0,0.2);
+ }
+ if (btn & 0x20)
+ {
+    glTranslated(0,0,-0.2);
+ }
+ if (x>50){
+     glRotated(5,0,1,0);
+ }
+ if (x<-50){
+     glRotated(-5,0,1,0);
+ }
+ if (y>50){
+     glRotated(5,1,0,0);
+ }
+ if (y<-50){
+     glRotated(-5,1,0,0);
+ }
+ if (z>50){
+     glRotated(5,0,0,1);
+ }
+ if (z<-50){
+     glRotated(-5,0,0,1);
+ }
+ std::cout << btn << " -- " << x << "" <<  " -- " << y << " -- " << z << "\n"; //test gampead
+ glutPostRedisplay();
+}
+void Thread2(int argc, char** argv)
 {
     /* initialize GLUT, using any commandline parameters passed to the
            program */
@@ -49,7 +96,7 @@ void Thread2(int argc, char** argv, int *axis, char *button)
         glutCreateWindow("hello, teapot!");
 
         glutDisplayFunc(display);
-
+        glutJoystickFunc(&joyFunc,100);
         /* tell GLUT to wait for events */
         glutMainLoop();
 
@@ -60,10 +107,10 @@ void Thread2(int argc, char** argv, int *axis, char *button)
 
 
 
-void Thread(int joy_fd, struct js_event js, int *axis, char *button, int num_of_axis, int x, int num_of_buttons, int argc, char** argv)
+void Thread(int joy_fd, struct js_event js, int *axis, char *button, int num_of_axis, int x, int num_of_buttons)
 {
-    while( 1 ) 	/* infinite loop */
-    {
+    //while( 1 ) 	/* infinite loop */
+   // {
 
             /* read the joystick state */
         read(joy_fd, &js, sizeof(struct js_event));
@@ -93,7 +140,7 @@ void Thread(int joy_fd, struct js_event js, int *axis, char *button, int num_of_
 
         printf("  \r");
         fflush(stdout);
-    }
+    //}
 }
 
 
@@ -125,8 +172,8 @@ int main(int argc, char** argv)
     fcntl( joy_fd, F_SETFL, O_NONBLOCK );	/* use non-blocking mode */
 
 
-    std::thread t(&Thread, joy_fd, js, axis, button, num_of_axis, x, num_of_buttons,argc ,argv);
-    std::thread t2(&Thread2, argc, argv, axis, button);
+    std::thread t(&Thread, joy_fd, js, axis, button, num_of_axis, x, num_of_buttons);
+    std::thread t2(&Thread2, argc, argv);
     t.join();
         t2.join();
 
