@@ -19,28 +19,46 @@
 
 
 #define JOY_DEV "/dev/input/js1"
-void Thread2(int argc, char** argv)
-{
-    tinyxml2::XMLDocument config;
-    config.LoadFile("../../resources/configGlobal.xml");
-    if (config.ErrorID())
-        std::cout << "unable to load config file.\n";
-    std::string visualizerConfig(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("config")->GetText());
-    std::string visualizerType(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("type")->GetText());
-    std::string Loader3dsConfig(config.FirstChildElement("Configuration")->FirstChildElement("Loader3ds")->FirstChildElement("config")->GetText());
+int i=0;
 
-    QApplication application(argc,argv);
-    setlocale(LC_NUMERIC,"C");
-    glutInit(&argc, argv);
+void display () {
 
-    QGLVisualizer visu(visualizerConfig);
-    visu.setWindowTitle("Simulator viewer");
-    visu.show();
+    /* clear window */
+    glClear(GL_COLOR_BUFFER_BIT);
 
+    /* draw scene */
+    glutSolidTeapot(.5);
 
-    application.exec();
-    std::cout << "Finished\n";
+    /* flush drawing routines to the window */
+    glFlush();
+
 }
+
+void Thread2(int argc, char** argv, int *axis, char *button)
+{
+    /* initialize GLUT, using any commandline parameters passed to the
+           program */
+        glutInit(&argc,argv);
+
+        /* setup the size, position, and display mode for new windows */
+        glutInitWindowSize(1000,800);
+        glutInitWindowPosition(0,0);
+        glutInitDisplayMode(GLUT_RGB);
+
+        /* create and set up a window */
+        glutCreateWindow("hello, teapot!");
+
+        glutDisplayFunc(display);
+
+        /* tell GLUT to wait for events */
+        glutMainLoop();
+
+
+
+}
+
+
+
 
 void Thread(int joy_fd, struct js_event js, int *axis, char *button, int num_of_axis, int x, int num_of_buttons, int argc, char** argv)
 {
@@ -78,6 +96,8 @@ void Thread(int joy_fd, struct js_event js, int *axis, char *button, int num_of_
     }
 }
 
+
+
 int main(int argc, char** argv)
 {
     int joy_fd, *axis=NULL, num_of_axis=0, num_of_buttons=0, x;
@@ -106,7 +126,7 @@ int main(int argc, char** argv)
 
 
     std::thread t(&Thread, joy_fd, js, axis, button, num_of_axis, x, num_of_buttons,argc ,argv);
-    std::thread t2(&Thread2, argc, argv);
+    std::thread t2(&Thread2, argc, argv, axis, button);
     t.join();
         t2.join();
 
