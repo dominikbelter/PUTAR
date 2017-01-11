@@ -89,19 +89,30 @@ int main(int argc, char** argv)
 
         cv::Mat dst;
         Mat34 cameraPose;
-        GLfloat depth;
+        cv::Mat depthMask;
+        //cv::Mat depth  16 bitowy obraz głębi mnożony razy 1000 albo coś
 
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
         glutInitWindowSize(screen_width,screen_height);
         glutInitWindowPosition(0,0);
         glutCreateWindow("At the moment unfortunately this window is nesessery");
 
-        objLoader->computeMask(cameraPose, dst, depth);
+        objLoader->computeMask(cameraPose, dst, depthMask);
+
+
+
+        for(int x=0; x<depthMask.cols; x++)
+        {
+            for(int y =0; y<depthMask.rows; y++)
+            {
+                depthMask.at<uchar>(y,x) = depthMask.at<uchar>(y,x)*1000;
+            }
+        }
 
         cv::namedWindow("imgMAT");
-        cv::imshow("imgMAT", dst);
+        cv::imshow("imgMAT", depthMask);
 
-        cv::waitKey(1000);
+        cv::waitKey(0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

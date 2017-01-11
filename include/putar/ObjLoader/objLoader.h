@@ -41,7 +41,7 @@ namespace putar {
             /// Grab image and/or point cloud
             virtual void getMesh(obj_type &p_object) const = 0;
 
-            virtual void computeMask(const Mat34 cameraPose,cv::Mat& mask, GLfloat& depth) = 0;
+            virtual void computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& depthMask) = 0;
 
             /// Attach visualizer
             virtual void attachVisualizer(QGLVisualizer* visualizer) = 0;

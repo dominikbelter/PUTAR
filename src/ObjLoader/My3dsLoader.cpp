@@ -264,7 +264,7 @@ void My3dsLoader:: LoadBitmap()
     free(infoheader.data); // Free the memory we used to load the texture
 }
 
-void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, GLfloat& depth)
+void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& depthMask)
 {
     glClearColor(0.0, 0.0, 0.0, 0.0); // This clear the background color to black
     glShadeModel(GL_SMOOTH); // Type of shading for the polygons
@@ -348,6 +348,7 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, GLfloat& dep
 
 
     cv::Mat img(screen_height, screen_width, CV_8UC3);
+    cv::Mat imgMask(screen_height, screen_width, CV_8UC1);
 
     mask.create(img.size(), img.type());
     //use fast 4-byte alignment (default anyway) if possible
@@ -361,7 +362,15 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, GLfloat& dep
     cv::flip(img, mask, 0);
 
     //get the depth Buffor
-    //DB glReadPixels (0, 0, screen_width, screen_height, GL_DEPTH_COMPONENT, GL_FLOAT, depth);
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_ALWAYS); // Change this to whatever kind of depth testing you want
+    glDepthRange(0.0f, 1.0f);
+
+    glReadPixels(0, 0, imgMask.cols, imgMask.rows, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, imgMask.data);
+    //cv::flip(imgMask, depthMask, 0);
+    depthMask = imgMask.clone();
+    //bitwise_not ( imgMask, depthMask );
 }
 
 /// Attach visualizer
