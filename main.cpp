@@ -10,8 +10,11 @@
 #include <iostream>
 #include <thread>
 #include <PUTSLAM/PUTSLAM.h>
+#include <putslam/PUTSLAM/PUTSLAM.h>
 
 PUTSLAM slam;
+cv::Mat rgbImg;
+cv::Mat depthImg;
 
 void processSLAM(PUTSLAM* _slam){
     _slam->startProcessing();
@@ -27,16 +30,12 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D, Hmi* hmiDev){
     while(1){
         Mat34 camPose;
         slam.getCurrentPose(camPose);
-        cv::Mat rgbImg;
-        cv::Mat depthImg;
-        std::cout << "get frame\n";
         slam.getCurrentFrame(rgbImg, depthImg);
-        std::cout << "got frame\n";
-        cv::imshow("putar rgb",depthImg);
+        cv::imshow("putar rgb",rgbImg);
         cv::waitKey(30);
         cv::Mat mask;
         Mat34 objPose;
-        hmiDev->updatePose(objPose);
+        //hmiDev->updatePose(objPose);
         //DB objLoader->computeMask(camPose, mask);
 
         visu2D->updateMask(mask, mask);
@@ -49,7 +48,7 @@ int main(int argc, char** argv)
     try {
         using namespace putar;
         using namespace std;
-
+        std::cout<<"dziala"<<std::endl;
 
 
         tinyxml2::XMLDocument config;
