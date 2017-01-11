@@ -120,12 +120,11 @@ if (BUILD_PUTAR)
     FIND_PACKAGE(PUTSLAM)
     include_directories(${PUTSLAM_INCLUDE_DIR})
     set(PUTSLAM_INCLUDE_DIR "/usr/local/include/putslam")
-    MESSAGE(${PUTSLAM_INCLUDE_DIR})
     #include_directories("/usr/local/include/putslam")
     #include_directories("${PUTSLAM_INCLUDE_DIR}/include/putslam")
     link_directories(${PUTSLAM_LIBRARY})
     set(PUTSLAM_LIBRARY_DIR "/usr/local/lib")
-    MESSAGE(${PUTSLAM_LIBRARY_DIR})
+    #MESSAGE(${PUTSLAM_LIBRARY_DIR})
 
     # Architecture
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
