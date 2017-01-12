@@ -266,6 +266,7 @@ void My3dsLoader:: LoadBitmap()
 
 void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& depthMask)
 {
+
     glClearColor(0.0, 0.0, 0.0, 0.0); // This clear the background color to black
     glShadeModel(GL_SMOOTH); // Type of shading for the polygons
 
@@ -370,6 +371,15 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& dep
     glReadPixels(0, 0, imgMask.cols, imgMask.rows, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, imgMask.data);
     //cv::flip(imgMask, depthMask, 0);
     depthMask = imgMask.clone();
+
+    for(int x=0; x<depthMask.cols; x++)
+    {
+        for(int y =0; y<depthMask.rows; y++)
+        {
+            depthMask.at<uchar>(y,x) = depthMask.at<uchar>(y,x)*1000;
+        }
+    }
+
     //bitwise_not ( imgMask, depthMask );
 }
 

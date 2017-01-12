@@ -38,30 +38,40 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D, Hmi* hmiDev){
         cv::Mat rgbImg;
         cv::Mat depthImg;
         //slam.getFrame(rgbImg, depthImg);
-        cv::Mat mask, depthMask;
-        //DB objLoader->computeMask(camPose, mask);
-        std::cout << "dffd\n";
-        objLoader->computeMask(Mat34::Identity(),mask, depthMask);
-        std::cout << "mask " << mask.rows << "\n";
-        std::cout << "mask1 " << mask.cols << "\n";
-        cv::namedWindow("mask");
-        cv::imshow("mask",mask);
-        cv::waitKey(30);
-        cv::namedWindow("depthmask");
-        cv::imshow("depthmask",depthMask);
-        cv::waitKey(30);
-        visu2D->updateMask(mask, depthMask);
+Mat34 cameraPose;
+        putar::obj_type object;
+        cv::Mat rgbMask, depthMask;
+        std::cout<<"--------------1"<<endl;
+        objLoader->getMesh(object);
+        std::cout<<"--------------2"<<endl;
+
+
+        objLoader->computeMask(cameraPose, rgbMask, depthMask);
+        std::cout<<"--------------3"<<endl;
+
+        std::cout << "mask " << depthMask.rows << "\n";
+        std::cout << "mask1 " << depthMask.cols << "\n";
+//        cv::namedWindow("mask");
+//        cv::imshow("mask",mask);
+//        cv::waitKey(30);
+//        cv::namedWindow("depthmask");
+//        cv::imshow("depthmask",depthMask);
+//        cv::waitKey(30);
+        visu2D->updateMask(rgbMask, depthMask);
         visu2D->updateFrame(rgbImg,depthImg);
+
+        break;
     }
 }
 
 int main(int argc, char** argv)
 {
-    try {
+    try {   
+
+
         using namespace putar;
         using namespace std;
         std::cout<<"dziala"<<std::endl;
-
 
         tinyxml2::XMLDocument config;
         config.LoadFile("../../resources/configGlobal.xml");
@@ -71,36 +81,36 @@ int main(int argc, char** argv)
         std::string visualizerType(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("type")->GetText());
         std::string Loader3dsConfig(config.FirstChildElement("Configuration")->FirstChildElement("Loader3ds")->FirstChildElement("config")->GetText());
 
-        //QApplication application(argc,argv);
-        //setlocale(LC_NUMERIC,"C");
-        //glutInit(&argc, argv);
+//        QApplication application(argc,argv);
+//        setlocale(LC_NUMERIC,"C");
+        glutInit(&argc, argv);
 
-        //QGLVisualizer visu(visualizerConfig);
-        //visu.setWindowTitle("Simulator viewer");
-        //visu.show();
 
-        ObjLoader* objLoader;// = putar::createMyLoader();
+//        QGLVisualizer visu(visualizerConfig);
+//        visu.setWindowTitle("Simulator viewer");
+//        visu.show();
+
+        ObjLoader* objLoader;
         if (0)
             objLoader = putar::createMyLoader();
         else{
             objLoader = putar::createMy3dsLoader(Loader3dsConfig);
         }
-        //objLoader->attachVisualizer(&visu);
-
-        //putar::obj_type object;
+//        objLoader->attachVisualizer(&visu);
         objLoader->loadObj();
-        //objLoader->getMesh(object);
 
         ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
 
 
         Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
+//        application.exec();
+
         std::thread processThr(processSLAM, &slam);
 
         std::thread putarThr(processPUTAR, objLoader, visu2D, hmiDev);
 
-//        application.exec();
+
 
         processThr.join();
         putarThr.join();
