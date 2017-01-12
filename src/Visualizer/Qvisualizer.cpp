@@ -34,6 +34,13 @@ void QGLVisualizer::draw(){
     glPopMatrix();
 
     drawAxis();
+    glBegin(GL_POINTS);
+    for(Point3D i : PointCloud)
+    {
+        glColor3f(i.red/255.0f, i.green/255.0f, i.blue/255.0f);
+        glVertex3f(i.x, i.y, i.z);
+    }
+    glEnd();
 }
 
 /// draw objects
@@ -77,6 +84,11 @@ void QGLVisualizer::init(){
     startAnimation();
 }
 
+/// Updates cloud
+void QGLVisualizer::updateCloud(cv::Mat RGB, cv::Mat D){
+    depth2cloud(D, RGB);
+}
+
 /// generate help string
 std::string QGLVisualizer::help() const{
     std::string text("S i m p l e V i e w e r");
@@ -97,3 +109,32 @@ std::string QGLVisualizer::help() const{
     return text;
 }
 
+void QGLVisualizer::getPoint(unsigned int u, unsigned int v, float depth,
+Eigen::Vector3d& point3D){
+    Eigen::Vector3d point(u, v, 1);
+    point3D = depth*config.PHCPModel*point;
+}
+
+/// Convert disparity image to point cloud
+void QGLVisualizer::depth2cloud(cv::Mat& depthImage, cv::Mat RGB){
+    Eigen::Vector3d point;
+    PointCloud.clear();
+    for (unsigned int i=0;i<depthImage.rows;i++){
+        for (unsigned int j=0;j<depthImage.cols;j++){
+            if(depthImage.at<uint16_t>(i,j)>800&&depthImage.at<uint16_t>(i,j)<8500){
+                float depthM = float(depthImage.at<uint16_t>(i,j))*0.001;
+                getPoint(j,i,depthM,point);
+                Point3D pointPCL;
+                pointPCL.x = point(0);
+                pointPCL.y = point(1);
+                pointPCL.z = point(2);
+
+                pointPCL.red = RGB.at<cv::Vec<uchar, 3>>(i, j).val[2];
+                pointPCL.green = RGB.at<cv::Vec<uchar, 3>>(i, j).val[1];
+                pointPCL.blue= RGB.at<cv::Vec<uchar, 3>>(i, j).val[0];
+                PointCloud.push_back(pointPCL);
+            }
+
+        }
+    }
+}
