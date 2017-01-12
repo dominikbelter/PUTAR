@@ -26,19 +26,31 @@ void processSLAM(PUTSLAM* _slam){
 
 
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D, Hmi* hmiDev){
-    usleep(2000000);
+    usleep(1000000);
     while(1){
         Mat34 camPose;
         slam.getCurrentPose(camPose);
         slam.getCurrentFrame(rgbImg, depthImg);
         cv::imshow("putar rgb",rgbImg);
         cv::waitKey(30);
-        cv::Mat mask;
         Mat34 objPose;
         //hmiDev->updatePose(objPose);
+        cv::Mat rgbImg;
+        cv::Mat depthImg;
+        //slam.getFrame(rgbImg, depthImg);
+        cv::Mat mask, depthMask;
         //DB objLoader->computeMask(camPose, mask);
-
-        visu2D->updateMask(mask, mask);
+        std::cout << "dffd\n";
+        objLoader->computeMask(Mat34::Identity(),mask, depthMask);
+        std::cout << "mask " << mask.rows << "\n";
+        std::cout << "mask1 " << mask.cols << "\n";
+        cv::namedWindow("mask");
+        cv::imshow("mask",mask);
+        cv::waitKey(30);
+        cv::namedWindow("depthmask");
+        cv::imshow("depthmask",depthMask);
+        cv::waitKey(30);
+        visu2D->updateMask(mask, depthMask);
         visu2D->updateFrame(rgbImg,depthImg);
     }
 }
@@ -75,9 +87,9 @@ int main(int argc, char** argv)
         }
         //objLoader->attachVisualizer(&visu);
 
-        //objLoader->loadObj("kamien.obj");
-
-
+        //putar::obj_type object;
+        objLoader->loadObj();
+        //objLoader->getMesh(object);
 
         ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
 
