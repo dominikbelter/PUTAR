@@ -280,26 +280,116 @@ void Thread(int joy_fd, struct js_event js, int *axis, char *button, int num_of_
         if(axis[0]>50)
         {
             printf("rotacja wokol x +\n");
+            zmienna(0,0)=1;
+            zmienna(0,1)=0;
+            zmienna(0,2)=0;
+            zmienna(0,3)=0;
+            zmienna(1,0)=0;
+            zmienna(1,1)=0.28366;
+            zmienna(1,2)=0.95892;
+            zmienna(1,3)=0;
+            zmienna(2,0)=0;
+            zmienna(2,1)=-0.95892;
+            zmienna(2,2)=0.28366;
+            zmienna(2,3)=0;
+            //std::cout<<zmienna.matrix()<<std::endl;
+            pozycja0=pozycja0*zmienna;
+            std::cout<<pozycja0.matrix()<<std::endl;
         }
         if(axis[0]<-50)
         {
             printf("rotacja wokol x -\n");
+            zmienna(0,0)=1;
+            zmienna(0,1)=0;
+            zmienna(0,2)=0;
+            zmienna(0,3)=0;
+            zmienna(1,0)=0;
+            zmienna(1,1)=0.28366;
+            zmienna(1,2)=-0.95892;
+            zmienna(1,3)=0;
+            zmienna(2,0)=0;
+            zmienna(2,1)=0.95892;
+            zmienna(2,2)=0.28366;
+            zmienna(2,3)=0;
+            //std::cout<<zmienna.matrix()<<std::endl;
+            pozycja0=pozycja0*zmienna;
+            std::cout<<pozycja0.matrix()<<std::endl;
         }
         if(axis[1]>50)
         {
             printf("rotacja wokol y +\n");
+            zmienna(0,0)=0.28366;
+            zmienna(0,1)=0;
+            zmienna(0,2)=-0.95892;
+            zmienna(0,3)=0;
+            zmienna(1,0)=0;
+            zmienna(1,1)=1;
+            zmienna(1,2)=0;
+            zmienna(1,3)=0;
+            zmienna(2,0)=0.95892;
+            zmienna(2,1)=0;
+            zmienna(2,2)=0.28366;
+            zmienna(2,3)=0;
+            //std::cout<<zmienna.matrix()<<std::endl;
+            pozycja0=pozycja0*zmienna;
+            std::cout<<pozycja0.matrix()<<std::endl;
         }
         if(axis[1]<-50)
         {
             printf("rotacja wokol y -\n");
+            zmienna(0,0)=0.28366;
+            zmienna(0,1)=0;
+            zmienna(0,2)=0.95892;
+            zmienna(0,3)=0;
+            zmienna(1,0)=0;
+            zmienna(1,1)=1;
+            zmienna(1,2)=0;
+            zmienna(1,3)=0;
+            zmienna(2,0)=-0.95892;
+            zmienna(2,1)=0;
+            zmienna(2,2)=0.28366;
+            zmienna(2,3)=0;
+            //std::cout<<zmienna.matrix()<<std::endl;
+            pozycja0=pozycja0*zmienna;
+            std::cout<<pozycja0.matrix()<<std::endl;
         }
         if(axis[2]>50)
         {
             printf("rotacja wokol z +\n");
+            zmienna(0,0)=0.28366;
+            zmienna(0,1)=0.95892;
+            zmienna(0,2)=0;
+            zmienna(0,3)=0;
+            zmienna(1,0)=-0.95892;
+            zmienna(1,1)=0.28366;
+            zmienna(1,2)=0;
+            zmienna(1,3)=0;
+            zmienna(2,0)=0;
+            zmienna(2,1)=0;
+            zmienna(2,2)=1;
+            zmienna(2,3)=0;
+            //std::cout<<zmienna.matrix()<<std::endl;
+            pozycja0=pozycja0*zmienna;
+            std::cout<<pozycja0.matrix()<<std::endl;
         }
         if(axis[2]<-50)
         {
             printf("rotacja wokol z -\n");
+            zmienna(0,0)=0.28366;
+            zmienna(0,1)=-0.95892;
+            zmienna(0,2)=0;
+            zmienna(0,3)=0;
+            zmienna(1,0)=0.95892;
+            zmienna(1,1)=0.28366;
+            zmienna(1,2)=0;
+            zmienna(1,3)=0;
+            zmienna(2,0)=0;
+            zmienna(2,1)=0;
+            zmienna(2,2)=1;
+            zmienna(2,3)=0;
+            //std::cout<<zmienna.matrix()<<std::endl;
+            pozycja0=pozycja0*zmienna;
+            std::cout<<pozycja0.matrix()<<std::endl;
         }
         printf("  \r");
         usleep(100000);
@@ -351,6 +441,7 @@ int main(int argc, char** argv)
     pozycja0(2,1)=0;
     pozycja0(2,2)=1;
     pozycja0(2,3)=2;
+    std::cout<<"pozycja poczatkowa"<<std::endl;
     std::cout<<pozycja0.matrix()<<std::endl;
 
 
