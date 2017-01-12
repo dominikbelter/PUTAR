@@ -1,4 +1,4 @@
-
+//#include <GL/glew.h>
 #include "Defs/defs.h"
 #include "ObjLoader/objLoader.h"
 #include "ObjLoader/MyLoader.h"
@@ -8,10 +8,27 @@
 #include "Visualizer/Qvisualizer.h"
 #include "HMIControl/hmiGamepad.h"
 #include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <QApplication>
 #include <iostream>
 #include <thread>
 
+
+
+/**********************************************************
+ *
+ * VARIABLES DECLARATION
+ *
+ *********************************************************/
+
+
+//// The width and height of your window, change them as you like
+int screen_width=640;
+int screen_height=480;
+
+
+//Now the object is generic, the cube has annoyed us a little bit, or not?
+obj_type object;
 
 
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
@@ -22,7 +39,7 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
         cv::Mat depthImg;
         //slam.getFrame(rgbImg, depthImg);
         cv::Mat mask;
-        objLoader->computeMask(camPose, mask);
+        //DB objLoader->computeMask(camPose, mask);
 
         visu2D->updateMask(mask, mask);
         visu2D->updateFrame(rgbImg,depthImg);
@@ -68,10 +85,36 @@ int main(int argc, char** argv)
 
         objLoader->getMesh(object);
 
-        cout<<endl
-           <<"-----------------------"
-          <<endl
-         <<"Polygons quantity:  "<<object.polygons_qty<<endl;
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        cv::Mat dst;
+        Mat34 cameraPose;
+        cv::Mat depthMask;
+        //cv::Mat depth  16 bitowy obraz głębi mnożony razy 1000 albo coś
+
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+        glutInitWindowSize(screen_width,screen_height);
+        glutInitWindowPosition(0,0);
+        glutCreateWindow("At the moment unfortunately this window is nesessery");
+
+        objLoader->computeMask(cameraPose, dst, depthMask);
+
+
+
+        for(int x=0; x<depthMask.cols; x++)
+        {
+            for(int y =0; y<depthMask.rows; y++)
+            {
+                depthMask.at<uchar>(y,x) = depthMask.at<uchar>(y,x)*1000;
+            }
+        }
+
+        cv::namedWindow("imgMAT");
+        cv::imshow("imgMAT", depthMask);
+
+        cv::waitKey(0);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         std::cout << "Done\n";
 }

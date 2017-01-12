@@ -68,7 +68,10 @@ class MyLoader : public ObjLoader, public Subject {
         ///Attach visualizer
         void attachVisualizer(QGLVisualizer* visualizer);
 
-        void computeMask(const Mat34 cameraPose, cv::Mat& mask);
+        void computeMask(const Mat34 cameraPose, cv::Mat& mask, cv::Mat& depthMask);
+
+        ///Texture loader
+        void LoadBitmap();
 
     private:
         Mat34 poseVis;

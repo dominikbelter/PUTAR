@@ -9,25 +9,34 @@
 #include <QApplication>
 #include <iostream>
 #include <thread>
+#include <PUTSLAM/PUTSLAM.h>
+#include <putslam/PUTSLAM/PUTSLAM.h>
 
-//void processSLAM(PUTSLAM* slam){
-//    slam->process();
-//}
-// test
+PUTSLAM slam;
+cv::Mat rgbImg;
+cv::Mat depthImg;
+
+void processSLAM(PUTSLAM* _slam){
+    _slam->startProcessing();
+}
+ //test
 
 
 
 
 
-void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
+void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D, Hmi* hmiDev){
+    usleep(2000000);
     while(1){
         Mat34 camPose;
-        //slam.getPose(camPose);
-        cv::Mat rgbImg;
-        cv::Mat depthImg;
-        //slam.getFrame(rgbImg, depthImg);
+        slam.getCurrentPose(camPose);
+        slam.getCurrentFrame(rgbImg, depthImg);
+        cv::imshow("putar rgb",rgbImg);
+        cv::waitKey(30);
         cv::Mat mask;
-        objLoader->computeMask(camPose, mask);
+        Mat34 objPose;
+        //hmiDev->updatePose(objPose);
+        //DB objLoader->computeMask(camPose, mask);
 
         visu2D->updateMask(mask, mask);
         visu2D->updateFrame(rgbImg,depthImg);
@@ -39,6 +48,8 @@ int main(int argc, char** argv)
     try {
         using namespace putar;
         using namespace std;
+        std::cout<<"dziala"<<std::endl;
+
 
         tinyxml2::XMLDocument config;
         config.LoadFile("../../resources/configGlobal.xml");
@@ -48,13 +59,13 @@ int main(int argc, char** argv)
         std::string visualizerType(config.FirstChildElement("Configuration")->FirstChildElement("Visualizer")->FirstChildElement("type")->GetText());
         std::string Loader3dsConfig(config.FirstChildElement("Configuration")->FirstChildElement("Loader3ds")->FirstChildElement("config")->GetText());
 
-        QApplication application(argc,argv);
-        setlocale(LC_NUMERIC,"C");
-        glutInit(&argc, argv);
+        //QApplication application(argc,argv);
+        //setlocale(LC_NUMERIC,"C");
+        //glutInit(&argc, argv);
 
-        QGLVisualizer visu(visualizerConfig);
-        visu.setWindowTitle("Simulator viewer");
-        visu.show();
+        //QGLVisualizer visu(visualizerConfig);
+        //visu.setWindowTitle("Simulator viewer");
+        //visu.show();
 
         ObjLoader* objLoader;// = putar::createMyLoader();
         if (0)
@@ -62,24 +73,24 @@ int main(int argc, char** argv)
         else{
             objLoader = putar::createMy3dsLoader(Loader3dsConfig);
         }
-        objLoader->attachVisualizer(&visu);
+        //objLoader->attachVisualizer(&visu);
 
         //objLoader->loadObj("kamien.obj");
 
-        //PUTSLAM slam;
+
 
         ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
 
 
         Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
-        //std::thread processThr(processSLAM, &slam);
+        std::thread processThr(processSLAM, &slam);
 
-        std::thread putarThr(processPUTAR, objLoader, visu2D);
+        std::thread putarThr(processPUTAR, objLoader, visu2D, hmiDev);
 
-        application.exec();
+//        application.exec();
 
-        //processThr.join();
+        processThr.join();
         putarThr.join();
 
         std::cout << "Done\n";

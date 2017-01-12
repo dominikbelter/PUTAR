@@ -9,4 +9,8 @@
   <Loader3ds>
 	<config>3dsLoaderConfig.xml</config>
   </Loader3ds>
+
+<LoaderObj>
+	<config>MyLoader.xml</config>
+</LoaderObj>
 </Configuration>

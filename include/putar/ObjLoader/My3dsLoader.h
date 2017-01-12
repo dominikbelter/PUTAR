@@ -44,11 +44,15 @@ class My3dsLoader : public ObjLoader, public Subject {
             if (config.ErrorID())
                 std::cout << "unable to load ObjLoader config file.\n";
 
-            tinyxml2::XMLElement * posXML = config.FirstChildElement( "My3dsLoader" )->FirstChildElement("parameters");
-
+            tinyxml2::XMLElement * posXML = config.FirstChildElement( "My3dsLoader" )->FirstChildElement("file3ds");
             this->fileName=posXML->Attribute("fileName");
-
             this->fileDIR=posXML->Attribute("fileDIR");
+
+            posXML = config.FirstChildElement( "My3dsLoader" )->FirstChildElement("bitMap");
+            this->bitMapName=posXML->Attribute("bitMapName");
+            this->bitMapDIR=posXML->Attribute("bitMapDIR");
+
+            this->num_texture=-1;
         }
 
         /// Name of the grabber
@@ -66,13 +70,21 @@ class My3dsLoader : public ObjLoader, public Subject {
         ///Attach visualizer
         void attachVisualizer(QGLVisualizer* visualizer);
 
-        void computeMask(const Mat34 cameraPose,cv::Mat& mask);
+        void computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& depthMask);
+
+        ///Texture loader
+        void LoadBitmap();
 
     private:
         std::string fileName;
         std::string fileDIR;
+        std::string bitMapName;
+        std::string bitMapDIR;
         obj_type object;
         Mat34 poseVis;
+        int screen_width=640;
+        int screen_height=480;
+        int num_texture;
 };
 
 #endif // MY_3DS_LOADER_H_INCLUDED
