@@ -20,6 +20,11 @@
 
 #define JOY_DEV "/dev/input/js1"
 #define GLUT_JOYSTICK_BUTTON_E 0x80
+#define GLUT_JOYSTICK_BUTTON_F 0x20
+#define GLUT_JOYSTICK_BUTTON_AB 0x03
+#define GLUT_JOYSTICK_BUTTON_BC 0x06
+#define GLUT_JOYSTICK_BUTTON_AD 0x09
+#define GLUT_JOYSTICK_BUTTON_CD 0x12
 
 void display () {
 
@@ -27,7 +32,7 @@ void display () {
     glClear(GL_COLOR_BUFFER_BIT);
 
     /* draw scene */
-    glutSolidTeapot(.5);
+    glutSolidTeapot(.1);
 
     /* flush drawing routines to the window */
     glFlush();
@@ -52,13 +57,29 @@ void joyFunc(unsigned int btn,int x,int y, int z)
  {
  glTranslated(-0.02,0,0);
  }
- if (btn & 0x80)
+ if (btn==GLUT_JOYSTICK_BUTTON_E)
  {
     glTranslated(0,0,0.2);
  }
- if (btn & 0x20)
+ if (btn==GLUT_JOYSTICK_BUTTON_F)
  {
     glTranslated(0,0,-0.2);
+ }
+ if (btn==GLUT_JOYSTICK_BUTTON_AB)
+ {
+    glTranslated(0.02,0.02,0);
+ }
+ if (btn==GLUT_JOYSTICK_BUTTON_BC)
+ {
+    glTranslated(0.02,-0.02,0);
+ }
+ if (btn==GLUT_JOYSTICK_BUTTON_CD)
+ {
+    glTranslated(-0.02,-0.02,0);
+ }
+ if (btn==GLUT_JOYSTICK_BUTTON_AD)
+ {
+    glTranslated(-0.02,0.02,0);
  }
  if (x>50){
      glRotated(5,0,1,0);
