@@ -107,10 +107,10 @@ int main(int argc, char** argv)
 
 
 
-//        cv::namedWindow("imgMAT");
-//        cv::imshow("imgMAT", rgbMask);
+        cv::namedWindow("imgMAT");
+        cv::imshow("imgMAT", rgbMask);
 
-//        cv::waitKey(0);
+        cv::waitKey(0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
