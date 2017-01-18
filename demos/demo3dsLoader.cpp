@@ -70,7 +70,7 @@ int main(int argc, char** argv)
         visu.show();
 
 
-        ObjLoader* objLoader;// = putar::createMyLoader();
+        ObjLoader* objLoader;
         if (0)
             objLoader = putar::createMyLoader();
         else{
@@ -78,7 +78,6 @@ int main(int argc, char** argv)
         }
         objLoader->attachVisualizer(&visu);
 
-        //objLoader->loadObj("stone.obj");
         putar::obj_type object;
 
         objLoader->loadObj();
@@ -87,30 +86,31 @@ int main(int argc, char** argv)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        cv::Mat dst;
+        cv::Mat rgbMask;
         Mat34 cameraPose;
         cv::Mat depthMask;
         //cv::Mat depth  16 bitowy obraz głębi mnożony razy 1000 albo coś
 
-        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-        glutInitWindowSize(screen_width,screen_height);
-        glutInitWindowPosition(0,0);
-        glutCreateWindow("At the moment unfortunately this window is nesessery");
+//        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+//        glutInitWindowSize(screen_width,screen_height);
+//        glutInitWindowPosition(0,0);
+//        glutCreateWindow("At the moment unfortunately this window is nesessery");
 
-        objLoader->computeMask(cameraPose, dst, depthMask);
+        objLoader->computeMask(cameraPose, rgbMask, depthMask);
+
+        //cv::Mat dstDepth;
+        //dstDepth.create(depthMask.size(), CV_16UC1);
+
+        //depthMask.convertTo(dstDepth, CV_16UC1, 2048.0/255.0);
+
+        //cvConvertScale(depthMask, dstDepth, 1.0 / 255.0, 0.0);
 
 
-
-        for(int x=0; x<depthMask.cols; x++)
-        {
-            for(int y =0; y<depthMask.rows; y++)
-            {
-                depthMask.at<uchar>(y,x) = depthMask.at<uchar>(y,x)*1000;
-            }
-        }
 
         cv::namedWindow("imgMAT");
-        cv::imshow("imgMAT", depthMask);
+        cv::imshow("imgMAT", rgbMask);
+        cv::namedWindow("depthMAT");
+        cv::imshow("depthMAT", depthMask);
 
         cv::waitKey(0);
 
