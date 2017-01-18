@@ -91,10 +91,10 @@ int main(int argc, char** argv)
         cv::Mat depthMask;
         //cv::Mat depth  16 bitowy obraz głębi mnożony razy 1000 albo coś
 
-//        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-//        glutInitWindowSize(screen_width,screen_height);
-//        glutInitWindowPosition(0,0);
-//        glutCreateWindow("At the moment unfortunately this window is nesessery");
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+        glutInitWindowSize(screen_width,screen_height);
+        glutInitWindowPosition(0,0);
+        glutCreateWindow("At the moment unfortunately this window is nesessery");
 
         objLoader->computeMask(cameraPose, rgbMask, depthMask);
 
