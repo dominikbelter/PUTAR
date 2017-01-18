@@ -24,6 +24,9 @@ int main(int argc, char** argv)
         glutInit(&argc, argv);
 
         QGLVisualizer visu(visualizerConfig);
+        cv::Mat depth = cv::imread("../../resources/depth_00000.png", CV_LOAD_IMAGE_ANYDEPTH);
+        cv::Mat RGB = cv::imread("../../resources/rgb_00000.png");
+        visu.updateCloud(RGB, depth);
         visu.setWindowTitle("Simulator viewer");
         visu.show();
 
