@@ -10,7 +10,6 @@
 #include <iostream>
 #include <thread>
 #include <PUTSLAM/PUTSLAM.h>
-#include <putslam/PUTSLAM/PUTSLAM.h>
 
 PUTSLAM slam;
 cv::Mat rgbImg;
