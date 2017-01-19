@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <thread>
-#define JOY_DEV "/dev/input/js1"
+//#define JOY_DEV "/dev/input/js1"
 
 using namespace putar;
 
@@ -19,6 +19,9 @@ HmiGamepad::HmiGamepad(void){
 }
 
 HmiGamepad::HmiGamepad(std::string configFilename) : config(configFilename){
+
+    std::string device_path = config.devicename;
+    const char *JOY_DEV = device_path.c_str();
 
     if( ( joy_fd = open( JOY_DEV , O_RDONLY)) == -1 )
     {

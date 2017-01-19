@@ -35,6 +35,8 @@ void QGLVisualizer::draw(){
 
     drawAxis();
 
+    glEnable(GL_TEXTURE_2D); // This Enable the Texture mapping
+    glBindTexture(GL_TEXTURE_2D, objType.id_texture); // We set the active texture
     glBegin(GL_TRIANGLES); // glBegin and glEnd delimit the vertices that define a primitive (in our case triangles)
     for (int i=0;i<objType.polygons_qty;i++)
     {
