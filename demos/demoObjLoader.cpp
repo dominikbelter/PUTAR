@@ -126,7 +126,7 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
     }
 
 }
-/*
+
 GLuint loadBMP_custom(const char * imagepath)
 {
 
@@ -207,8 +207,8 @@ GLuint loadBMP_custom(const char * imagepath)
     glGenerateMipmap(GL_TEXTURE_2D);*/
 
     // Return the ID of the texture we just created
-   // return textureID;
-//}
+    return textureID;
+}
 
 cv::Mat screenshot()
 {
@@ -287,10 +287,10 @@ int main(int argc, char** argv)
         //tworzenie czarnego tła
         glClearColor(0, 0,0,0);
 
-        loadOBJ("../../resources/cube.obj", mesh);
+        loadOBJ("../../resources/kamien.obj", mesh);
         //loadOBJ("/media/user/901E247A1E245B8A/LINUX/PROJEKT/PUTAR/resources/cube.obj", mesh);
-        //GLuint numTex;
-        //numTex = loadBMP_custom("/home/mordimer/Downloads/Hulk_body_diff.bmp");
+        GLuint numTex;
+        numTex = loadBMP_custom("../../resources/kamien.bmp");
 
 
          cout<<"Object loadin process ended"<<endl;
