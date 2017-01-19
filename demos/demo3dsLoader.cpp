@@ -100,9 +100,10 @@ int main(int argc, char** argv)
         cv::Mat depthMask;
         Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
+
+
         while(1)
         {
-            usleep(1000000);
             hmiDev->updatePose(objectPose);
             std::cout<<objectPose.matrix()<<std::endl;
             objLoader->computeMask(cameraPose,objectPose, rgbMask, depthMask);
@@ -111,7 +112,7 @@ int main(int argc, char** argv)
             cv::imshow("imgMAT", depthMask);
             cv::namedWindow("imgMAT2");
             cv::imshow("imgMAT2", rgbMask);
-            cv::waitKey(3000);
+            cv::waitKey(300);
 
         }
 

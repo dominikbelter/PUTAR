@@ -315,19 +315,31 @@ void My3dsLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, 
 //    glRotatef(0,0.0,0.0,1.0);
 
 
-    rotation_x = rotation_x + rotation_x_increment;
-    rotation_y = rotation_y + rotation_y_increment;
-    rotation_z = rotation_z + rotation_z_increment;
+//    rotation_x = rotation_x + rotation_x_increment;
+//    rotation_y = rotation_y + rotation_y_increment;
+//    rotation_z = rotation_z + rotation_z_increment;
 
-    if (rotation_x > 359) rotation_x = 0;
-    if (rotation_y > 359) rotation_y = 0;
-    if (rotation_z > 359) rotation_z = 0;
+//    if (rotation_x > 359) rotation_x = 0;
+//    if (rotation_y > 359) rotation_y = 0;
+//    if (rotation_z > 359) rotation_z = 0;
 
-    glRotatef(rotation_x,1.0,0.0,0.0); // Rotations of the object (the model matrix is multiplied by the rotation matrices)
-    glRotatef(rotation_y,0.0,1.0,0.0);
-    glRotatef(rotation_z,0.0,0.0,1.0);
+//    glRotatef(rotation_x,1.0,0.0,0.0); // Rotations of the object (the model matrix is multiplied by the rotation matrices)
+//    glRotatef(rotation_y,0.0,1.0,0.0);
+//    glRotatef(rotation_z,0.0,0.0,1.0);
 
+    GLdouble matrix[16];
+    for(int i=0;i<4;++i){
+        for(int j=0;j<3;++j){
+            matrix[i*4 + j] = objectPose(i,j);
+        }
+    }
+    matrix[12] = 0;
+    matrix[13] = 0;
+    matrix[14] = 0;
+    matrix[15] = 1;
+    glMultMatrixd(matrix);
 
+    //glScaled(0.01, 0.01, 0.01);
 
     glBindTexture(GL_TEXTURE_2D, object.id_texture); // We set the active texture
 
