@@ -18,51 +18,48 @@
 //}
 //test
 
-void processPUTAR(ObjLoader* objLoader){//, ImageVisualizer* visu2D, Hmi* hmiDev){
+void processPUTAR(ObjLoader* objLoader, Hmi* hmiDev){//, ImageVisualizer* visu2D){
     std::cout << "putar start\n";
     usleep(1000000);
     std::cout << "putar started\n\n\n\n\n\n\n\n\n";
     while(1){
-        Mat34 camPose;
-<<<<<<< HEAD
-        Mat34 objectPose;
-        slam.getCurrentPose(camPose);
-        slam.getCurrentFrame(rgbImg, depthImg);
-        cv::imshow("putar rgb",rgbImg);
-        cv::waitKey(30);
-=======
+
+
+//        slam.getCurrentPose(camPose);
+//        slam.getCurrentFrame(rgbImg, depthImg);
+//        cv::imshow("putar rgb",rgbImg);
+//        cv::waitKey(30);
+
         //slam.getCurrentPose(camPose);
         cv::Mat rgbImg, depthImg;
-        std::cout << "get frame\n";
+        //std::cout << "get frame\n";
         //slam.getCurrentFrame(rgbImg, depthImg);
 //        cv::namedWindow("putar rgb");
 //        cv::imshow("putar rgb",rgbImg);
 //        cv::waitKey(30);
         std::cout << "get frame end\n";
->>>>>>> 9614b4bb7c9ffeafba3001ab9e4798535683c1c3
-        Mat34 objPose;
-        //hmiDev->updatePose(objPose);
-        //slam.getFrame(rgbImg, depthImg);
-<<<<<<< HEAD
 
-        Mat34 cameraPose;
-=======
-Mat34 cameraPose(Mat34::Identity());
->>>>>>> 9614b4bb7c9ffeafba3001ab9e4798535683c1c3
+        Mat34 objPose;
+        hmiDev->updatePose(objPose);
+        std::cout << objPose.matrix() << "\n";
+        //slam.getFrame(rgbImg, depthImg);
+
+        //Mat34 cameraPose;
+
+        Mat34 cameraPose(Mat34::Identity());
+
         putar::obj_type object;
         cv::Mat rgbMask, depthMask;
         std::cout<<"--------------1"<<std::endl;
         objLoader->getMesh(object);
         std::cout<<"--------------2"<<std::endl;
 
-<<<<<<< HEAD
-        objLoader->computeMask(cameraPose, objectPose, rgbMask, depthMask);
+        objLoader->computeMask(cameraPose, objPose, rgbMask, depthMask);
         std::cout<<"--------------3"<<endl;
-=======
+
         std::cout << "compute mask\n";
-        objLoader->computeMask(cameraPose, rgbMask, depthMask);
+        //objLoader->computeMask(cameraPose, rgbMask, depthMask);
         std::cout<<"--------------3"<<std::endl;
->>>>>>> 9614b4bb7c9ffeafba3001ab9e4798535683c1c3
 
         std::cout << "mask " << depthMask.rows << "\n";
         std::cout << "mask1 " << depthMask.cols << "\n";
@@ -115,20 +112,16 @@ int main(int argc, char** argv)
         //ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
 
 
-        //Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
+        Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
 
         //std::thread slamThr(processSLAM, &slam);
 
-<<<<<<< HEAD
         //application.exec();
 
-        processThr.join();
-=======
-        std::thread putarThr(processPUTAR, objLoader);//, visu2D, hmiDev);
+        std::thread putarThr(processPUTAR, objLoader, hmiDev);//, visu2D);
 
         //slamThr.join();
->>>>>>> 9614b4bb7c9ffeafba3001ab9e4798535683c1c3
         putarThr.join();
     }
     catch (const std::exception& ex) {

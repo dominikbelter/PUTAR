@@ -309,6 +309,7 @@ void HmiGamepad::updatePose(Mat34& pose){
         fflush(stdout);
 
     }
+    //pose = macierz;
 }
 
 putar::Hmi* putar::createMyHmiGamepad(){
