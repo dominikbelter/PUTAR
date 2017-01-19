@@ -178,9 +178,6 @@ void My3dsLoader::loadObj()
         }
     }
     fclose (l_file); // Closes the file stream
-    LoadBitmap();
-    std::cout<<object.id_texture<<std::endl;
-
 }
 
 /// Grab image and/or point cloud
