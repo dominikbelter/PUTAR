@@ -34,6 +34,66 @@ void QGLVisualizer::draw(){
     glPopMatrix();
 
     drawAxis();
+
+    glBegin(GL_TRIANGLES); // glBegin and glEnd delimit the vertices that define a primitive (in our case triangles)
+    for (int i=0;i<objType.polygons_qty;i++)
+    {
+        //----------------- FIRST VERTEX -----------------
+        // Texture coordinates of the first vertex
+        glTexCoord2f( objType.mapcoord[ objType.polygon[i].a ].u,
+                      objType.mapcoord[ objType.polygon[i].a ].v);
+        // Coordinates of the first vertex
+        glVertex3f( objType.vertex[ objType.polygon[i].a ].x,
+                    objType.vertex[ objType.polygon[i].a ].y,
+                    objType.vertex[ objType.polygon[i].a ].z); //Vertex definition
+
+        //----------------- SECOND VERTEX -----------------
+        // Texture coordinates of the second vertex
+        glTexCoord2f( objType.mapcoord[ objType.polygon[i].b ].u,
+                      objType.mapcoord[ objType.polygon[i].b ].v);
+        // Coordinates of the second vertex
+        glVertex3f( objType.vertex[ objType.polygon[i].b ].x,
+                    objType.vertex[ objType.polygon[i].b ].y,
+                    objType.vertex[ objType.polygon[i].b ].z);
+
+        //----------------- THIRD VERTEX -----------------
+        // Texture coordinates of the third vertex
+        glTexCoord2f( objType.mapcoord[ objType.polygon[i].c ].u,
+                      objType.mapcoord[ objType.polygon[i].c ].v);
+        // Coordinates of the Third vertex
+        glVertex3f( objType.vertex[ objType.polygon[i].c ].x,
+                    objType.vertex[ objType.polygon[i].c ].y,
+                    objType.vertex[ objType.polygon[i].c ].z);
+    }
+    glEnd();
+
+    int numberTriangles = mesh.vertices.size();
+
+
+    glBegin(GL_TRIANGLES);
+    for(int i=0;i<numberTriangles;i+=3)
+    {
+        glTexCoord2f(mesh.uvs.at(i)(0), mesh.uvs.at(i)(1));
+        glNormal3f(mesh.normals.at(i)(0), mesh.normals.at(i)(1), mesh.normals.at(i)(2));
+        glVertex3f(mesh.vertices.at(i)(0), mesh.vertices.at(i)(1), mesh.vertices.at(i)(2));
+
+        glTexCoord2f(mesh.uvs.at(i+1)(0), mesh.uvs.at(i+1)(1));
+        glNormal3f(mesh.normals.at(i+1)(0), mesh.normals.at(i+1)(1), mesh.normals.at(i+1)(2));
+        glVertex3f(mesh.vertices.at(i+1)(0), mesh.vertices.at(i+1)(1), mesh.vertices.at(i+1)(2));
+
+        glTexCoord2f(mesh.uvs.at(i+2)(0), mesh.uvs.at(i+2)(1));
+        glNormal3f(mesh.normals.at(i+2)(0), mesh.normals.at(i+2)(1), mesh.normals.at(i+2)(2));
+        glVertex3f(mesh.vertices.at(i+2)(0), mesh.vertices.at(i+2)(1), mesh.vertices.at(i+2)(2));
+    }
+    glEnd();
+
+    glBegin(GL_POINTS);
+    for(Point3D i : PointCloud)
+    {
+        glColor3f(i.red/255.0f, i.green/255.0f, i.blue/255.0f);
+        glVertex3f(i.x, i.y, i.z);
+    }
+    glEnd();
 }
 
 /// draw objects
@@ -77,6 +137,11 @@ void QGLVisualizer::init(){
     startAnimation();
 }
 
+/// Updates cloud
+void QGLVisualizer::updateCloud(cv::Mat RGB, cv::Mat D){
+    depth2cloud(D, RGB);
+}
+
 /// generate help string
 std::string QGLVisualizer::help() const{
     std::string text("S i m p l e V i e w e r");
@@ -97,3 +162,41 @@ std::string QGLVisualizer::help() const{
     return text;
 }
 
+void QGLVisualizer::getPoint(unsigned int u, unsigned int v, float depth,
+Eigen::Vector3d& point3D){
+    Eigen::Vector3d point(u, v, 1);
+    point3D = depth*config.PHCPModel*point;
+}
+
+/// Convert disparity image to point cloud
+void QGLVisualizer::depth2cloud(cv::Mat& depthImage, cv::Mat RGB){
+    Eigen::Vector3d point;
+    PointCloud.clear();
+    for (unsigned int i=0;i<depthImage.rows;i++){
+        for (unsigned int j=0;j<depthImage.cols;j++){
+            if(depthImage.at<uint16_t>(i,j)>800&&depthImage.at<uint16_t>(i,j)<8500){
+                float depthM = float(depthImage.at<uint16_t>(i,j))*0.001;
+                getPoint(j,i,depthM,point);
+                Point3D pointPCL;
+                pointPCL.x = point(0);
+                pointPCL.y = point(1);
+                pointPCL.z = point(2);
+
+                pointPCL.red = RGB.at<cv::Vec<uchar, 3>>(i, j).val[2];
+                pointPCL.green = RGB.at<cv::Vec<uchar, 3>>(i, j).val[1];
+                pointPCL.blue= RGB.at<cv::Vec<uchar, 3>>(i, j).val[0];
+                PointCloud.push_back(pointPCL);
+            }
+
+        }
+    }
+}
+
+/// update mesh
+void QGLVisualizer::updateMesh(const Mesh &mesh){
+    this->mesh = mesh;
+}
+
+void QGLVisualizer::updateMesh(const obj_type &objType){
+    this->objType = objType;
+}

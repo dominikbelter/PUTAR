@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MyLoader>
-<parameters fileName="Stone.obj"></parameters>
+<parameters fileName="Stone.obj" fileDIR="../../resources/"></parameters>
 </MyLoader>
 

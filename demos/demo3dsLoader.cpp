@@ -89,12 +89,10 @@ int main(int argc, char** argv)
         Mat34 objectPose;
         cv::Mat depthMask;
 
-
         objLoader->computeMask(cameraPose,objectPose, rgbMask, depthMask);
 
         cv::namedWindow("imgMAT");
         cv::imshow("imgMAT", depthMask);
-
         cv::waitKey(0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
