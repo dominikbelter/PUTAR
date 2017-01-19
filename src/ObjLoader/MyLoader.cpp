@@ -28,17 +28,18 @@ void MyLoader::loadObj(){
 /*
     Mesh mesh;
 
-   const  char path="../../resources/cube.obj";
+    //DB const char path="../../resources/cube.obj";
+/*
 
     printf("Loading OBJ file %s...\n", path);
-
+*/
     std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
     std::vector<Eigen::Vector3f> temp_vertices;
     std::vector<Eigen::Vector2f> temp_uvs;
     std::vector<Eigen::Vector3f> temp_normals;
 
 
-    FILE* file = fopen(path, "r");
+    /*DB FILE* file = fopen(path, "r");
     if( file == NULL ){
         printf("Impossible to open the file ! Are you in the right path ? See Tutorial 1 for details\n");
         getchar();
@@ -120,8 +121,10 @@ for( unsigned int i=0; i<vertexIndices.size(); i++ ){
 
 }
 fclose(file);
+
 return mesh;
 */
+
 
     //std::cout << filename << "\n";
     //throw std::runtime_error("LoadObj method is not implemented\n");
@@ -133,7 +136,9 @@ void MyLoader::getMesh(obj_type &p_object) const{
     p_object=mesh;
      std::cout <<"\n vertices: " <<mesh.vertices.size() << "\n";
       std::cout <<" uvs: " <<mesh.uvs.size() << "\n";
+
     std::cout <<"normals: " <<mesh.normals.size() << "\n";*/
+
    // throw std::runtime_error("getMesh method is not implemented\n");
 }
 
@@ -216,7 +221,7 @@ void MyLoader:: LoadBitmap(){
     // Poor filtering, or ...
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
+*/
     // ... nice trilinear filtering.
     /*
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
