@@ -28,6 +28,15 @@
 //Now the object is generic, the cube has annoyed us a little bit, or not?
 obj_type object;
 
+#define JOY_DEV "/dev/input/js0"
+#define GLUT_JOYSTICK_BUTTON_E 128
+#define GLUT_JOYSTICK_BUTTON_F 512
+#define GLUT_JOYSTICK_BUTTON_AB 18
+#define GLUT_JOYSTICK_BUTTON_BC 3
+#define GLUT_JOYSTICK_BUTTON_AD 24
+#define GLUT_JOYSTICK_BUTTON_CD 9
+#define GLUT_JOYSTICK_BUTTON_G 16
+
 
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
     while(1){
@@ -89,13 +98,24 @@ int main(int argc, char** argv)
         Mat34 cameraPose;
         Mat34 objectPose;
         cv::Mat depthMask;
+        Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
-        objLoader->computeMask(cameraPose,objectPose, rgbMask, depthMask);
+        while(1)
+        {
+            usleep(1000000);
+            hmiDev->updatePose(objectPose);
+            std::cout<<objectPose.matrix()<<std::endl;
+            objLoader->computeMask(cameraPose,objectPose, rgbMask, depthMask);
 
-        cv::namedWindow("imgMAT");
-        cv::imshow("imgMAT", depthMask);
-        cv::namedWindow("imgMAT2");
-        cv::imshow("imgMAT2", rgbMask);
+            cv::namedWindow("imgMAT");
+            cv::imshow("imgMAT", depthMask);
+            cv::namedWindow("imgMAT2");
+            cv::imshow("imgMAT2", rgbMask);
+            cv::waitKey(3000);
+
+        }
+
+
         cv::waitKey(0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
