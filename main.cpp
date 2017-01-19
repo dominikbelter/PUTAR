@@ -54,8 +54,8 @@ void processPUTAR(ObjLoader* objLoader, Hmi* hmiDev){//, ImageVisualizer* visu2D
         objLoader->getMesh(object);
         std::cout<<"--------------2"<<std::endl;
 
-        objLoader->computeMask(cameraPose, objPose, rgbMask, depthMask);
-        std::cout<<"--------------3"<<endl;
+        //objLoader->computeMask(cameraPose, objPose, rgbMask, depthMask);
+        //std::cout<<"--------------3"<<std::endl;
 
         std::cout << "compute mask\n";
         //objLoader->computeMask(cameraPose, rgbMask, depthMask);
