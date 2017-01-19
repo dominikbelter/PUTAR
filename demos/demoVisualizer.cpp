@@ -141,11 +141,11 @@ int main(int argc, char** argv)
 
         objLoader->getMesh(object);
 
-
         visu.updateMesh(object);
         visu.updateCloud(RGB, depth);
         visu.setWindowTitle("Simulator viewer");
         visu.show();
+        objLoader->LoadBitmap();
 
         application.exec();
         std::cout << "Finished\n";
