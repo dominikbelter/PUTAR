@@ -64,6 +64,7 @@ int main(int argc, char** argv)
         glutInit(&argc, argv);
 
         QGLVisualizer visu(visualizerConfig);
+        visu.resize(640, 480);
         visu.setWindowTitle("Simulator viewer");
         visu.show();
 
@@ -93,6 +94,8 @@ int main(int argc, char** argv)
 
         cv::namedWindow("imgMAT");
         cv::imshow("imgMAT", depthMask);
+        cv::namedWindow("imgMAT2");
+        cv::imshow("imgMAT2", rgbMask);
         cv::waitKey(0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////

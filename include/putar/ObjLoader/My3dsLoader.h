@@ -99,8 +99,8 @@ class My3dsLoader : public ObjLoader, public Subject {
         std::string bitMapDIR;
         obj_type object;
         Mat34 poseVis;
-        int screen_width=480;
-        int screen_height=360;
+        int screen_width=640;
+        int screen_height=480;
         int num_texture;
 };
 

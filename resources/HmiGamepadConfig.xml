@@ -2,5 +2,5 @@
   <!-- HmiGamepad configuration -->
   <HmiGamepadConfig>
   	<name>HmiGamepad</name>
-	<parameters devicename="gamepad" delay="0.1"></parameters>
+	<parameters devicename="/dev/input/js1" delay="100" increment="0.02"></parameters>
   </HmiGamepadConfig>

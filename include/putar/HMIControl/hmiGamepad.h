@@ -48,6 +48,7 @@ class HmiGamepad : public Hmi {
             tinyxml2::XMLElement * model = config.FirstChildElement( "HmiGamepadConfig" );
             devicename = model->FirstChildElement( "parameters" )->Attribute("devicename");
             model->FirstChildElement( "parameters" )->QueryFloatAttribute("delay", &delay);
+            model->FirstChildElement( "parameters" )->QueryFloatAttribute("increment", &increment);
         }
 
         public:
@@ -55,6 +56,8 @@ class HmiGamepad : public Hmi {
             std::string devicename;
             /// delay
             float delay;
+            /// increment
+            float increment;
     };
 
         // overloaded constructor
