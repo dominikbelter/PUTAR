@@ -53,12 +53,11 @@ int main(int argc, char** argv)
         }
         objLoader->attachVisualizer(&visu);
         objLoader->loadObj();
+        putar::obj_type object;
 
         //ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
 
-
-        //Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
-
+        Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
         //std::thread slamThr(processSLAM, &slam);
 
@@ -97,7 +96,7 @@ int main(int argc, char** argv)
 
             Mat34 cameraPose(Mat34::Identity());
 
-            putar::obj_type object;
+
             cv::Mat rgbMask, depthMask;
             objLoader->getMesh(object);
 
@@ -106,10 +105,10 @@ int main(int argc, char** argv)
 
             cv::namedWindow("mask");
             cv::imshow("mask",rgbMask);
-            cv::waitKey(30);
+            //cv::waitKey(30);
             cv::namedWindow("depthmask");
             cv::imshow("depthmask",depthMask);
-            cv::waitKey(30);
+            cv::waitKey(0);
             /*visu2D->updateMask(rgbMask, depthMask);
             visu2D->updateFrame(rgbImg,depthImg);*/
             usleep(30000);

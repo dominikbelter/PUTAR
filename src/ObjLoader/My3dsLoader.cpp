@@ -31,7 +31,7 @@ long My3dsLoader::filelength(int f)
     return(buf.st_size);
 }
 
-/// Returns the current 2D image
+/// Load 3ds file
 void My3dsLoader::loadObj()
 {
     obj_type_ptr p_object(&object);
@@ -178,7 +178,6 @@ void My3dsLoader::loadObj()
         }
     }
     fclose (l_file); // Closes the file stream
-
 }
 
 /// Grab image and/or point cloud
@@ -284,9 +283,6 @@ void My3dsLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, 
 
     glEnable(GL_TEXTURE_2D); // This Enable the Texture mapping
 
-    LoadBitmap(); // The Function LoadBitmap()
-
-
     object.id_texture=num_texture;
 
     // If the last function returns -1 it means the file was not found so we exit from the program
@@ -350,7 +346,8 @@ void My3dsLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, 
 
 
     cv::Mat img(screen_height, screen_width, CV_8UC3);
-    cv::Mat imgMask(screen_height, screen_width, CV_8UC1);
+    cv::Mat imgMask;
+    imgMask = cv::Mat::zeros(screen_height, screen_width, CV_8UC1);
 
     mask.create(img.size(), img.type());
     //use fast 4-byte alignment (default anyway) if possible
