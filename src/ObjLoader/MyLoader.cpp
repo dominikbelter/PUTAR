@@ -25,11 +25,12 @@ const std::string& MyLoader::getName() const {
 
 /// Returns the current 2D image
 void MyLoader::loadObj(){
-
+/*
     Mesh mesh;
 
     //DB const char path="../../resources/cube.obj";
 /*
+
     printf("Loading OBJ file %s...\n", path);
 */
     std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
@@ -120,7 +121,9 @@ for( unsigned int i=0; i<vertexIndices.size(); i++ ){
 
 }
 fclose(file);
-return mesh;*/
+
+return mesh;
+*/
 
 
     //std::cout << filename << "\n";
@@ -133,8 +136,9 @@ void MyLoader::getMesh(obj_type &p_object) const{
     p_object=mesh;
      std::cout <<"\n vertices: " <<mesh.vertices.size() << "\n";
       std::cout <<" uvs: " <<mesh.uvs.size() << "\n";
-    std::cout <<"normals: " <<mesh.normals.size() << "\n";
-    */
+
+    std::cout <<"normals: " <<mesh.normals.size() << "\n";*/
+
    // throw std::runtime_error("getMesh method is not implemented\n");
 }
 
@@ -219,7 +223,8 @@ void MyLoader:: LoadBitmap(){
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 */
     // ... nice trilinear filtering.
-    /*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    /*
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

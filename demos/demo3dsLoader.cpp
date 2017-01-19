@@ -39,8 +39,8 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
         cv::Mat mask;
         //DB objLoader->computeMask(camPose, mask);
 
-        visu2D->updateMask(mask, mask);
-        visu2D->updateFrame(rgbImg,depthImg);
+        //visu2D->updateMask(mask, mask);
+        //visu2D->updateFrame(rgbImg,depthImg);
     }
 
 }

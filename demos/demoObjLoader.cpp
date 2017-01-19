@@ -121,8 +121,8 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
         cv::Mat mask;
         //DB objLoader->computeMask(camPose, mask);
 
-        visu2D->updateMask(mask, mask);
-        visu2D->updateFrame(rgbImg,depthImg);
+        //visu2D->updateMask(mask, mask);
+        //visu2D->updateFrame(rgbImg,depthImg);
     }
 
 }
@@ -287,10 +287,10 @@ int main(int argc, char** argv)
         //tworzenie czarnego tła
         glClearColor(0, 0,0,0);
 
-        loadOBJ("../../resources/kamien.obj", mesh);
+        loadOBJ("../../resources/cube.obj", mesh);
         //loadOBJ("/media/user/901E247A1E245B8A/LINUX/PROJEKT/PUTAR/resources/cube.obj", mesh);
-        GLuint numTex;
-        numTex = loadBMP_custom("../../resources/kamien.bmp");
+        //GLuint numTex;
+        //numTex = loadBMP_custom("../../resources/kamien.bmp");
 
 
          cout<<"Object loadin process ended"<<endl;
@@ -309,6 +309,27 @@ int main(int argc, char** argv)
          glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
          glutInitWindowSize(640,480);
          glutInitWindowPosition(0,0);
+
+         glShadeModel(GL_SMOOTH); // Type of shading for the polygons
+
+         // Viewport transformation
+         glViewport(0,0,840,640);
+
+         // Projection transformation
+         glMatrixMode(GL_PROJECTION); // Specifies which matrix stack is the target for matrix operations
+         glLoadIdentity(); // We initialize the projection matrix as identity
+         gluPerspective(45.0f,(GLfloat)840/(GLfloat)640,10.0f,10000.0f); // We define the "viewing volume"
+
+         glEnable(GL_DEPTH_TEST); // We enable the depth test (also called z buffer)
+         glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)
+
+         glEnable(GL_TEXTURE_2D); // This Enable the Texture mapping
+
+
+         glFlush(); // This force the execution of OpenGL commands
+
+
+
          glutCreateWindow("MASKOWNICA");
 
         cv::Mat shot= screenshot();

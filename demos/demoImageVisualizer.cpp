@@ -24,9 +24,11 @@ int main(int argc, char** argv)
         return 1;
     }
     */
+    cv::namedWindow("Updated Image");
     ImageVisualizer* x = putar::createMyImageVisualizer();
 
-    x->UpdateImage();
+
+
 
     return 0;
 }
