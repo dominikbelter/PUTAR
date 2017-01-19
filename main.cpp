@@ -18,62 +18,6 @@
 //}
 //test
 
-void processPUTAR(ObjLoader* objLoader, Hmi* hmiDev){//, ImageVisualizer* visu2D){
-    std::cout << "putar start\n";
-    usleep(1000000);
-    std::cout << "putar started\n\n\n\n\n\n\n\n\n";
-    while(1){
-
-
-//        slam.getCurrentPose(camPose);
-//        slam.getCurrentFrame(rgbImg, depthImg);
-//        cv::imshow("putar rgb",rgbImg);
-//        cv::waitKey(30);
-
-        //slam.getCurrentPose(camPose);
-        cv::Mat rgbImg, depthImg;
-        //std::cout << "get frame\n";
-        //slam.getCurrentFrame(rgbImg, depthImg);
-//        cv::namedWindow("putar rgb");
-//        cv::imshow("putar rgb",rgbImg);
-//        cv::waitKey(30);
-        std::cout << "get frame end\n";
-
-        Mat34 objPose;
-        hmiDev->updatePose(objPose);
-        std::cout << objPose.matrix() << "\n";
-        //slam.getFrame(rgbImg, depthImg);
-
-        //Mat34 cameraPose;
-
-        Mat34 cameraPose(Mat34::Identity());
-
-        putar::obj_type object;
-        cv::Mat rgbMask, depthMask;
-        std::cout<<"--------------1"<<std::endl;
-        objLoader->getMesh(object);
-        std::cout<<"--------------2"<<std::endl;
-
-        //objLoader->computeMask(cameraPose, objPose, rgbMask, depthMask);
-        //std::cout<<"--------------3"<<std::endl;
-
-        std::cout << "compute mask\n";
-        //objLoader->computeMask(cameraPose, rgbMask, depthMask);
-        std::cout<<"--------------3"<<std::endl;
-
-        std::cout << "mask " << depthMask.rows << "\n";
-        std::cout << "mask1 " << depthMask.cols << "\n";
-//        cv::namedWindow("mask");
-//        cv::imshow("mask",rgbMask);
-//        cv::waitKey(30);
-//        cv::namedWindow("depthmask");
-//        cv::imshow("depthmask",depthMask);
-//        cv::waitKey(30);
-        /*visu2D->updateMask(rgbMask, depthMask);
-        visu2D->updateFrame(rgbImg,depthImg);*/
-    }
-}
-
 int main(int argc, char** argv)
 {
     try {   
@@ -97,6 +41,7 @@ int main(int argc, char** argv)
 
 
         QGLVisualizer visu(visualizerConfig);
+        visu.resize(640, 480);
         visu.setWindowTitle("Simulator viewer");
         visu.show();
 
@@ -119,10 +64,63 @@ int main(int argc, char** argv)
 
         //application.exec();
 
-        std::thread putarThr(processPUTAR, objLoader, hmiDev);//, visu2D);
+        //std::thread putarThr(processPUTAR, objLoader, hmiDev);//, visu2D);
 
         //slamThr.join();
-        putarThr.join();
+        //putarThr.join();
+        std::cout << "putar start\n";
+        usleep(1000000);
+        std::cout << "putar started\n\n\n\n\n\n\n\n\n";
+        while(1){
+
+
+    //        slam.getCurrentPose(camPose);
+    //        slam.getCurrentFrame(rgbImg, depthImg);
+    //        cv::imshow("putar rgb",rgbImg);
+    //        cv::waitKey(30);
+
+            //slam.getCurrentPose(camPose);
+            cv::Mat rgbImg, depthImg;
+            //std::cout << "get frame\n";
+            //slam.getCurrentFrame(rgbImg, depthImg);
+    //        cv::namedWindow("putar rgb");
+    //        cv::imshow("putar rgb",rgbImg);
+    //        cv::waitKey(30);
+            std::cout << "get frame end\n";
+
+            Mat34 objPose;
+            hmiDev->updatePose(objPose);
+            //std::cout << objPose.matrix() << "\n";
+            //slam.getFrame(rgbImg, depthImg);
+
+            //Mat34 cameraPose;
+
+            Mat34 cameraPose(Mat34::Identity());
+
+            putar::obj_type object;
+            cv::Mat rgbMask, depthMask;
+            std::cout<<"--------------1"<<std::endl;
+            objLoader->getMesh(object);
+            std::cout<<"--------------2"<<std::endl;
+
+            objLoader->computeMask(cameraPose, objPose, rgbMask, depthMask);
+            std::cout<<"--------------3"<<std::endl;
+
+            std::cout << "compute mask\n";
+            //objLoader->computeMask(cameraPose, rgbMask, depthMask);
+            std::cout<<"--------------3"<<std::endl;
+
+            std::cout << "mask " << depthMask.rows << "\n";
+            std::cout << "mask1 " << depthMask.cols << "\n";
+            cv::namedWindow("mask");
+            cv::imshow("mask",rgbMask);
+            cv::waitKey(30);
+            cv::namedWindow("depthmask");
+            cv::imshow("depthmask",depthMask);
+            cv::waitKey(30);
+            /*visu2D->updateMask(rgbMask, depthMask);
+            visu2D->updateFrame(rgbImg,depthImg);*/
+        }
     }
     catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
