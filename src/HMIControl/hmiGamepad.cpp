@@ -55,6 +55,7 @@ HmiGamepad::HmiGamepad(std::string configFilename) : config(configFilename){
     std::cout<<pose.matrix()<<std::endl;
 
 
+
 }
 
 void HmiGamepad::updatePose(Mat34& pose){
