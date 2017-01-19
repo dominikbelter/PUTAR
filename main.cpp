@@ -29,6 +29,7 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D, Hmi* hmiDev){
     usleep(1000000);
     while(1){
         Mat34 camPose;
+        Mat34 objectPose;
         slam.getCurrentPose(camPose);
         slam.getCurrentFrame(rgbImg, depthImg);
         cv::imshow("putar rgb",rgbImg);
@@ -38,7 +39,8 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D, Hmi* hmiDev){
         cv::Mat rgbImg;
         cv::Mat depthImg;
         //slam.getFrame(rgbImg, depthImg);
-Mat34 cameraPose;
+
+        Mat34 cameraPose;
         putar::obj_type object;
         cv::Mat rgbMask, depthMask;
         std::cout<<"--------------1"<<endl;
@@ -46,7 +48,7 @@ Mat34 cameraPose;
         std::cout<<"--------------2"<<endl;
 
 
-        objLoader->computeMask(cameraPose, rgbMask, depthMask);
+        objLoader->computeMask(cameraPose, objectPose, rgbMask, depthMask);
         std::cout<<"--------------3"<<endl;
 
         std::cout << "mask " << depthMask.rows << "\n";
@@ -104,13 +106,12 @@ int main(int argc, char** argv)
 
         Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
-//        application.exec();
 
         std::thread processThr(processSLAM, &slam);
 
         std::thread putarThr(processPUTAR, objLoader, visu2D, hmiDev);
 
-
+        //application.exec();
 
         processThr.join();
         putarThr.join();

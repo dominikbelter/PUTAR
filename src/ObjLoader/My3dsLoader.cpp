@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <chrono>
 #include <thread>
+#include <GL/glut.h>
+#include <GL/freeglut.h>
 
 using namespace putar;
 
@@ -264,9 +266,8 @@ void My3dsLoader:: LoadBitmap()
     free(infoheader.data); // Free the memory we used to load the texture
 }
 
-void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& depthMask)
+void My3dsLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, cv::Mat& mask, cv::Mat& depthMask)
 {
-
     glClearColor(0.0, 0.0, 0.0, 0.0); // This clear the background color to black
     glShadeModel(GL_SMOOTH); // Type of shading for the polygons
 
@@ -370,16 +371,16 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& dep
 
     glReadPixels(0, 0, imgMask.cols, imgMask.rows, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, imgMask.data);
     //cv::flip(imgMask, depthMask, 0);
-    depthMask = imgMask.clone();
 
-    for(int x=0; x<depthMask.cols; x++)
+    for(int x =0; x<imgMask.cols; x++)
     {
-        for(int y =0; y<depthMask.rows; y++)
+        for(int y = 0; y<imgMask.rows; y++)
         {
-            depthMask.at<uchar>(y,x) = depthMask.at<uchar>(y,x)*1000;
+            imgMask.at<uchar>(y,x)=100* imgMask.at<uchar>(y,x);
         }
     }
 
+    depthMask = imgMask.clone();
     //bitwise_not ( imgMask, depthMask );
 }
 
