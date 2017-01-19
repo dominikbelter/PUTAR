@@ -370,7 +370,7 @@ void My3dsLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, 
     glDepthRange(0.0f, 1.0f);
 
     glReadPixels(0, 0, imgMask.cols, imgMask.rows, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, imgMask.data);
-    //cv::flip(imgMask, depthMask, 0);
+    cv::flip(imgMask, imgMask, 0);
 
     for(int x =0; x<imgMask.cols; x++)
     {
