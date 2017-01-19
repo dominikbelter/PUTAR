@@ -39,6 +39,17 @@ void QGLVisualizer::draw(){
     glPopMatrix();
 
     glPushMatrix();
+    GLdouble matrix[16];
+    for(int i=0;i<4;++i){
+        for(int j=0;j<3;++j){
+            matrix[i*4 + j] = objectPose(i,j);
+        }
+    }
+    matrix[12] = 0;
+    matrix[13] = 0;
+    matrix[14] = 0;
+    matrix[15] = 1;
+    glMultMatrixd(matrix);
     glScaled(0.01, 0.01, 0.01);
     glEnable(GL_TEXTURE_2D); // This Enable the Texture mapping
     //glBindTexture(GL_TEXTURE_2D, objType.id_texture); // We set the active texture
