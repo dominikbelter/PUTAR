@@ -25,8 +25,7 @@ HmiGamepad::HmiGamepad(std::string configFilename) : config(configFilename){
 
     if( ( joy_fd = open( JOY_DEV , O_RDONLY)) == -1 )
     {
-        printf( "Couldn't open joystick\n" );
-        //return -1;
+        throw std::runtime_error("Couldn't open joystick");
     }
 
     ioctl( joy_fd, JSIOCGAXES, &num_of_axis );
@@ -89,7 +88,7 @@ void HmiGamepad::gamepadProcess()
             zmienna(1,0)=0;
             zmienna(1,1)=1;
             zmienna(1,2)=0;
-            zmienna(1,3)=0.02;
+            zmienna(1,3)=config.increment;
             zmienna(2,0)=0;
             zmienna(2,1)=0;
             zmienna(2,2)=1;
@@ -108,7 +107,7 @@ void HmiGamepad::gamepadProcess()
             zmienna(1,0)=0;
             zmienna(1,1)=1;
             zmienna(1,2)=0;
-            zmienna(1,3)=-0.02;
+            zmienna(1,3)=-config.increment;
             zmienna(2,0)=0;
             zmienna(2,1)=0;
             zmienna(2,2)=1;
@@ -123,7 +122,7 @@ void HmiGamepad::gamepadProcess()
             zmienna(0,0)=1;
             zmienna(0,1)=0;
             zmienna(0,2)=0;
-            zmienna(0,3)=0.02;
+            zmienna(0,3)=config.increment;
             zmienna(1,0)=0;
             zmienna(1,1)=1;
             zmienna(1,2)=0;
@@ -142,7 +141,7 @@ void HmiGamepad::gamepadProcess()
             zmienna(0,0)=1;
             zmienna(0,1)=0;
             zmienna(0,2)=0;
-            zmienna(0,3)=-0.02;
+            zmienna(0,3)=-config.increment;
             zmienna(1,0)=0;
             zmienna(1,1)=1;
             zmienna(1,2)=0;
@@ -169,7 +168,7 @@ void HmiGamepad::gamepadProcess()
             zmienna(2,0)=0;
             zmienna(2,1)=0;
             zmienna(2,2)=1;
-            zmienna(2,3)=0.02;
+            zmienna(2,3)=config.increment;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
@@ -188,7 +187,7 @@ void HmiGamepad::gamepadProcess()
             zmienna(2,0)=0;
             zmienna(2,1)=0;
             zmienna(2,2)=1;
-            zmienna(2,3)=-0.02;
+            zmienna(2,3)=-config.increment;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
@@ -308,7 +307,7 @@ void HmiGamepad::gamepadProcess()
             std::cout<<macierz.matrix()<<std::endl;
         }
         printf("  \r");
-        usleep(100000);
+        usleep(config.delay*1000);
         fflush(stdout);
 
     }
@@ -321,8 +320,6 @@ HmiGamepad::~HmiGamepad(){
 
 
 void HmiGamepad::updatePose(Mat34& pose){
-    //throw std::runtime_error("updatePose method is not implemented");
-
     pose = macierz;
 }
 
