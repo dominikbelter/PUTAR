@@ -25,10 +25,10 @@ const std::string& MyLoader::getName() const {
 
 /// Returns the current 2D image
 void MyLoader::loadObj(){
-
+/*
     Mesh mesh;
 
-    const char path="../../resources/cube.obj";
+   const  char path="../../resources/cube.obj";
 
     printf("Loading OBJ file %s...\n", path);
 
@@ -121,7 +121,7 @@ for( unsigned int i=0; i<vertexIndices.size(); i++ ){
 }
 fclose(file);
 return mesh;
-
+*/
 
     //std::cout << filename << "\n";
     //throw std::runtime_error("LoadObj method is not implemented\n");
@@ -129,11 +129,11 @@ return mesh;
 
 /// Grab image and/or point cloud
 void MyLoader::getMesh(obj_type &p_object) const{
-
+/*
     p_object=mesh;
      std::cout <<"\n vertices: " <<mesh.vertices.size() << "\n";
       std::cout <<" uvs: " <<mesh.uvs.size() << "\n";
-    std::cout <<"normals: " <<mesh.normals.size() << "\n";
+    std::cout <<"normals: " <<mesh.normals.size() << "\n";*/
    // throw std::runtime_error("getMesh method is not implemented\n");
 }
 
@@ -144,7 +144,7 @@ void MyLoader::attachVisualizer(QGLVisualizer* visualizer) {
 
 void MyLoader:: LoadBitmap(){
 
-
+/*
     const char imagepath="../../resources/kamien.bmp";
 
 
@@ -218,14 +218,15 @@ void MyLoader:: LoadBitmap(){
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     // ... nice trilinear filtering.
-    /*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    /*
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glGenerateMipmap(GL_TEXTURE_2D);*/
 
     // Return the ID of the texture we just created
-    return textureID;
+    //return textureID;
 
        // throw std::runtime_error("LoadBitmap method is not implemented\n");
 }
@@ -240,7 +241,7 @@ void MyLoader::computeMask(const Mat34 cameraPose, cv::Mat& mask, cv::Mat& depth
         objPose(i,3) = distribution(e2);
     notify(objPose);
 
-
+/*
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(640,480);
     glutInitWindowPosition(0,0);
@@ -262,7 +263,7 @@ cv::Mat mask;
 cv::flip(img, mask, 0);
 cv::imshow("MASKA",mask);
 
-
+*/
 
 
 
