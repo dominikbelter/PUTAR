@@ -11,7 +11,8 @@ using namespace putar;
 /// A single instance of Visualizer
 QGLVisualizer::Ptr visualizer;
 
-QGLVisualizer::QGLVisualizer(void) : objectPose(Mat34::Identity()){
+QGLVisualizer::QGLVisualizer(void) : objectPose(Mat34::Identity()), cameraPose(Mat34::Identity()){
+    objectPose(0,3)=2.0;
 }
 
 /// Construction
@@ -34,7 +35,7 @@ void QGLVisualizer::draw(){
     glPopMatrix();
 
     drawAxis();
-
+    std::cout << objType.id_texture;
     glEnable(GL_TEXTURE_2D); // This Enable the Texture mapping
     glBindTexture(GL_TEXTURE_2D, objType.id_texture); // We set the active texture
     glBegin(GL_TRIANGLES); // glBegin and glEnd delimit the vertices that define a primitive (in our case triangles)
@@ -69,7 +70,8 @@ void QGLVisualizer::draw(){
     }
     glEnd();
 
-    int numberTriangles = mesh.vertices.size();
+
+    /*int numberTriangles = mesh.vertices.size();
 
 
     glBegin(GL_TRIANGLES);
@@ -95,7 +97,7 @@ void QGLVisualizer::draw(){
         glColor3f(i.red/255.0f, i.green/255.0f, i.blue/255.0f);
         glVertex3f(i.x, i.y, i.z);
     }
-    glEnd();
+    glEnd();*/
 }
 
 /// draw objects
@@ -104,7 +106,16 @@ void QGLVisualizer::animate(){
 
 /// update object state
 void QGLVisualizer::update(const putar::Mat34& objectState){
+    mtxCamera.lock();
     objectPose = objectState;
+    mtxCamera.unlock();
+}
+
+/// update object state
+void QGLVisualizer::updateCamera(const putar::Mat34& cameraState){
+    mtxCamera.lock();
+    cameraPose = cameraState;
+    mtxCamera.unlock();
 }
 
 /// initialize visualizer

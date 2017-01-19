@@ -178,7 +178,7 @@ void My3dsLoader::loadObj()
         }
     }
     fclose (l_file); // Closes the file stream
-
+    //LoadBitmap();
 }
 
 /// Grab image and/or point cloud
