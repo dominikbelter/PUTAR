@@ -67,16 +67,19 @@ class HmiGamepad : public Hmi {
         void updatePose(Mat34& pose);
         
         // Virtual descrutor
-        ~HmiGamepad(){}
+        ~HmiGamepad();
 private:
         ///config
         Config config;
+
+        void gamepadProcess();
 
         int joy_fd, *axis=NULL, num_of_axis=0, num_of_buttons=0, x;
         char *button=NULL, name_of_joystick[80];
 
         Mat34 zmienna;
-        Mat34 pose;
+        Mat34 macierz;
+        std::unique_ptr<std::thread> gamepadThread;
 };
 
 #endif
