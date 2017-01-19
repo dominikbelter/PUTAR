@@ -58,13 +58,8 @@ class ImageVisualizerCV: public ImageVisualizer{
 	ImageVisualizerCV(void){}
     // overloaded constructor
     ImageVisualizerCV(std::string configFilename);
-	// update the Cloud
-    void updateFrame(cv::Mat RGB, cv::Mat depthImg);
-	
-	// update Mask
-    void updateMask(cv::Mat mask, cv::Mat depthMask);
 
-    cv::Mat UpdateImage(/*cv::Mat mask, cv::Mat depthMask, cv::Mat RGB, cv::Mat depthImg*/);
+    cv::Mat UpdateImage(cv::Mat mask, cv::Mat depthMask, cv::Mat RGB, cv::Mat depthImg);
 	
 	// Desctructor
 	~ImageVisualizerCV(){}
