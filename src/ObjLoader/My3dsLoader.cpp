@@ -381,6 +381,8 @@ void My3dsLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, 
     }
 
     depthMask = imgMask.clone();
+    notify(objectPose);
+    notifyCamera(cameraPose);
     //bitwise_not ( imgMask, depthMask );
 }
 

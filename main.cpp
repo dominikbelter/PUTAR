@@ -57,7 +57,7 @@ int main(int argc, char** argv)
         //ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
 
 
-        Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
+        //Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
 
         //std::thread slamThr(processSLAM, &slam);
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
             std::cout << "get frame end\n";
 
             Mat34 objPose;
-            hmiDev->updatePose(objPose);
+            //hmiDev->updatePose(objPose);
             //std::cout << objPose.matrix() << "\n";
             //slam.getFrame(rgbImg, depthImg);
 
@@ -99,19 +99,11 @@ int main(int argc, char** argv)
 
             putar::obj_type object;
             cv::Mat rgbMask, depthMask;
-            std::cout<<"--------------1"<<std::endl;
             objLoader->getMesh(object);
-            std::cout<<"--------------2"<<std::endl;
 
             objLoader->computeMask(cameraPose, objPose, rgbMask, depthMask);
-            std::cout<<"--------------3"<<std::endl;
-
-            std::cout << "compute mask\n";
             //objLoader->computeMask(cameraPose, rgbMask, depthMask);
-            std::cout<<"--------------3"<<std::endl;
 
-            std::cout << "mask " << depthMask.rows << "\n";
-            std::cout << "mask1 " << depthMask.cols << "\n";
             cv::namedWindow("mask");
             cv::imshow("mask",rgbMask);
             cv::waitKey(30);
@@ -120,6 +112,7 @@ int main(int argc, char** argv)
             cv::waitKey(30);
             /*visu2D->updateMask(rgbMask, depthMask);
             visu2D->updateFrame(rgbImg,depthImg);*/
+            usleep(30000);
         }
     }
     catch (const std::exception& ex) {
