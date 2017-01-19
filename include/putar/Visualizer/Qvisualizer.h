@@ -103,7 +103,8 @@ public:
     void update(const putar::Mat34& objectState);
 
     /// Updates mesh
-    void updateMesh(const Object3D& mesh);
+    void updateMesh(const Mesh&  mesh);
+    void updateMesh(const obj_type &objType);
 
     /// Updates cloud
     void updateCloud(cv::Mat RGB, cv::Mat D);
@@ -148,6 +149,11 @@ private:
     };
 
     std::vector<Point3D> PointCloud;
+
+    /// mesh object
+    Mesh mesh;
+
+    obj_type objType;
 };
 
 #endif // QVISUALIZER_H_INCLUDED

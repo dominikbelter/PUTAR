@@ -34,6 +34,59 @@ void QGLVisualizer::draw(){
     glPopMatrix();
 
     drawAxis();
+
+    glBegin(GL_TRIANGLES); // glBegin and glEnd delimit the vertices that define a primitive (in our case triangles)
+    for (int i=0;i<objType.polygons_qty;i++)
+    {
+        //----------------- FIRST VERTEX -----------------
+        // Texture coordinates of the first vertex
+        glTexCoord2f( objType.mapcoord[ objType.polygon[i].a ].u,
+                      objType.mapcoord[ objType.polygon[i].a ].v);
+        // Coordinates of the first vertex
+        glVertex3f( objType.vertex[ objType.polygon[i].a ].x,
+                    objType.vertex[ objType.polygon[i].a ].y,
+                    objType.vertex[ objType.polygon[i].a ].z); //Vertex definition
+
+        //----------------- SECOND VERTEX -----------------
+        // Texture coordinates of the second vertex
+        glTexCoord2f( objType.mapcoord[ objType.polygon[i].b ].u,
+                      objType.mapcoord[ objType.polygon[i].b ].v);
+        // Coordinates of the second vertex
+        glVertex3f( objType.vertex[ objType.polygon[i].b ].x,
+                    objType.vertex[ objType.polygon[i].b ].y,
+                    objType.vertex[ objType.polygon[i].b ].z);
+
+        //----------------- THIRD VERTEX -----------------
+        // Texture coordinates of the third vertex
+        glTexCoord2f( objType.mapcoord[ objType.polygon[i].c ].u,
+                      objType.mapcoord[ objType.polygon[i].c ].v);
+        // Coordinates of the Third vertex
+        glVertex3f( objType.vertex[ objType.polygon[i].c ].x,
+                    objType.vertex[ objType.polygon[i].c ].y,
+                    objType.vertex[ objType.polygon[i].c ].z);
+    }
+    glEnd();
+
+    int numberTriangles = mesh.vertices.size();
+
+
+    glBegin(GL_TRIANGLES);
+    for(int i=0;i<numberTriangles;i+=3)
+    {
+        glTexCoord2f(mesh.uvs.at(i)(0), mesh.uvs.at(i)(1));
+        glNormal3f(mesh.normals.at(i)(0), mesh.normals.at(i)(1), mesh.normals.at(i)(2));
+        glVertex3f(mesh.vertices.at(i)(0), mesh.vertices.at(i)(1), mesh.vertices.at(i)(2));
+
+        glTexCoord2f(mesh.uvs.at(i+1)(0), mesh.uvs.at(i+1)(1));
+        glNormal3f(mesh.normals.at(i+1)(0), mesh.normals.at(i+1)(1), mesh.normals.at(i+1)(2));
+        glVertex3f(mesh.vertices.at(i+1)(0), mesh.vertices.at(i+1)(1), mesh.vertices.at(i+1)(2));
+
+        glTexCoord2f(mesh.uvs.at(i+2)(0), mesh.uvs.at(i+2)(1));
+        glNormal3f(mesh.normals.at(i+2)(0), mesh.normals.at(i+2)(1), mesh.normals.at(i+2)(2));
+        glVertex3f(mesh.vertices.at(i+2)(0), mesh.vertices.at(i+2)(1), mesh.vertices.at(i+2)(2));
+    }
+    glEnd();
+
     glBegin(GL_POINTS);
     for(Point3D i : PointCloud)
     {
@@ -137,4 +190,13 @@ void QGLVisualizer::depth2cloud(cv::Mat& depthImage, cv::Mat RGB){
 
         }
     }
+}
+
+/// update mesh
+void QGLVisualizer::updateMesh(const Mesh &mesh){
+    this->mesh = mesh;
+}
+
+void QGLVisualizer::updateMesh(const obj_type &objType){
+    this->objType = objType;
 }
