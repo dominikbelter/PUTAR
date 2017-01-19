@@ -18,3 +18,12 @@ void Subject::notify(const putar::Mat34& objectState){
         }
     }
 }
+
+void Subject::notifyCamera(const putar::Mat34& cameraState){
+    for(vector<Observer*>::const_iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        if(*iter != 0) {
+            (*iter)->updateCamera(cameraState);
+        }
+    }
+}
