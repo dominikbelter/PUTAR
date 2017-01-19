@@ -89,7 +89,8 @@ void QGLVisualizer::draw(){
 
     int numberTriangles = mesh.vertices.size();
 
-
+    glPushMatrix();
+    glMultMatrixd(matrix);
     glBegin(GL_TRIANGLES);
     for(int i=0;i<numberTriangles;i+=3)
     {
@@ -106,7 +107,20 @@ void QGLVisualizer::draw(){
         glVertex3f(mesh.vertices.at(i+2)(0), mesh.vertices.at(i+2)(1), mesh.vertices.at(i+2)(2));
     }
     glEnd();
+    glPopMatrix();
 
+    glPushMatrix();
+    GLdouble matrixCam[16];
+    for(int i=0;i<4;++i){
+        for(int j=0;j<3;++j){
+            matrixCam[i*4 + j] = cameraPose(i,j);
+        }
+    }
+    matrixCam[12] = 0;
+    matrixCam[13] = 0;
+    matrixCam[14] = 0;
+    matrixCam[15] = 1;
+    glMultMatrixd(matrixCam);
     glBegin(GL_POINTS);
     for(Point3D i : PointCloud)
     {
@@ -114,6 +128,8 @@ void QGLVisualizer::draw(){
         glVertex3f(i.x, i.y, i.z);
     }
     glEnd();
+    glPopMatrix();
+
 }
 
 /// draw objects
