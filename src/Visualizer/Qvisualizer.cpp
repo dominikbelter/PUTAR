@@ -34,10 +34,14 @@ void QGLVisualizer::draw(){
     glutSolidTeapot(0.1);
     glPopMatrix();
 
+    glPushMatrix();
     drawAxis();
-    std::cout << objType.id_texture;
+    glPopMatrix();
+
+    glPushMatrix();
+    glScaled(0.01, 0.01, 0.01);
     glEnable(GL_TEXTURE_2D); // This Enable the Texture mapping
-    glBindTexture(GL_TEXTURE_2D, objType.id_texture); // We set the active texture
+    //glBindTexture(GL_TEXTURE_2D, objType.id_texture); // We set the active texture
     glBegin(GL_TRIANGLES); // glBegin and glEnd delimit the vertices that define a primitive (in our case triangles)
     for (int i=0;i<objType.polygons_qty;i++)
     {
@@ -69,9 +73,10 @@ void QGLVisualizer::draw(){
                     objType.vertex[ objType.polygon[i].c ].z);
     }
     glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
 
-
-    /*int numberTriangles = mesh.vertices.size();
+    int numberTriangles = mesh.vertices.size();
 
 
     glBegin(GL_TRIANGLES);
@@ -97,7 +102,7 @@ void QGLVisualizer::draw(){
         glColor3f(i.red/255.0f, i.green/255.0f, i.blue/255.0f);
         glVertex3f(i.x, i.y, i.z);
     }
-    glEnd();*/
+    glEnd();
 }
 
 /// draw objects
