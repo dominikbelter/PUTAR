@@ -6,6 +6,7 @@
 #include <linux/joystick.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <thread>
 #define JOY_DEV "/dev/input/js1"
 
 using namespace putar;
@@ -39,26 +40,25 @@ HmiGamepad::HmiGamepad(std::string configFilename) : config(configFilename){
 
     fcntl( joy_fd, F_SETFL, O_NONBLOCK );	/* use non-blocking mode */
 
-    pose(0,0)=1;
-    pose(0,1)=0;
-    pose(0,2)=0;
-    pose(0,3)=0;
-    pose(1,0)=0;
-    pose(1,1)=1;
-    pose(1,2)=0;
-    pose(1,3)=0;
-    pose(2,0)=0;
-    pose(2,1)=0;
-    pose(2,2)=1;
-    pose(2,3)=2;
+    macierz(0,0)=1;
+    macierz(0,1)=0;
+    macierz(0,2)=0;
+    macierz(0,3)=0;
+    macierz(1,0)=0;
+    macierz(1,1)=1;
+    macierz(1,2)=0;
+    macierz(1,3)=0;
+    macierz(2,0)=0;
+    macierz(2,1)=0;
+    macierz(2,2)=1;
+    macierz(2,3)=2;
     std::cout<<"pozycja poczatkowa"<<std::endl;
-    std::cout<<pose.matrix()<<std::endl;
+    std::cout<<macierz.matrix()<<std::endl;
 
-
+    gamepadThread.reset(new std::thread(&HmiGamepad::gamepadProcess,this));
 }
-
-void HmiGamepad::updatePose(Mat34& pose){
-    //throw std::runtime_error("updatePose method is not implemented");
+void HmiGamepad::gamepadProcess()
+{
     while( 1 ) 	/* infinite loop */
     {
         struct js_event js;
@@ -92,8 +92,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=1;
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(button[0]==1)
         {
@@ -111,8 +111,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=1;
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(button[1]==1)
         {
@@ -130,8 +130,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=1;
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(button[3]==1)
         {
@@ -149,8 +149,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=1;
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(button[9]==1)
         {
@@ -168,8 +168,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=1;
             zmienna(2,3)=0.02;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(button[7]==1)
         {
@@ -187,8 +187,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=1;
             zmienna(2,3)=-0.02;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(axis[0]>50)
         {
@@ -206,8 +206,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=0.28366;
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(axis[0]<-50)
         {
@@ -225,8 +225,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=0.28366;
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(axis[1]>50)
         {
@@ -244,8 +244,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=0.28366;
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(axis[1]<-50)
         {
@@ -263,8 +263,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=0.28366;
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(axis[2]>50)
         {
@@ -282,8 +282,8 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=1;
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         if(axis[2]<-50)
         {
@@ -301,14 +301,26 @@ void HmiGamepad::updatePose(Mat34& pose){
             zmienna(2,2)=1;
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
-            pose=pose*zmienna;
-            std::cout<<pose.matrix()<<std::endl;
+            macierz=macierz*zmienna;
+            std::cout<<macierz.matrix()<<std::endl;
         }
         printf("  \r");
         usleep(100000);
         fflush(stdout);
 
     }
+
+}
+
+HmiGamepad::~HmiGamepad(){
+    gamepadThread->join();
+}
+
+
+void HmiGamepad::updatePose(Mat34& pose){
+    //throw std::runtime_error("updatePose method is not implemented");
+
+    pose = macierz;
 }
 
 putar::Hmi* putar::createMyHmiGamepad(){

@@ -18,32 +18,47 @@
 //}
 //test
 
-void processPUTAR(ObjLoader* objLoader){//, ImageVisualizer* visu2D, Hmi* hmiDev){
+void processPUTAR(ObjLoader* objLoader, Hmi* hmiDev){//, ImageVisualizer* visu2D){
     std::cout << "putar start\n";
     usleep(1000000);
     std::cout << "putar started\n\n\n\n\n\n\n\n\n";
     while(1){
-        Mat34 camPose;
+
+
+//        slam.getCurrentPose(camPose);
+//        slam.getCurrentFrame(rgbImg, depthImg);
+//        cv::imshow("putar rgb",rgbImg);
+//        cv::waitKey(30);
+
         //slam.getCurrentPose(camPose);
         cv::Mat rgbImg, depthImg;
-        std::cout << "get frame\n";
+        //std::cout << "get frame\n";
         //slam.getCurrentFrame(rgbImg, depthImg);
 //        cv::namedWindow("putar rgb");
 //        cv::imshow("putar rgb",rgbImg);
 //        cv::waitKey(30);
         std::cout << "get frame end\n";
+
         Mat34 objPose;
-        //hmiDev->updatePose(objPose);
+        hmiDev->updatePose(objPose);
+        std::cout << objPose.matrix() << "\n";
         //slam.getFrame(rgbImg, depthImg);
-Mat34 cameraPose(Mat34::Identity());
+
+        //Mat34 cameraPose;
+
+        Mat34 cameraPose(Mat34::Identity());
+
         putar::obj_type object;
         cv::Mat rgbMask, depthMask;
         std::cout<<"--------------1"<<std::endl;
         objLoader->getMesh(object);
         std::cout<<"--------------2"<<std::endl;
 
+        objLoader->computeMask(cameraPose, objPose, rgbMask, depthMask);
+        std::cout<<"--------------3"<<endl;
+
         std::cout << "compute mask\n";
-        objLoader->computeMask(cameraPose, rgbMask, depthMask);
+        //objLoader->computeMask(cameraPose, rgbMask, depthMask);
         std::cout<<"--------------3"<<std::endl;
 
         std::cout << "mask " << depthMask.rows << "\n";
@@ -97,13 +112,14 @@ int main(int argc, char** argv)
         //ImageVisualizer* visu2D = putar::createMyImageVisualizer("ImageVisualizerConfig.xml");
 
 
-        //Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
+        Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
-//        application.exec();
 
         //std::thread slamThr(processSLAM, &slam);
 
-        std::thread putarThr(processPUTAR, objLoader);//, visu2D, hmiDev);
+        //application.exec();
+
+        std::thread putarThr(processPUTAR, objLoader, hmiDev);//, visu2D);
 
         //slamThr.join();
         putarThr.join();

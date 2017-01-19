@@ -22,9 +22,7 @@
  *********************************************************/
 
 
-//// The width and height of your window, change them as you like
-int screen_width=640;
-int screen_height=480;
+
 
 
 //Now the object is generic, the cube has annoyed us a little bit, or not?
@@ -41,8 +39,8 @@ void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
         cv::Mat mask;
         //DB objLoader->computeMask(camPose, mask);
 
-        visu2D->updateMask(mask, mask);
-        visu2D->updateFrame(rgbImg,depthImg);
+        //visu2D->updateMask(mask, mask);
+        //visu2D->updateFrame(rgbImg,depthImg);
     }
 
 }
@@ -88,30 +86,13 @@ int main(int argc, char** argv)
 
         cv::Mat rgbMask;
         Mat34 cameraPose;
+        Mat34 objectPose;
         cv::Mat depthMask;
-        //cv::Mat depth  16 bitowy obraz głębi mnożony razy 1000 albo coś
 
-        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-        glutInitWindowSize(screen_width,screen_height);
-        glutInitWindowPosition(0,0);
-        glutCreateWindow("At the moment unfortunately this window is nesessery");
-
-        objLoader->computeMask(cameraPose, rgbMask, depthMask);
-
-        //cv::Mat dstDepth;
-        //dstDepth.create(depthMask.size(), CV_16UC1);
-
-        //depthMask.convertTo(dstDepth, CV_16UC1, 2048.0/255.0);
-
-        //cvConvertScale(depthMask, dstDepth, 1.0 / 255.0, 0.0);
-
-
+        objLoader->computeMask(cameraPose,objectPose, rgbMask, depthMask);
 
         cv::namedWindow("imgMAT");
-        cv::imshow("imgMAT", rgbMask);
-        cv::namedWindow("depthMAT");
-        cv::imshow("depthMAT", depthMask);
-
+        cv::imshow("imgMAT", depthMask);
         cv::waitKey(0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////

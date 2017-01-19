@@ -25,18 +25,18 @@ using namespace putar;
 class My3dsLoader : public ObjLoader, public Subject {
     public:
 
-
-
         /// Pointer
         typedef std::unique_ptr<My3dsLoader> Ptr;
 
-
-
-
-        /// Construction
+        /**
+         * @brief My3dsLoader constructor
+         */
         My3dsLoader(void);
 
-        /// Construction
+        /**
+         * @brief My3dsLoader overloaded constructor
+         * @param configFilename
+         */
         My3dsLoader(std::string configFilename) : ObjLoader("My3dsLoader", TYPE_3DS){
             tinyxml2::XMLDocument config;
             std::string filename = "../../resources/" + configFilename;
@@ -55,35 +55,52 @@ class My3dsLoader : public ObjLoader, public Subject {
             this->num_texture=-1;
         }
 
+
+        /**
+        * @brief Load 3ds file. Set Path and FileName in configFile
+        */
+        void loadObj();
+
+        /**
+         * @brief Grab image and/or point cloud
+         * @param p_object
+         */
+        void getMesh(obj_type &p_object) const;
+
+        /**
+         * @brief Attach Visualizer
+         * @param visualizer
+         */
+        void attachVisualizer(QGLVisualizer* visualizer);
+
+        /**
+         * @brief Compute 2D RGB and Depth masks
+         * @param cameraPose
+         * @param objectPose
+         * @param mask
+         * @param depthMask
+         */
+        void computeMask(const Mat34& cameraPose, const Mat34& objectPose, cv::Mat& mask, cv::Mat& depthMask);
+
+
+    private:
         /// Name of the grabber
         const std::string& getName() const;
 
         /// Calculate length of the file
         long filelength(int f);
 
-        /// Returns the current 2D image
-        void loadObj();
-
-        /// Grab image and/or point cloud
-        void getMesh(obj_type &p_object) const;
-
-        ///Attach visualizer
-        void attachVisualizer(QGLVisualizer* visualizer);
-
-        void computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& depthMask);
-
         ///Texture loader
         void LoadBitmap();
 
-    private:
         std::string fileName;
         std::string fileDIR;
         std::string bitMapName;
         std::string bitMapDIR;
         obj_type object;
         Mat34 poseVis;
-        int screen_width=640;
-        int screen_height=480;
+        int screen_width=480;
+        int screen_height=360;
         int num_texture;
 };
 
