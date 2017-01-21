@@ -192,7 +192,7 @@ void HmiGamepad::gamepadProcess()
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[0]>50)
+        if(axis[0]>200)
         {
             printf("rotacja wokol x +\n");
             zmienna(0,0)=1;
@@ -211,7 +211,7 @@ void HmiGamepad::gamepadProcess()
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[0]<-50)
+        if(axis[0]<-200)
         {
             printf("rotacja wokol x -\n");
             zmienna(0,0)=1;
@@ -230,7 +230,7 @@ void HmiGamepad::gamepadProcess()
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[1]>50)
+        if(axis[1]>200)
         {
             printf("rotacja wokol y +\n");
             zmienna(0,0)=0.28366;
@@ -249,7 +249,7 @@ void HmiGamepad::gamepadProcess()
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[1]<-50)
+        if(axis[1]<-200)
         {
             printf("rotacja wokol y -\n");
             zmienna(0,0)=0.28366;
@@ -268,7 +268,7 @@ void HmiGamepad::gamepadProcess()
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[2]>50)
+        if(axis[2]>200)
         {
             printf("rotacja wokol z +\n");
             zmienna(0,0)=0.28366;
@@ -287,7 +287,7 @@ void HmiGamepad::gamepadProcess()
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[2]<-50)
+        if(axis[2]<-200)
         {
             printf("rotacja wokol z -\n");
             zmienna(0,0)=0.28366;
