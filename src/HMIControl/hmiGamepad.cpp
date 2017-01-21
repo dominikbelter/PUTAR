@@ -200,12 +200,12 @@ void HmiGamepad::gamepadProcess()
             zmienna(0,2)=0;
             zmienna(0,3)=0;
             zmienna(1,0)=0;
-            zmienna(1,1)=std::cos(0.087266463);
-            zmienna(1,2)=std::sin(0.087266463);
+            zmienna(1,1)=std::cos(config.angle);
+            zmienna(1,2)=std::sin(config.angle);
             zmienna(1,3)=0;
             zmienna(2,0)=0;
-            zmienna(2,1)=-std::sin(0.087266463);
-            zmienna(2,2)=std::cos(0.087266463);
+            zmienna(2,1)=-std::sin(config.angle);
+            zmienna(2,2)=std::cos(config.angle);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
@@ -219,12 +219,12 @@ void HmiGamepad::gamepadProcess()
             zmienna(0,2)=0;
             zmienna(0,3)=0;
             zmienna(1,0)=0;
-            zmienna(1,1)=std::cos(0.087266463);
-            zmienna(1,2)=-std::sin(0.087266463);
+            zmienna(1,1)=std::cos(config.angle);
+            zmienna(1,2)=-std::sin(config.angle);
             zmienna(1,3)=0;
             zmienna(2,0)=0;
-            zmienna(2,1)=std::sin(0.087266463);
-            zmienna(2,2)=std::cos(0.087266463);
+            zmienna(2,1)=std::sin(config.angle);
+            zmienna(2,2)=std::cos(config.angle);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
@@ -233,17 +233,17 @@ void HmiGamepad::gamepadProcess()
         if(axis[1]>30000)
         {
             printf("rotacja wokol y +\n");
-            zmienna(0,0)=std::cos(0.087266463);
+            zmienna(0,0)=std::cos(config.angle);
             zmienna(0,1)=0;
-            zmienna(0,2)=-std::sin(0.087266463);
+            zmienna(0,2)=-std::sin(config.angle);
             zmienna(0,3)=0;
             zmienna(1,0)=0;
             zmienna(1,1)=1;
             zmienna(1,2)=0;
             zmienna(1,3)=0;
-            zmienna(2,0)=std::sin(0.087266463);
+            zmienna(2,0)=std::sin(config.angle);
             zmienna(2,1)=0;
-            zmienna(2,2)=std::cos(0.087266463);
+            zmienna(2,2)=std::cos(config.angle);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
@@ -252,17 +252,17 @@ void HmiGamepad::gamepadProcess()
         if(axis[1]<-30000)
         {
             printf("rotacja wokol y -\n");
-            zmienna(0,0)=std::cos(0.087266463);
+            zmienna(0,0)=std::cos(config.angle);
             zmienna(0,1)=0;
-            zmienna(0,2)=std::sin(0.087266463);
+            zmienna(0,2)=std::sin(config.angle);
             zmienna(0,3)=0;
             zmienna(1,0)=0;
             zmienna(1,1)=1;
             zmienna(1,2)=0;
             zmienna(1,3)=0;
-            zmienna(2,0)=-std::sin(0.087266463);
+            zmienna(2,0)=-std::sin(config.angle);
             zmienna(2,1)=0;
-            zmienna(2,2)=std::cos(0.087266463);
+            zmienna(2,2)=std::cos(config.angle);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
@@ -271,12 +271,12 @@ void HmiGamepad::gamepadProcess()
         if(axis[2]>30000)
         {
             printf("rotacja wokol z +\n");
-            zmienna(0,0)=std::cos(0.087266463);
-            zmienna(0,1)=std::sin(0.087266463);
+            zmienna(0,0)=std::cos(config.angle);
+            zmienna(0,1)=std::sin(config.angle);
             zmienna(0,2)=0;
             zmienna(0,3)=0;
-            zmienna(1,0)=-std::sin(0.087266463);
-            zmienna(1,1)=std::cos(0.087266463);
+            zmienna(1,0)=-std::sin(config.angle);
+            zmienna(1,1)=std::cos(config.angle);
             zmienna(1,2)=0;
             zmienna(1,3)=0;
             zmienna(2,0)=0;
@@ -290,12 +290,12 @@ void HmiGamepad::gamepadProcess()
         if(axis[2]<-30000)
         {
             printf("rotacja wokol z -\n");
-            zmienna(0,0)=std::cos(0.087266463);
-            zmienna(0,1)=-std::sin(0.087266463);
+            zmienna(0,0)=std::cos(config.angle);
+            zmienna(0,1)=-std::sin(config.angle);
             zmienna(0,2)=0;
             zmienna(0,3)=0;
-            zmienna(1,0)=std::sin(0.087266463);
-            zmienna(1,1)=std::cos(0.087266463);
+            zmienna(1,0)=std::sin(config.angle);
+            zmienna(1,1)=std::cos(config.angle);
             zmienna(1,2)=0;
             zmienna(1,3)=0;
             zmienna(2,0)=0;
@@ -307,7 +307,7 @@ void HmiGamepad::gamepadProcess()
             std::cout<<macierz.matrix()<<std::endl;
         }
         printf("  \r");
-        usleep(config.delay*1000);
+        usleep((unsigned int)config.delay*1000);
         fflush(stdout);
 
     }
