@@ -192,7 +192,7 @@ void HmiGamepad::gamepadProcess()
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[0]>200)
+        if(axis[0]>30000)
         {
             printf("rotacja wokol x +\n");
             zmienna(0,0)=1;
@@ -200,18 +200,18 @@ void HmiGamepad::gamepadProcess()
             zmienna(0,2)=0;
             zmienna(0,3)=0;
             zmienna(1,0)=0;
-            zmienna(1,1)=0.28366;
-            zmienna(1,2)=0.95892;
+            zmienna(1,1)=std::cos(0.087266463);
+            zmienna(1,2)=std::sin(0.087266463);
             zmienna(1,3)=0;
             zmienna(2,0)=0;
-            zmienna(2,1)=-0.95892;
-            zmienna(2,2)=0.28366;
+            zmienna(2,1)=-std::sin(0.087266463);
+            zmienna(2,2)=std::cos(0.087266463);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[0]<-200)
+        if(axis[0]<-30000)
         {
             printf("rotacja wokol x -\n");
             zmienna(0,0)=1;
@@ -219,64 +219,64 @@ void HmiGamepad::gamepadProcess()
             zmienna(0,2)=0;
             zmienna(0,3)=0;
             zmienna(1,0)=0;
-            zmienna(1,1)=0.28366;
-            zmienna(1,2)=-0.95892;
+            zmienna(1,1)=std::cos(0.087266463);
+            zmienna(1,2)=-std::sin(0.087266463);
             zmienna(1,3)=0;
             zmienna(2,0)=0;
-            zmienna(2,1)=0.95892;
-            zmienna(2,2)=0.28366;
+            zmienna(2,1)=std::sin(0.087266463);
+            zmienna(2,2)=std::cos(0.087266463);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[1]>200)
+        if(axis[1]>30000)
         {
             printf("rotacja wokol y +\n");
-            zmienna(0,0)=0.28366;
+            zmienna(0,0)=std::cos(0.087266463);
             zmienna(0,1)=0;
-            zmienna(0,2)=-0.95892;
+            zmienna(0,2)=-std::sin(0.087266463);
             zmienna(0,3)=0;
             zmienna(1,0)=0;
             zmienna(1,1)=1;
             zmienna(1,2)=0;
             zmienna(1,3)=0;
-            zmienna(2,0)=0.95892;
+            zmienna(2,0)=std::sin(0.087266463);
             zmienna(2,1)=0;
-            zmienna(2,2)=0.28366;
+            zmienna(2,2)=std::cos(0.087266463);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[1]<-200)
+        if(axis[1]<-30000)
         {
             printf("rotacja wokol y -\n");
-            zmienna(0,0)=0.28366;
+            zmienna(0,0)=std::cos(0.087266463);
             zmienna(0,1)=0;
-            zmienna(0,2)=0.95892;
+            zmienna(0,2)=std::sin(0.087266463);
             zmienna(0,3)=0;
             zmienna(1,0)=0;
             zmienna(1,1)=1;
             zmienna(1,2)=0;
             zmienna(1,3)=0;
-            zmienna(2,0)=-0.95892;
+            zmienna(2,0)=-std::sin(0.087266463);
             zmienna(2,1)=0;
-            zmienna(2,2)=0.28366;
+            zmienna(2,2)=std::cos(0.087266463);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[2]>200)
+        if(axis[2]>30000)
         {
             printf("rotacja wokol z +\n");
-            zmienna(0,0)=0.28366;
-            zmienna(0,1)=0.95892;
+            zmienna(0,0)=std::cos(0.087266463);
+            zmienna(0,1)=std::sin(0.087266463);
             zmienna(0,2)=0;
             zmienna(0,3)=0;
-            zmienna(1,0)=-0.95892;
-            zmienna(1,1)=0.28366;
+            zmienna(1,0)=-std::sin(0.087266463);
+            zmienna(1,1)=std::cos(0.087266463);
             zmienna(1,2)=0;
             zmienna(1,3)=0;
             zmienna(2,0)=0;
@@ -287,15 +287,15 @@ void HmiGamepad::gamepadProcess()
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[2]<-200)
+        if(axis[2]<-30000)
         {
             printf("rotacja wokol z -\n");
-            zmienna(0,0)=0.28366;
-            zmienna(0,1)=-0.95892;
+            zmienna(0,0)=std::cos(0.087266463);
+            zmienna(0,1)=-std::sin(0.087266463);
             zmienna(0,2)=0;
             zmienna(0,3)=0;
-            zmienna(1,0)=0.95892;
-            zmienna(1,1)=0.28366;
+            zmienna(1,0)=std::sin(0.087266463);
+            zmienna(1,1)=std::cos(0.087266463);
             zmienna(1,2)=0;
             zmienna(1,3)=0;
             zmienna(2,0)=0;
