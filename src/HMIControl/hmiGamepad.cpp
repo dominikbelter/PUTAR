@@ -56,6 +56,7 @@ HmiGamepad::HmiGamepad(std::string configFilename) : config(configFilename){
     macierz(2,3)=2;
     std::cout<<"pozycja poczatkowa"<<std::endl;
     std::cout<<macierz.matrix()<<std::endl;
+    std::cout<<macierz.matrix()<<std::endl;
 
     gamepadThread.reset(new std::thread(&HmiGamepad::gamepadProcess,this));
 }
@@ -65,8 +66,10 @@ void HmiGamepad::gamepadProcess()
     {
         struct js_event js;
 
+        auto ret=0;
             /* read the joystick state */
-        read(joy_fd, &js, sizeof(struct js_event));
+        ret = (int)read(joy_fd, &js, sizeof(struct js_event));
+        std::cout<<ret<<std::endl;
 
             /* see what to do with the event */
         switch (js.type & ~JS_EVENT_INIT)
