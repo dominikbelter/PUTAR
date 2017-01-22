@@ -88,7 +88,7 @@ int main(int argc, char** argv)
             std::cout << "get frame end\n";
 
             Mat34 objPose;
-            //hmiDev->updatePose(objPose);
+            hmiDev->updatePose(objPose);
             //std::cout << objPose.matrix() << "\n";
             //slam.getFrame(rgbImg, depthImg);
 

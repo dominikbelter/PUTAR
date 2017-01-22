@@ -1,27 +1,27 @@
 
-#ifndef OBSERVER_H_
-#define OBSERVER_H_
+#ifndef OBSERVERAR_H_
+#define OBSERVERAR_H_
 
 #include "Defs/defs.h"
 #include <vector>
 #include <list>
-class Observer
+class ObserverAR
 {
 public:
     virtual void update(const putar::Mat34& objectState) = 0;
     virtual void updateCamera(const putar::Mat34& cameraState) = 0;
 };
 
-class Subject
+class SubjectAR
 {
     //Lets keep a track of all the observers we observe
-    std::vector<Observer*> list;
+    std::vector<ObserverAR*> list;
 
 public:
-    void attach(Observer *observer);
-    void detach(Observer *observer);
+    void attach(ObserverAR *observer);
+    void detach(ObserverAR *observer);
     void notify(const putar::Mat34& objectState);
     void notifyCamera(const putar::Mat34& cameraState);
 };
 
-#endif // OBSERVER_H_
+#endif // OBSERVERAR_H_
