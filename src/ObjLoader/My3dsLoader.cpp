@@ -329,17 +329,29 @@ void My3dsLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, 
 
     GLdouble matrix[16];
     for(int i=0;i<4;++i){
-        for(int j=0;j<3;++j){
-            matrix[i*4 + j] = objectPose(i,j);
+        for(int j=0;j<4;++j){
+            matrix[j*4 + i] = objectPose(i,j);
         }
     }
-    matrix[12] = 0;
-    matrix[13] = 0;
-    matrix[14] = 0;
-    matrix[15] = 1;
+    matrix[15]=1;
     glMultMatrixd(matrix);
 
-    //glScaled(0.01, 0.01, 0.01);
+    ///camera motion
+    for(int i=0;i<4;++i){
+        for(int j=0;j<4;++j){
+            matrix[j*4 + i] = cameraPose(i,j);
+            if (j==3){
+                matrix[j*4 + i] *= 100;
+                if (i==0)
+                    std::cout << "x: " << matrix[j*4 + i] << "\n";
+            }
+        }
+    }
+    matrix[15]=1;
+    glMultMatrixd(matrix);
+
+//    glTranslatef(1000, 0.0, 0.0);
+    //glScaled(100,100,100);
 
     glBindTexture(GL_TEXTURE_2D, object.id_texture); // We set the active texture
 

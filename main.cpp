@@ -5,11 +5,12 @@
 #include "3rdParty/tinyXML/tinyxml2.h"
 #include "Visualizer/Qvisualizer.h"
 #include "HMIControl/hmiGamepad.h"
+#include <PUTSLAM/PUTSLAM.h>
+#include "Utilities/offlineSLAM.h"
 #include <GL/glut.h>
 #include <QApplication>
 #include <iostream>
 #include <thread>
-#include <PUTSLAM/PUTSLAM.h>
 
 //PUTSLAM slam;
 
@@ -59,6 +60,8 @@ int main(int argc, char** argv)
 
         Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
+        OfflineSLAM offlineSLAM("offlineSLAM.xml");
+
         //std::thread slamThr(processSLAM, &slam);
 
         //application.exec();
@@ -70,6 +73,7 @@ int main(int argc, char** argv)
         std::cout << "putar start\n";
         usleep(1000000);
         std::cout << "putar started\n\n\n\n\n\n\n\n\n";
+        Mat34 prevCameraPose(Mat34::Identity());
         while(1){
 
 
@@ -80,27 +84,27 @@ int main(int argc, char** argv)
 
             //slam.getCurrentPose(camPose);
             cv::Mat rgbImg, depthImg;
-            //std::cout << "get frame\n";
-            //slam.getCurrentFrame(rgbImg, depthImg);
-    //        cv::namedWindow("putar rgb");
-    //        cv::imshow("putar rgb",rgbImg);
-    //        cv::waitKey(30);
+            std::cout << "get frame\n";
+            offlineSLAM.getFrame(rgbImg, depthImg);
+            cv::namedWindow("putar rgb");
+            cv::imshow("putar rgb",rgbImg);
+            cv::waitKey(3);
+//            cv::namedWindow("putar depth");
+//            cv::imshow("putar depth",depthImg);
+//            cv::waitKey(30);
             std::cout << "get frame end\n";
 
             Mat34 objPose;
             hmiDev->updatePose(objPose);
-            //std::cout << objPose.matrix() << "\n";
-            //slam.getFrame(rgbImg, depthImg);
-
-            //Mat34 cameraPose;
 
             Mat34 cameraPose(Mat34::Identity());
+            offlineSLAM.getCurrentPose(cameraPose);
 
 
             cv::Mat rgbMask, depthMask;
             objLoader->getMesh(object);
 
-            objLoader->computeMask(cameraPose, objPose, rgbMask, depthMask);
+            objLoader->computeMask(cameraPose.inverse(), objPose, rgbMask, depthMask);
             //objLoader->computeMask(cameraPose, rgbMask, depthMask);
 
             cv::namedWindow("mask");
@@ -108,10 +112,11 @@ int main(int argc, char** argv)
             //cv::waitKey(30);
             cv::namedWindow("depthmask");
             cv::imshow("depthmask",depthMask);
-            cv::waitKey(0);
+            cv::waitKey(2);
             /*visu2D->updateMask(rgbMask, depthMask);
             visu2D->updateFrame(rgbImg,depthImg);*/
-            usleep(30000);
+            usleep(3000);
+            prevCameraPose = cameraPose;
         }
     }
     catch (const std::exception& ex) {
