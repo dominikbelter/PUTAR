@@ -22,13 +22,20 @@
  *********************************************************/
 
 
-//// The width and height of your window, change them as you like
-int screen_width=640;
-int screen_height=480;
+
 
 
 //Now the object is generic, the cube has annoyed us a little bit, or not?
 obj_type object;
+
+#define JOY_DEV "/dev/input/js0"
+#define GLUT_JOYSTICK_BUTTON_E 128
+#define GLUT_JOYSTICK_BUTTON_F 512
+#define GLUT_JOYSTICK_BUTTON_AB 18
+#define GLUT_JOYSTICK_BUTTON_BC 3
+#define GLUT_JOYSTICK_BUTTON_AD 24
+#define GLUT_JOYSTICK_BUTTON_CD 9
+#define GLUT_JOYSTICK_BUTTON_G 16
 
 
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
@@ -66,6 +73,7 @@ int main(int argc, char** argv)
         glutInit(&argc, argv);
 
         QGLVisualizer visu(visualizerConfig);
+        visu.resize(640, 480);
         visu.setWindowTitle("Simulator viewer");
         visu.show();
 
@@ -88,29 +96,26 @@ int main(int argc, char** argv)
 
         cv::Mat rgbMask;
         Mat34 cameraPose;
+        Mat34 objectPose;
         cv::Mat depthMask;
-        //cv::Mat depth  16 bitowy obraz głębi mnożony razy 1000 albo coś
-
-        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-        glutInitWindowSize(screen_width,screen_height);
-        glutInitWindowPosition(0,0);
-        glutCreateWindow("At the moment unfortunately this window is nesessery");
-
-        objLoader->computeMask(cameraPose, rgbMask, depthMask);
-
-        //cv::Mat dstDepth;
-        //dstDepth.create(depthMask.size(), CV_16UC1);
-
-        //depthMask.convertTo(dstDepth, CV_16UC1, 2048.0/255.0);
-
-        //cvConvertScale(depthMask, dstDepth, 1.0 / 255.0, 0.0);
+        Hmi* hmiDev = putar::createMyHmiGamepad("HmiGamepadConfig.xml");
 
 
 
-        cv::namedWindow("imgMAT");
-        cv::imshow("imgMAT", rgbMask);
-        cv::namedWindow("depthMAT");
-        cv::imshow("depthMAT", depthMask);
+        while(1)
+        {
+            hmiDev->updatePose(objectPose);
+            std::cout<<objectPose.matrix()<<std::endl;
+            objLoader->computeMask(cameraPose,objectPose, rgbMask, depthMask);
+
+            cv::namedWindow("imgMAT");
+            cv::imshow("imgMAT", depthMask);
+            cv::namedWindow("imgMAT2");
+            cv::imshow("imgMAT2", rgbMask);
+            cv::waitKey(300);
+
+        }
+
 
         cv::waitKey(0);
 

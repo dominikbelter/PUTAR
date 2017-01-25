@@ -43,7 +43,6 @@ void display () {
 }
 void joyFunc(unsigned int btn,int x,int y, int z)
 {
-
  if (btn==GLUT_JOYSTICK_BUTTON_A)
  {
  glTranslated(0,-0.02,0);
@@ -131,13 +130,15 @@ void Thread2(int argc, char** argv)
 
 
 
-void Thread(int joy_fd, struct js_event js, int *axis, char *button, int num_of_axis, int x, int num_of_buttons, Mat34 zmienna, Mat34 pozycja0)
+void Thread(int joy_fd, struct js_event js, int *axis, char *button, Mat34 zmienna, Mat34 pozycja0)
 {
     while( 1 ) 	/* infinite loop */
     {
 
             /* read the joystick state */
-        read(joy_fd, &js, sizeof(struct js_event));
+        auto ret=0;
+        ret = (int)read(joy_fd, &js, sizeof(struct js_event));
+        std::cout<<ret<<std::endl;
 
             /* see what to do with the event */
         switch (js.type & ~JS_EVENT_INIT)
@@ -146,7 +147,7 @@ void Thread(int joy_fd, struct js_event js, int *axis, char *button, int num_of_
                 axis   [ js.number ] = js.value;
                 break;
             case JS_EVENT_BUTTON:
-                button [ js.number ] = js.value;
+                button [ js.number ] = (char)js.value;
                 break;
         }
 
@@ -402,7 +403,7 @@ void Thread(int joy_fd, struct js_event js, int *axis, char *button, int num_of_
 
 int main(int argc, char** argv)
 {
-    int joy_fd, *axis=NULL, num_of_axis=0, num_of_buttons=0, x;
+    int joy_fd, *axis=NULL, num_of_axis=0, num_of_buttons=0;
     char *button=NULL, name_of_joystick[80];
     struct js_event js;
 
@@ -445,7 +446,7 @@ int main(int argc, char** argv)
     std::cout<<pozycja0.matrix()<<std::endl;
 
 
-    std::thread t(&Thread, joy_fd, js, axis, button, num_of_axis, x, num_of_buttons, zmienna, pozycja0);
+    std::thread t(&Thread, joy_fd, js, axis, button,zmienna, pozycja0);
     std::thread t2(&Thread2, argc, argv);
     t.join();
         t2.join();

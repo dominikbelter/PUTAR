@@ -22,7 +22,7 @@ namespace putar {
 using namespace putar;
 
 /// ObjLoader implementation
-class MyLoader : public ObjLoader, public Subject {
+class MyLoader : public ObjLoader, public SubjectAR {
     public:
 
         /// Pointer
@@ -68,7 +68,7 @@ class MyLoader : public ObjLoader, public Subject {
         ///Attach visualizer
         void attachVisualizer(QGLVisualizer* visualizer);
 
-        void computeMask(const Mat34 cameraPose, cv::Mat& mask, cv::Mat& depthMask);
+        void computeMask(const Mat34& cameraPose, const Mat34& objectPose, cv::Mat& mask, cv::Mat& depthMask);
 
         ///Texture loader
         void LoadBitmap();

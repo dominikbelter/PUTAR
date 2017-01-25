@@ -3,7 +3,7 @@
 
 #include "hmi.h"
 #include "../Defs/defs.h"
-#include "Utilities/observer.h"
+#include "Utilities/observerAR.h"
 #include <iostream>
 #include <string>
 #include "opencvCore.h"
@@ -48,6 +48,8 @@ class HmiGamepad : public Hmi {
             tinyxml2::XMLElement * model = config.FirstChildElement( "HmiGamepadConfig" );
             devicename = model->FirstChildElement( "parameters" )->Attribute("devicename");
             model->FirstChildElement( "parameters" )->QueryFloatAttribute("delay", &delay);
+            model->FirstChildElement( "parameters" )->QueryFloatAttribute("increment", &increment);
+            model->FirstChildElement( "parameters" )->QueryFloatAttribute("increment", &angle);
         }
 
         public:
@@ -55,6 +57,10 @@ class HmiGamepad : public Hmi {
             std::string devicename;
             /// delay
             float delay;
+            /// increment
+            float increment;
+            /// angle
+            float angle;
     };
 
         // overloaded constructor

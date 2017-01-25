@@ -232,7 +232,7 @@ void MyLoader:: LoadBitmap(){
        // throw std::runtime_error("LoadBitmap method is not implemented\n");
 }
 
-void MyLoader::computeMask(const Mat34 cameraPose, cv::Mat& mask, cv::Mat& depthMask){
+void MyLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, cv::Mat& mask, cv::Mat& depthMask){
     std::random_device rd;
     std::mt19937 e2(rd());
     std::default_random_engine generator;

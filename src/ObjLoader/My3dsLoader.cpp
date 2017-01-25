@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <chrono>
 #include <thread>
+#include <GL/glut.h>
+#include <GL/freeglut.h>
 
 using namespace putar;
 
@@ -11,6 +13,10 @@ using namespace putar;
 
 /// A single instance of 3ds Loader grabber
 My3dsLoader::Ptr my3dsLoader;
+
+double rotation_x=0, rotation_x_increment=0.1;
+double rotation_y=0, rotation_y_increment=0.05;
+double rotation_z=0, rotation_z_increment=0.03;
 
 My3dsLoader::My3dsLoader(void) : ObjLoader("My 3dsLoader", TYPE_3DS) {
 
@@ -29,7 +35,7 @@ long My3dsLoader::filelength(int f)
     return(buf.st_size);
 }
 
-/// Returns the current 2D image
+/// Load 3ds file
 void My3dsLoader::loadObj()
 {
     obj_type_ptr p_object(&object);
@@ -176,7 +182,7 @@ void My3dsLoader::loadObj()
         }
     }
     fclose (l_file); // Closes the file stream
-
+    LoadBitmap();
 }
 
 /// Grab image and/or point cloud
@@ -264,9 +270,8 @@ void My3dsLoader:: LoadBitmap()
     free(infoheader.data); // Free the memory we used to load the texture
 }
 
-void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& depthMask)
+void My3dsLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, cv::Mat& mask, cv::Mat& depthMask)
 {
-
     glClearColor(0.0, 0.0, 0.0, 0.0); // This clear the background color to black
     glShadeModel(GL_SMOOTH); // Type of shading for the polygons
 
@@ -282,9 +287,6 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& dep
     glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)
 
     glEnable(GL_TEXTURE_2D); // This Enable the Texture mapping
-
-    LoadBitmap(); // The Function LoadBitmap()
-
 
     object.id_texture=num_texture;
 
@@ -304,12 +306,52 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& dep
     glLoadIdentity(); // Initialize the model matrix as identity
 
 
+
+
     glTranslatef(0.0,0.0,-400); // We move the object forward (the model matrix is multiplied by the translation matrix)
 
-    glRotatef(0,1.0,0.0,0.0); // Rotations of the object (the model matrix is multiplied by the rotation matrices)
-    glRotatef(0,0.0,1.0,0.0);
-    glRotatef(0,0.0,0.0,1.0);
+//    glRotatef(0,1.0,0.0,0.0); // Rotations of the object (the model matrix is multiplied by the rotation matrices)
+//    glRotatef(0,0.0,1.0,0.0);
+//    glRotatef(0,0.0,0.0,1.0);
 
+
+//    rotation_x = rotation_x + rotation_x_increment;
+//    rotation_y = rotation_y + rotation_y_increment;
+//    rotation_z = rotation_z + rotation_z_increment;
+
+//    if (rotation_x > 359) rotation_x = 0;
+//    if (rotation_y > 359) rotation_y = 0;
+//    if (rotation_z > 359) rotation_z = 0;
+
+//    glRotatef(rotation_x,1.0,0.0,0.0); // Rotations of the object (the model matrix is multiplied by the rotation matrices)
+//    glRotatef(rotation_y,0.0,1.0,0.0);
+//    glRotatef(rotation_z,0.0,0.0,1.0);
+
+    GLdouble matrix[16];
+    for(int i=0;i<4;++i){
+        for(int j=0;j<4;++j){
+            matrix[j*4 + i] = objectPose(i,j);
+        }
+    }
+    matrix[15]=1;
+    glMultMatrixd(matrix);
+
+    ///camera motion
+    for(int i=0;i<4;++i){
+        for(int j=0;j<4;++j){
+            matrix[j*4 + i] = cameraPose(i,j);
+            if (j==3){
+                matrix[j*4 + i] *= 100;
+                if (i==0)
+                    std::cout << "x: " << matrix[j*4 + i] << "\n";
+            }
+        }
+    }
+    matrix[15]=1;
+    glMultMatrixd(matrix);
+
+//    glTranslatef(1000, 0.0, 0.0);
+    //glScaled(100,100,100);
 
     glBindTexture(GL_TEXTURE_2D, object.id_texture); // We set the active texture
 
@@ -349,7 +391,8 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& dep
 
 
     cv::Mat img(screen_height, screen_width, CV_8UC3);
-    cv::Mat imgMask(screen_height, screen_width, CV_8UC1);
+    cv::Mat imgMask;
+    imgMask = cv::Mat::zeros(screen_height, screen_width, CV_8UC1);
 
     mask.create(img.size(), img.type());
     //use fast 4-byte alignment (default anyway) if possible
@@ -369,17 +412,19 @@ void My3dsLoader::computeMask(const Mat34 cameraPose,cv::Mat& mask, cv::Mat& dep
     glDepthRange(0.0f, 1.0f);
 
     glReadPixels(0, 0, imgMask.cols, imgMask.rows, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, imgMask.data);
-    //cv::flip(imgMask, depthMask, 0);
-    depthMask = imgMask.clone();
+    cv::flip(imgMask, imgMask, 0);
 
-    for(int x=0; x<depthMask.cols; x++)
+    for(int x =0; x<imgMask.cols; x++)
     {
-        for(int y =0; y<depthMask.rows; y++)
+        for(int y = 0; y<imgMask.rows; y++)
         {
-            depthMask.at<uchar>(y,x) = depthMask.at<uchar>(y,x)*1000;
+            imgMask.at<uchar>(y,x)=100* imgMask.at<uchar>(y,x);
         }
     }
 
+    depthMask = imgMask.clone();
+    notify(objectPose);
+    notifyCamera(cameraPose);
     //bitwise_not ( imgMask, depthMask );
 }
 

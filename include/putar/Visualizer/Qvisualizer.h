@@ -8,7 +8,7 @@
 #define QVISUALIZER_H_INCLUDED
 
 #include "Defs/defs.h"
-#include "Utilities/observer.h"
+#include "Utilities/observerAR.h"
 #include "../../3rdParty/tinyXML/tinyxml2.h"
 #include <QGLViewer/qglviewer.h>
 #include <iostream>
@@ -17,7 +17,7 @@
 using namespace putar;
 
 /// Map implementation
-class QGLVisualizer: public QGLViewer, public Observer{
+class QGLVisualizer: public QGLViewer, public ObserverAR{
 public:
     /// Pointer
     typedef std::unique_ptr<QGLVisualizer> Ptr;
@@ -102,6 +102,9 @@ public:
     /// update object state
     void update(const putar::Mat34& objectState);
 
+    /// update object state
+    void updateCamera(const putar::Mat34& cameraState);
+
     /// Updates mesh
     void updateMesh(const Mesh&  mesh);
     void updateMesh(const obj_type &objType);
@@ -138,6 +141,11 @@ private:
 
     /// object pose
     Mat34 objectPose;
+
+    /// object pose
+    Mat34 cameraPose;
+
+    std::mutex mtxCamera;
 
     struct Point3D{
         float x;

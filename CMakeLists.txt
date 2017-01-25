@@ -94,6 +94,9 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 add_definitions(-Wno-deprecated -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT)
 
+#libfreenect
+find_package(libfreenect REQUIRED)
+
 # Boost
 FIND_PACKAGE(Boost COMPONENTS system filesystem thread asio)
 
@@ -313,7 +316,7 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_VISUALIZER)
         if(APPLE)
             TARGET_LINK_LIBRARIES(demoVisualizer Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
         else()
-            TARGET_LINK_LIBRARIES(demoVisualizer Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut ${OpenCV_LIBS})
+            TARGET_LINK_LIBRARIES(demoVisualizer Visualizer ObjLoader  tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut ${OpenCV_LIBS})
         endif()
         INSTALL(TARGETS demoVisualizer RUNTIME DESTINATION bin)
 
@@ -435,9 +438,9 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO_3DSLOADER)
         SET(DEMO_SOURCES ./demos/demo3dsLoader.cpp)
         ADD_EXECUTABLE(demo3dsLoader ${DEMO_SOURCES})
         if(APPLE)
-            TARGET_LINK_LIBRARIES(demo3dsLoader ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+            TARGET_LINK_LIBRARIES(demo3dsLoader HMIControl ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
         else()
-            TARGET_LINK_LIBRARIES(demo3dsLoader ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut  ${OpenCV_LIBS})
+            TARGET_LINK_LIBRARIES(demo3dsLoader HMIControl ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} glut  ${OpenCV_LIBS})
         endif()
         INSTALL(TARGETS demo3dsLoader RUNTIME DESTINATION bin)
 
@@ -526,9 +529,9 @@ if(BUILD_PUTAR AND BUILD_PUTAR_DEMO AND BUILD_PUTAR_DEMO_MAIN)
         SET(DEMO_SOURCES ./main.cpp)
         ADD_EXECUTABLE(putar ${DEMO_SOURCES})
         if(APPLE)
-            TARGET_LINK_LIBRARIES(putar PUTSLAM PutslamMatcher PutslamTransformEst PutslamRGBD  PutslamGrabber OpenNI2 PutslamUtilities  PutslamMap PutslamPoseGraph PutslamGrabber PutslamUtilities PutslamMatcher PutslamTransformEst PutslamRGBD PutslamLoopClosure  csparse g2o_types_slam2d g2o_types_slam3d g2o_csparse_extension g2o_stuff g2o_core g2o_solver_csparse PUTARDefs ImageVisualizer HMIControl Utilities ObjLoader Visualizer tinyxml2  ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
+            TARGET_LINK_LIBRARIES(putar PUTSLAM PutslamMatcher PutslamTransformEst PutslamRGBD  PutslamGrabber OpenNI2 PutslamUtilities  PutslamMap PutslamPoseGraph PutslamGrabber PutslamUtilities PutslamMatcher PutslamTransformEst PutslamRGBD PutslamLoopClosure  csparse g2o_types_slam2d g2o_types_slam3d g2o_csparse_extension g2o_stuff g2o_core g2o_solver_csparse PUTARDefs ImageVisualizer HMIControl Utilities ObjLoader Visualizer tinyxml2 freenect ${OpenCV_LIBS} ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} /usr/local/Cellar/qt/4.8.7_2/lib/QtCore.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtXml.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtOpenGL.framework /usr/local/Cellar/qt/4.8.7_2/lib/QtGui.framework ${OPENGL_LIBRARY} /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/GLUT.framework)
         else()
-            TARGET_LINK_LIBRARIES(putar PUTSLAM PutslamMatcher PutslamTransformEst PutslamRGBD PutslamGrabber OpenNI2 PutslamUtilities  PutslamMap PutslamPoseGraph PutslamGrabber PutslamUtilities PutslamMatcher PutslamTransformEst PutslamRGBD PutslamLoopClosure PutslamVisualPlaceRecognition csparse g2o_types_slam2d g2o_types_slam3d g2o_csparse_extension g2o_stuff g2o_core g2o_solver_csparse PUTARDefs ImageVisualizer HMIControl Utilities ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui ${OPENGL_LIBRARY} ${OpenCV_LIBS} glut)
+            TARGET_LINK_LIBRARIES(putar PUTSLAM PutslamMatcher PutslamTransformEst PutslamRGBD PutslamGrabber OpenNI2 PutslamUtilities  PutslamMap PutslamPoseGraph PutslamGrabber PutslamUtilities PutslamMatcher PutslamTransformEst PutslamRGBD PutslamLoopClosure PutslamVisualPlaceRecognition csparse g2o_types_slam2d g2o_types_slam3d g2o_csparse_extension g2o_stuff g2o_core g2o_solver_csparse PUTARDefs ImageVisualizer HMIControl Utilities ObjLoader Visualizer tinyxml2 ${QGLVIEWER_LIBRARY} ${QT_LIBRARIES} ${QT_LIBRARIES} QtCore QtXml QtOpenGL QtGui freenect ${OPENGL_LIBRARY} ${OpenCV_LIBS} glut)
         endif()
         INSTALL(TARGETS putar RUNTIME DESTINATION bin)
 

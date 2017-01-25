@@ -124,13 +124,28 @@ int main(int argc, char** argv)
         cv::Mat depth = cv::imread("../../resources/depth_00000.png", CV_LOAD_IMAGE_ANYDEPTH);
         cv::Mat RGB = cv::imread("../../resources/rgb_00000.png");
 
-        Mesh mesh;
-        loadOBJ("../../resources/Hulk.obj", mesh);
+        /*Mesh mesh;
+        loadOBJ("../../resources/Hulk.obj", mesh);*/
 
-        visu.updateMesh(mesh);
+        ObjLoader* objLoader;
+        if (0)
+            objLoader = putar::createMyLoader();
+        else{
+            objLoader = putar::createMy3dsLoader(Loader3dsConfig);
+        }
+        objLoader->attachVisualizer(&visu);
+
+        putar::obj_type object;
+
+        objLoader->loadObj();
+
+        objLoader->getMesh(object);
+
+        visu.updateMesh(object);
         visu.updateCloud(RGB, depth);
         visu.setWindowTitle("Simulator viewer");
         visu.show();
+        objLoader->LoadBitmap();
 
         application.exec();
         std::cout << "Finished\n";
