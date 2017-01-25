@@ -8,10 +8,6 @@
 using namespace putar;
 
 
-
-
-
-
 /// A single instance of Kinect grabber
 MyLoader::Ptr myLoader;
 
@@ -28,11 +24,11 @@ void MyLoader::loadObj(){
 /*
     Mesh mesh;
 
-    //DB const char path="../../resources/cube.obj";
-/*
+   std::string path="../../resources/cube.obj";
+
 
     printf("Loading OBJ file %s...\n", path);
-*/
+
     std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
     std::vector<Eigen::Vector3f> temp_vertices;
     std::vector<Eigen::Vector2f> temp_uvs;
