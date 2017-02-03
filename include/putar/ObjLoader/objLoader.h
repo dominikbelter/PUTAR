@@ -8,7 +8,7 @@
 #define _OBJLOADER_H_
 
 #include "../Defs/defs.h"
-#include "Utilities/observer.h"
+#include "Utilities/observerAR.h"
 #include "Visualizer/Qvisualizer.h"
 #include <iostream>
 #include <string>

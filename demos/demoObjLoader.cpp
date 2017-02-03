@@ -2,11 +2,14 @@
 #include "Defs/defs.h"
 #include "ObjLoader/MyLoader.h"
 #include "ObjLoader/My3dsLoader.h"
+#include "ObjLoader/objLoader.h"
 #include "ImageVisualizer/imageVisualizerCV.h"
 #include "3rdParty/tinyXML/tinyxml2.h"
 #include "Visualizer/Qvisualizer.h"
 #include "HMIControl/hmiGamepad.h"
 #include <GL/glut.h>
+#include <GL/gl.h>
+#include <GL/freeglut.h>
 #include <QApplication>
 #include <iostream>
 #include <thread>
@@ -14,6 +17,10 @@
 using namespace std;
 using namespace putar;
 
+//globals
+GLuint elephant;
+float elephantrot;
+char ch='1';
 
 
 bool loadOBJ(const char* path, Mesh& mesh)
@@ -45,17 +52,17 @@ bool loadOBJ(const char* path, Mesh& mesh)
 
         if ( strcmp( lineHeader, "v" ) == 0 ){
             Eigen::Vector3f vertex;
-           //WUNUSED? BŁĄD? float x,y,z;
-           //WUNUSED? BŁĄD? fscanf(file, "%f %f %f\n", &vertex(0), &vertex(1), &vertex(2) );
+            float x,y,z;
+            fscanf(file, "%f %f %f\n", &vertex(0), &vertex(1), &vertex(2) );
             temp_vertices.push_back(vertex);
         }else if ( strcmp( lineHeader, "vt" ) == 0 ){
             Eigen::Vector2f uv;
-           //WUNUSED? BŁĄD? fscanf(file, "%f %f\n", &uv(0), &uv(1) );
+            fscanf(file, "%f %f\n", &uv(0), &uv(1) );
             uv(1) = -uv(1); // Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
             temp_uvs.push_back(uv);
         }else if ( strcmp( lineHeader, "vn" ) == 0 ){
             Eigen::Vector3f normal;
-           //WUNUSED? BŁĄD? fscanf(file, "%f %f %f\n", &normal(0), &normal(1), &normal(2) );
+            fscanf(file, "%f %f %f\n", &normal(0), &normal(1), &normal(2) );
             temp_normals.push_back(normal);
         }else if ( strcmp( lineHeader, "f" ) == 0 ){
             std::string vertex1, vertex2, vertex3;
@@ -88,28 +95,254 @@ bool loadOBJ(const char* path, Mesh& mesh)
     }
 
 
-// For each vertex of each triangle
-for( unsigned int i=0; i<vertexIndices.size(); i++ ){
 
-    // Get the indices of its attributes
-    unsigned int vertexIndex = vertexIndices[i];
-    unsigned int uvIndex = uvIndices[i];
-    unsigned int normalIndex = normalIndices[i];
 
-    // Get the attributes thanks to the index
-    Eigen::Vector3f vertex = temp_vertices[ vertexIndex-1 ];
-    Eigen::Vector2f uv = temp_uvs[ uvIndex-1 ];
-    Eigen::Vector3f normal = temp_normals[ normalIndex-1 ];
+    // For each vertex of each triangle
+    for( unsigned int i=0; i<vertexIndices.size(); i++ ){
 
-    // Put the attributes in buffers
-    mesh.vertices.push_back(vertex);
-    mesh.uvs.push_back(uv);
-    mesh.normals.push_back(normal);
+        // Get the indices of its attributes
+        unsigned int vertexIndex = vertexIndices[i];
+        unsigned int uvIndex = uvIndices[i];
+        unsigned int normalIndex = normalIndices[i];
+
+        // Get the attributes thanks to the index
+        Eigen::Vector3f vertex = temp_vertices[ vertexIndex-1 ];
+        Eigen::Vector2f uv = temp_uvs[ uvIndex-1 ];
+        Eigen::Vector3f normal = temp_normals[ normalIndex-1 ];
+
+        // Put the attributes in buffers
+        mesh.vertices.push_back(vertex);
+        mesh.uvs.push_back(uv);
+        mesh.normals.push_back(normal);
+
+        std::cout <<"\n vertices: " <<mesh.vertices.size() << "\n";
+         std::cout <<" uvs: " <<mesh.uvs.size() << "\n";
+
+       std::cout <<"normals: " <<mesh.normals.size() << "\n";
+
+
+
+
+    }
+    fclose(file);
+    return true;
+    }
+
+
+cv::Mat screenshot()
+{
+    int height=640;
+    int width=840;
+cv::Mat img(height, width, CV_8UC3);
+glReadBuffer( GL_FRONT );
+//use fast 4-byte alignment (default anyway) if possible
+glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3) ? 1 : 4);
+
+//set length of one complete row in destination data (doesn't need to equal img.cols)
+glPixelStorei(GL_PACK_ROW_LENGTH, img.step/img.elemSize());
+
+glReadPixels(0, 0, img.cols, img.rows, GL_BGR, GL_UNSIGNED_BYTE, img.data);
+cv::Mat imgMask(height, width, CV_8UC3);
+cv::flip(img, imgMask, 0);
+ cv::imshow("MASK",imgMask);
+ // cv::imshow("MASK",imgMask);
+/*cv::Mat depthMask;
+
+//get the depth Buffor
+glEnable(GL_DEPTH_TEST);
+glDepthMask(GL_TRUE);
+glDepthFunc(GL_ALWAYS); // Change this to whatever kind of depth testing you want
+glDepthRange(0.0f, 1.0f);
+
+glReadPixels(0, 0, imgMask.cols, imgMask.rows, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, imgMask.data);
+//cv::flip(imgMask, depthMask, 0);
+depthMask = imgMask.clone();
+
+for(int x=0; x<depthMask.cols; x++)
+{
+    for(int y =0; y<depthMask.rows; y++)
+    {
+        depthMask.at<uchar>(y,x) = depthMask.at<uchar>(y,x)*1000;
+    }
+}
+
+
+cv::imshow("DEPTH",depthMask);
+//bitwise_not ( imgMask, depthMask );
+*/
+return imgMask;
 
 }
-fclose(file);
-return true;
+
+
+
+
+
+void loadObje(char *fname)
+{
+    FILE *fp;
+    int read;
+    GLfloat x, y, z;
+    char ch;
+    elephant=glGenLists(1);
+    fp=fopen(fname,"r");
+    if (!fp)
+    {
+        printf("can't open file %s\n", fname);
+        exit(1);
+    }
+    glPointSize(2.0);
+    glNewList(elephant, GL_COMPILE);
+    {
+        glPushMatrix();
+        glBegin(GL_POINTS);
+        while(!(feof(fp)))
+        {
+            read=fscanf(fp,"%c %f %f %f",&ch,&x,&y,&z);
+            if(read==4&&ch=='v')
+            {
+                glVertex3f(x,y,z);
+            }
+        }
+        glEnd();
+    }
+    glPopMatrix();
+    glEndList();
+    // screenshot();
+    fclose(fp);
 }
+//wavefront .obj loader code ends here
+//wavefront .obj loader code ends here
+void reshape(int w,int h)
+{
+    glViewport(0,0,w,h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 1000.0);
+    //glOrtho(-25,25,-2,2,0.1,100);
+    glMatrixMode(GL_MODELVIEW);
+}
+void drawElephant()
+{
+    glPushMatrix();
+    glTranslatef(0,-5,-5);
+    glColor3f(1.0,0.23,0.27);
+    glScalef(1,1,1);
+    glRotatef(elephantrot,0,1,0);
+    glCallList(elephant);
+    glPopMatrix();
+    elephantrot=elephantrot+0.6;
+    if(elephantrot>360)elephantrot=elephantrot-360;
+}
+void display(void)
+{
+   /* glEnable(GL_TEXTURE_2D); // This Enable the Texture mapping
+
+    LoadBitmap("../../resources/Turret.bmp"); // The Function LoadBitmap()
+
+
+    object.id_texture=num_texture;
+
+    // If the last function returns -1 it means the file was not found so we exit from the program
+    if (object.id_texture==-1)
+    {
+        printf("BMP not found\n");
+        //MessageBox(NULL,"Image file: spaceshiptexture.bmp not found", "Zetadeck",MB_OK | MB_ICONERROR);
+        exit (0);
+    }*/
+
+
+
+    //Wczytywanie modelu
+    glClearColor (0.0,0.0,0.0,1.0);
+     glShadeModel(GL_SMOOTH);
+    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+   // drawElephant();
+
+    glEnable(GL_DEPTH_TEST); // We enable the depth test (also called z buffer)
+    glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)
+
+
+
+       Mesh mesh;
+       glTranslatef(0,-2,-4);
+        glRotatef(20,0,1,0);
+         glRotatef(20,1,0,0);
+std::vector<float> vert;
+gluLookAt(10, 10, 10,  0, 0, 0, 0, 1, 0);
+//glBindTexture(GL_TEXTURE_2D, object.id_texture);
+     loadOBJ("../../resources/Hulk.obj", mesh);
+    //DrawCube();
+       glColor3f(0,1,0);
+     /*  for (int i = 0; i < mesh.vertices.size(); i += 3)
+       {
+           int t0 = i + 0;
+           int t1 = i + 1;
+           int t2 = i + 2;
+           vert.push_back(mesh.vertices[t0][0]);
+           vert.push_back(mesh.vertices[t0][1]);
+           vert.push_back(mesh.vertices[t0][2]);
+           vert.push_back(mesh.vertices[t1][0]);
+           vert.push_back(mesh.vertices[t1][1]);
+           vert.push_back(mesh.vertices[t1][2]);
+           vert.push_back(mesh.vertices[t2][0]);
+           vert.push_back(mesh.vertices[t2][1]);
+           vert.push_back(mesh.vertices[t2][2]);
+
+           // [...] Same for colors and texture coords.
+       }
+glDrawArrays(GL_TRIANGLES, 0, mesh.vertices.size());*/
+
+
+    glBegin(GL_TRIANGLES); // grot na osi OX
+
+   for (int i=0;i<=mesh.vertices.size();i=i+3)
+{
+
+       glTexCoord2f(mesh.uvs[i][0], mesh.uvs[i][1]);
+       glNormal3f(mesh.normals[i][0], mesh.normals[i][1], mesh.normals[i][2]);
+       glVertex3f(mesh.vertices[i][0], mesh.vertices[i][1], mesh.vertices[i][2]);
+        glTexCoord2f(mesh.uvs[i+1][0], mesh.uvs[i+1][1]);
+         glNormal3f(mesh.normals[i+1][0], mesh.normals[i+1][1], mesh.normals[i+1][2]);
+        glVertex3f(mesh.vertices[i+1][0], mesh.vertices[i+1][1], mesh.vertices[i+1][2]);
+        glTexCoord2f(mesh.uvs[i+2][0], mesh.uvs[i+2][1]);
+         glNormal3f(mesh.normals[i+2][0], mesh.normals[i+2][1], mesh.normals[i+2][2]);
+        glVertex3f(mesh.vertices[i+2][0], mesh.vertices[i+2][1], mesh.vertices[i+2][2]);
+
+ }
+
+
+
+  /* glVertex3f(-1.0f,-0.25f,0.0f);//triangle one first vertex
+        glVertex3f(-0.5f,-0.25f,0.0f);//triangle one second vertex
+        glVertex3f(-0.75f,0.25f,0.0f);//triangle one third vertex
+        //drawing a new triangle
+        glVertex3f(0.5f,-0.25f,0.0f);//triangle two first vertex
+        glVertex3f(1.0f,-0.25f,0.0f);//triangle two second vertex
+        glVertex3f(0.75f,0.25f,0.0f);//triangle two third vertex
+
+/*
+    glTranslatef(0,0,-5);
+     glRotatef(20,0,1,0);
+      glRotatef(20,1,0,0);
+*/
+   glEnd();
+  glFlush(); // This force the execution of OpenGL commands
+      screenshot();
+    glutSwapBuffers(); //swap the buffers
+
+}
+
+
+
+
+
+
+
+
+
+
 
 void processPUTAR(ObjLoader* objLoader, ImageVisualizer* visu2D){
     while(1){
@@ -210,25 +443,7 @@ GLuint loadBMP_custom(const char * imagepath)
     return textureID;
 }
 
-cv::Mat screenshot()
-{
-    int height=640;
-    int width=840;
-cv::Mat img(height, width, CV_8UC3);
 
-//use fast 4-byte alignment (default anyway) if possible
-glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3) ? 1 : 4);
-
-//set length of one complete row in destination data (doesn't need to equal img.cols)
-glPixelStorei(GL_PACK_ROW_LENGTH, img.step/img.elemSize());
-
-glReadPixels(0, 0, img.cols, img.rows, GL_BGR, GL_UNSIGNED_BYTE, img.data);
-cv::Mat flipped;
-cv::flip(img, flipped, 0);
-
-return flipped;
-
-}
 
 
 void lookAt_Mat34(cv::Mat Poz)
@@ -283,60 +498,32 @@ int main(int argc, char** argv)
         visu.setWindowTitle("Simulator viewer");
         visu.show();
 
+        cv::Mat shot;
+
         Mesh mesh;
-        //tworzenie czarnego tła
-        glClearColor(0, 0,0,0);
-
-        loadOBJ("../../resources/cube.obj", mesh);
-        //loadOBJ("/media/user/901E247A1E245B8A/LINUX/PROJEKT/PUTAR/resources/cube.obj", mesh);
-        //GLuint numTex;
-        //numTex = loadBMP_custom("../../resources/kamien.bmp");
-
-
-         cout<<"Object loadin process ended"<<endl;
-//ObjLoader* objLoader;// = putar::createMyLoader();
-//if (1)
-//    objLoader = putar::createMyLoader();
-//else{
-//    objLoader = putar::createMy3dsLoader(Loader3dsConfig);
-//}
-//objLoader->attachVisualizer(&visu);
-
-//objLoader->loadObj("stone.obj");
-
-//------------------CREATING MASK----------------------
-
-         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-         glutInitWindowSize(640,480);
-         glutInitWindowPosition(0,0);
-
-         glShadeModel(GL_SMOOTH); // Type of shading for the polygons
-
-         // Viewport transformation
-         glViewport(0,0,840,640);
-
-         // Projection transformation
-         glMatrixMode(GL_PROJECTION); // Specifies which matrix stack is the target for matrix operations
-         glLoadIdentity(); // We initialize the projection matrix as identity
-         gluPerspective(45.0f,(GLfloat)840/(GLfloat)640,10.0f,10000.0f); // We define the "viewing volume"
-
-         glEnable(GL_DEPTH_TEST); // We enable the depth test (also called z buffer)
-         glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)
-
-         glEnable(GL_TEXTURE_2D); // This Enable the Texture mapping
-
-
-         glFlush(); // This force the execution of OpenGL commands
 
 
 
-         glutCreateWindow("MASKOWNICA");
+        glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
+        glutInitWindowSize(800,450);
+        glutInitWindowPosition(20,20);
+        glutCreateWindow("ObjLoader");
+        glutReshapeFunc(reshape);
+        glutDisplayFunc(display);
+        glutIdleFunc(display);
+        //loadOBJ("../../resources/cube.obj", mesh);
+        // DrawGLScene();
+       // DrawCube();
 
-        cv::Mat shot= screenshot();
-        cv::imshow("OKNO",shot);
 
-         //glutMainLoop();
-         //cin.get(); //zatrzymanie
+       // loadObje("../../resources/Hulk.obj");//replace elepham.obj withp orsche.obj or radar.obj or any other .obj to display it
+      //  shot= screenshot();
+      //  cv::imshow("OKNO",shot);
+
+        glutMainLoop();
+
+
+
 
 std::cout << "Done\n";
 }

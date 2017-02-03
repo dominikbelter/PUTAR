@@ -14,6 +14,10 @@ using namespace putar;
 /// A single instance of 3ds Loader grabber
 My3dsLoader::Ptr my3dsLoader;
 
+double rotation_x=0, rotation_x_increment=0.1;
+double rotation_y=0, rotation_y_increment=0.05;
+double rotation_z=0, rotation_z_increment=0.03;
+
 My3dsLoader::My3dsLoader(void) : ObjLoader("My 3dsLoader", TYPE_3DS) {
 
 }
@@ -179,8 +183,6 @@ void My3dsLoader::loadObj()
     }
     fclose (l_file); // Closes the file stream
     LoadBitmap();
-    std::cout<<object.id_texture<<std::endl;
-
 }
 
 /// Grab image and/or point cloud
@@ -304,12 +306,52 @@ void My3dsLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, 
     glLoadIdentity(); // Initialize the model matrix as identity
 
 
+
+
     glTranslatef(0.0,0.0,-400); // We move the object forward (the model matrix is multiplied by the translation matrix)
 
-    glRotatef(0,1.0,0.0,0.0); // Rotations of the object (the model matrix is multiplied by the rotation matrices)
-    glRotatef(0,0.0,1.0,0.0);
-    glRotatef(0,0.0,0.0,1.0);
+//    glRotatef(0,1.0,0.0,0.0); // Rotations of the object (the model matrix is multiplied by the rotation matrices)
+//    glRotatef(0,0.0,1.0,0.0);
+//    glRotatef(0,0.0,0.0,1.0);
 
+
+//    rotation_x = rotation_x + rotation_x_increment;
+//    rotation_y = rotation_y + rotation_y_increment;
+//    rotation_z = rotation_z + rotation_z_increment;
+
+//    if (rotation_x > 359) rotation_x = 0;
+//    if (rotation_y > 359) rotation_y = 0;
+//    if (rotation_z > 359) rotation_z = 0;
+
+//    glRotatef(rotation_x,1.0,0.0,0.0); // Rotations of the object (the model matrix is multiplied by the rotation matrices)
+//    glRotatef(rotation_y,0.0,1.0,0.0);
+//    glRotatef(rotation_z,0.0,0.0,1.0);
+
+    GLdouble matrix[16];
+    for(int i=0;i<4;++i){
+        for(int j=0;j<4;++j){
+            matrix[j*4 + i] = objectPose(i,j);
+        }
+    }
+    matrix[15]=1;
+    glMultMatrixd(matrix);
+
+    ///camera motion
+    for(int i=0;i<4;++i){
+        for(int j=0;j<4;++j){
+            matrix[j*4 + i] = cameraPose(i,j);
+            if (j==3){
+                matrix[j*4 + i] *= 100;
+                if (i==0)
+                    std::cout << "x: " << matrix[j*4 + i] << "\n";
+            }
+        }
+    }
+    matrix[15]=1;
+    glMultMatrixd(matrix);
+
+//    glTranslatef(1000, 0.0, 0.0);
+    //glScaled(100,100,100);
 
     glBindTexture(GL_TEXTURE_2D, object.id_texture); // We set the active texture
 
@@ -381,6 +423,8 @@ void My3dsLoader::computeMask(const Mat34& cameraPose, const Mat34& objectPose, 
     }
 
     depthMask = imgMask.clone();
+    notify(objectPose);
+    notifyCamera(cameraPose);
     //bitwise_not ( imgMask, depthMask );
 }
 

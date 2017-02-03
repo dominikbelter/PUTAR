@@ -22,7 +22,7 @@ namespace putar {
 using namespace putar;
 
 /// ObjLoader implementation
-class MyLoader : public ObjLoader, public Subject {
+class MyLoader : public ObjLoader, public SubjectAR {
     public:
 
         /// Pointer

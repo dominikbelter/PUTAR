@@ -34,10 +34,25 @@ void QGLVisualizer::draw(){
     glutSolidTeapot(0.1);
     glPopMatrix();
 
+    glPushMatrix();
     drawAxis();
-    std::cout << objType.id_texture;
+    glPopMatrix();
+
+    glPushMatrix();
+    GLdouble matrix[16];
+    for(int i=0;i<4;++i){
+        for(int j=0;j<3;++j){
+            matrix[i*4 + j] = objectPose(i,j);
+        }
+    }
+    matrix[12] = 0;
+    matrix[13] = 0;
+    matrix[14] = 0;
+    matrix[15] = 1;
+    glMultMatrixd(matrix);
+    glScaled(0.01, 0.01, 0.01);
     glEnable(GL_TEXTURE_2D); // This Enable the Texture mapping
-    glBindTexture(GL_TEXTURE_2D, objType.id_texture); // We set the active texture
+    //glBindTexture(GL_TEXTURE_2D, objType.id_texture); // We set the active texture
     glBegin(GL_TRIANGLES); // glBegin and glEnd delimit the vertices that define a primitive (in our case triangles)
     for (int i=0;i<objType.polygons_qty;i++)
     {
@@ -69,11 +84,13 @@ void QGLVisualizer::draw(){
                     objType.vertex[ objType.polygon[i].c ].z);
     }
     glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
 
+    int numberTriangles = mesh.vertices.size();
 
-    /*int numberTriangles = mesh.vertices.size();
-
-
+    glPushMatrix();
+    glMultMatrixd(matrix);
     glBegin(GL_TRIANGLES);
     for(int i=0;i<numberTriangles;i+=3)
     {
@@ -90,14 +107,29 @@ void QGLVisualizer::draw(){
         glVertex3f(mesh.vertices.at(i+2)(0), mesh.vertices.at(i+2)(1), mesh.vertices.at(i+2)(2));
     }
     glEnd();
+    glPopMatrix();
 
+    glPushMatrix();
+    GLdouble matrixCam[16];
+    for(int i=0;i<4;++i){
+        for(int j=0;j<3;++j){
+            matrixCam[i*4 + j] = cameraPose(i,j);
+        }
+    }
+    matrixCam[12] = 0;
+    matrixCam[13] = 0;
+    matrixCam[14] = 0;
+    matrixCam[15] = 1;
+    glMultMatrixd(matrixCam);
     glBegin(GL_POINTS);
     for(Point3D i : PointCloud)
     {
         glColor3f(i.red/255.0f, i.green/255.0f, i.blue/255.0f);
         glVertex3f(i.x, i.y, i.z);
     }
-    glEnd();*/
+    glEnd();
+    glPopMatrix();
+
 }
 
 /// draw objects

@@ -56,6 +56,7 @@ HmiGamepad::HmiGamepad(std::string configFilename) : config(configFilename){
     macierz(2,3)=2;
     std::cout<<"pozycja poczatkowa"<<std::endl;
     std::cout<<macierz.matrix()<<std::endl;
+    std::cout<<macierz.matrix()<<std::endl;
 
     gamepadThread.reset(new std::thread(&HmiGamepad::gamepadProcess,this));
 }
@@ -65,8 +66,10 @@ void HmiGamepad::gamepadProcess()
     {
         struct js_event js;
 
+        auto ret=0;
             /* read the joystick state */
-        read(joy_fd, &js, sizeof(struct js_event));
+        ret = (int)read(joy_fd, &js, sizeof(struct js_event));
+        std::cout<<ret<<std::endl;
 
             /* see what to do with the event */
         switch (js.type & ~JS_EVENT_INIT)
@@ -192,7 +195,7 @@ void HmiGamepad::gamepadProcess()
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[0]>50)
+        if(axis[0]>30000)
         {
             printf("rotacja wokol x +\n");
             zmienna(0,0)=1;
@@ -200,18 +203,18 @@ void HmiGamepad::gamepadProcess()
             zmienna(0,2)=0;
             zmienna(0,3)=0;
             zmienna(1,0)=0;
-            zmienna(1,1)=0.28366;
-            zmienna(1,2)=0.95892;
+            zmienna(1,1)=std::cos(config.angle);
+            zmienna(1,2)=std::sin(config.angle);
             zmienna(1,3)=0;
             zmienna(2,0)=0;
-            zmienna(2,1)=-0.95892;
-            zmienna(2,2)=0.28366;
+            zmienna(2,1)=-std::sin(config.angle);
+            zmienna(2,2)=std::cos(config.angle);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[0]<-50)
+        if(axis[0]<-30000)
         {
             printf("rotacja wokol x -\n");
             zmienna(0,0)=1;
@@ -219,64 +222,64 @@ void HmiGamepad::gamepadProcess()
             zmienna(0,2)=0;
             zmienna(0,3)=0;
             zmienna(1,0)=0;
-            zmienna(1,1)=0.28366;
-            zmienna(1,2)=-0.95892;
+            zmienna(1,1)=std::cos(config.angle);
+            zmienna(1,2)=-std::sin(config.angle);
             zmienna(1,3)=0;
             zmienna(2,0)=0;
-            zmienna(2,1)=0.95892;
-            zmienna(2,2)=0.28366;
+            zmienna(2,1)=std::sin(config.angle);
+            zmienna(2,2)=std::cos(config.angle);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[1]>50)
+        if(axis[1]>30000)
         {
             printf("rotacja wokol y +\n");
-            zmienna(0,0)=0.28366;
+            zmienna(0,0)=std::cos(config.angle);
             zmienna(0,1)=0;
-            zmienna(0,2)=-0.95892;
+            zmienna(0,2)=-std::sin(config.angle);
             zmienna(0,3)=0;
             zmienna(1,0)=0;
             zmienna(1,1)=1;
             zmienna(1,2)=0;
             zmienna(1,3)=0;
-            zmienna(2,0)=0.95892;
+            zmienna(2,0)=std::sin(config.angle);
             zmienna(2,1)=0;
-            zmienna(2,2)=0.28366;
+            zmienna(2,2)=std::cos(config.angle);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[1]<-50)
+        if(axis[1]<-30000)
         {
             printf("rotacja wokol y -\n");
-            zmienna(0,0)=0.28366;
+            zmienna(0,0)=std::cos(config.angle);
             zmienna(0,1)=0;
-            zmienna(0,2)=0.95892;
+            zmienna(0,2)=std::sin(config.angle);
             zmienna(0,3)=0;
             zmienna(1,0)=0;
             zmienna(1,1)=1;
             zmienna(1,2)=0;
             zmienna(1,3)=0;
-            zmienna(2,0)=-0.95892;
+            zmienna(2,0)=-std::sin(config.angle);
             zmienna(2,1)=0;
-            zmienna(2,2)=0.28366;
+            zmienna(2,2)=std::cos(config.angle);
             zmienna(2,3)=0;
             //std::cout<<zmienna.matrix()<<std::endl;
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[2]>50)
+        if(axis[2]>30000)
         {
             printf("rotacja wokol z +\n");
-            zmienna(0,0)=0.28366;
-            zmienna(0,1)=0.95892;
+            zmienna(0,0)=std::cos(config.angle);
+            zmienna(0,1)=std::sin(config.angle);
             zmienna(0,2)=0;
             zmienna(0,3)=0;
-            zmienna(1,0)=-0.95892;
-            zmienna(1,1)=0.28366;
+            zmienna(1,0)=-std::sin(config.angle);
+            zmienna(1,1)=std::cos(config.angle);
             zmienna(1,2)=0;
             zmienna(1,3)=0;
             zmienna(2,0)=0;
@@ -287,15 +290,15 @@ void HmiGamepad::gamepadProcess()
             macierz=macierz*zmienna;
             std::cout<<macierz.matrix()<<std::endl;
         }
-        if(axis[2]<-50)
+        if(axis[2]<-30000)
         {
             printf("rotacja wokol z -\n");
-            zmienna(0,0)=0.28366;
-            zmienna(0,1)=-0.95892;
+            zmienna(0,0)=std::cos(config.angle);
+            zmienna(0,1)=-std::sin(config.angle);
             zmienna(0,2)=0;
             zmienna(0,3)=0;
-            zmienna(1,0)=0.95892;
-            zmienna(1,1)=0.28366;
+            zmienna(1,0)=std::sin(config.angle);
+            zmienna(1,1)=std::cos(config.angle);
             zmienna(1,2)=0;
             zmienna(1,3)=0;
             zmienna(2,0)=0;
@@ -307,7 +310,7 @@ void HmiGamepad::gamepadProcess()
             std::cout<<macierz.matrix()<<std::endl;
         }
         printf("  \r");
-        usleep(config.delay*1000);
+        usleep((unsigned int)config.delay*1000);
         fflush(stdout);
 
     }

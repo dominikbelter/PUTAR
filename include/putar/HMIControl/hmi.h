@@ -8,7 +8,7 @@
 #define _HMI_H_
 
 #include "../Defs/defs.h"
-#include "Utilities/observer.h"
+#include "Utilities/observerAR.h"
 #include <iostream>
 #include <string>
 
