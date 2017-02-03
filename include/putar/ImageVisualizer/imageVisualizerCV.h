@@ -46,7 +46,6 @@ class ImageVisualizerCV: public ImageVisualizer{
                 std::cout << "unable to load Visualizer config file: " + filename << std::endl;
             tinyxml2::XMLElement * model = config.FirstChildElement( "ImageVisualizer" );
             windowName=model->FirstChildElement( "parameters" )->Attribute("windowName");
-
         }
     
         public:
@@ -59,9 +58,10 @@ class ImageVisualizerCV: public ImageVisualizer{
     // overloaded constructor
     ImageVisualizerCV(std::string configFilename);
 
+
     cv::Mat UpdateImage(cv::Mat mask, cv::Mat depthMask, cv::Mat RGB, cv::Mat depthImg);
 	
-	// Desctructor
+    // Desctructor double(1.0+
 	~ImageVisualizerCV(){}
 private:
     Config config;
